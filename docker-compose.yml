@@ -1,0 +1,30 @@
+version: '3'
+services:
+    semibot_host:
+        build: ./semibot_host
+        image: semibot_host
+        container_name: semibot_host
+        ports:
+            - "8000:8000"
+        tty: true
+        depends_on:
+        - semibot_db
+        
+    semibot_db:
+        build: ./semibot_db
+        image: semibot_db
+        container_name: semibot_db
+        command:
+            - --default-authentication-plugin=mysql_native_password
+        environment:
+            MYSQL_ROOT_PASSWORD: Endeavor
+            MYSQL_ROOT_HOST: '%'
+        ports:
+            - "3306:3306"
+        volumes:
+            - "./semibot_db/init:/docker-entrypoint-initdb.d" # db初期化
+            - "mysql:/var/lib/mysql" # db永続化(コンテナ再起動後もデータ保持)
+
+volumes:
+    mysql: # db用名前付きボリューム
+

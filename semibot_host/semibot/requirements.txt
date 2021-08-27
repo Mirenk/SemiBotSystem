@@ -1,0 +1,7 @@
+Django
+slackclient
+django-crispy-forms
+djangorestframework
+django-filter
+mysqlclient
+django-apscheduler

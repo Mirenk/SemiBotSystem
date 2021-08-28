@@ -1,24 +1,17 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 
 ##
 ## ユーザ関係モデル
 ##
 # 属性ラベルモデル
 class Label(models.Model):
-    name = models.CharField()
+    name = models.CharField(unique=True, max_length=10)
+
+    def __str__(self):
+        return self.name
 
 # 候補者モデル
-class Candidate(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+class Candidate(AbstractUser):
     label = models.ManyToManyField(Label, related_name='candidates')
-
-# 連絡手段モデル
-class ContactMethod(models.Model):
-    name = models.CharField()
-
-# 連絡先モデル
-class ContactAddress(models.Model):
-    candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE, related_name='contact')
-    address = models.CharField()
-    method = models.ForeignKey(ContactMethod, on_delete=models.CASCADE)
+    message_addr = models.URLField()

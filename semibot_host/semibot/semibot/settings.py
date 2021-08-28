@@ -78,10 +78,10 @@ WSGI_APPLICATION = 'semibot.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'semibot_db',
+        'NAME': 'semidb',
         'USER': 'root',
         'PASSWORD': 'Endeavor',
-        'HOST': 'semidb'
+        'HOST': 'semibot_db'
     }
 }
 

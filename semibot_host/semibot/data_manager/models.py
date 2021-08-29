@@ -23,3 +23,30 @@ class Label(models.Model):
 class Candidate(AbstractUser):
     label = models.ManyToManyField(Label, related_name='candidates')
     message_addr = models.URLField()
+
+##
+## 履歴関係モデル
+##
+# 値付きラベル
+# 必要ラベル値や推奨ラベル値を格納
+class LabelValue(models.Model):
+    label = models.ForeignKey(Label, on_delete=models.CASCADE)
+    value = models.IntegerField()
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['label, value'], name='label_value_unique')
+        ]
+
+# 作業モデル
+# これは現実の作業を示している。マッチングシステムのタスクではない。
+class Task(models.Model):
+    name = models.CharField(unique=True, max_length=20)
+    require_label_value = models.ManyToManyField(LabelValue, related_name='require_task')
+    recommend_lavel_value = models.ManyToManyField(LabelValue, related_name='recommend_task')
+
+# 作業履歴モデル
+# 作業と候補者グループのマッチング結果を格納
+class TaskHistory(models.Model):
+    task = models.ForeignKey(Task, on_delete=models.CASCADE)
+    worker = models.ManyToManyField(Candidate, related_name='joined_task')

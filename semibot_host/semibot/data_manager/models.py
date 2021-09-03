@@ -48,10 +48,10 @@ class LabelValue(models.Model):
 class Task(models.Model):
     name = models.CharField(unique=True, max_length=20)
     require_label_value = models.ManyToManyField(LabelValue, related_name='require_task')
-    recommend_lavel_value = models.ManyToManyField(LabelValue, related_name='recommend_task')
 
 # 作業履歴モデル
 # 作業と候補者グループのマッチング結果を格納
 class TaskHistory(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
     worker = models.ManyToManyField(Candidate, related_name='joined_task')
+    recommend_label_value = models.ManyToManyField(LabelValue, related_name='recommend_task')

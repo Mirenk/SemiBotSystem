@@ -35,7 +35,7 @@ class Candidate(AbstractUser):
 # 値付きラベル
 # 必要ラベル値や推奨ラベル値を格納
 class LabelValue(models.Model):
-    label = models.ForeignKey(Label, on_delete=models.CASCADE)
+    label = models.ForeignKey(BaseLabel, on_delete=models.CASCADE)
     value = models.IntegerField()
 
     class Meta:

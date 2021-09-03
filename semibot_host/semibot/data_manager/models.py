@@ -2,18 +2,23 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 ##
+## ラベル関係モデル
+##
+# 基底ラベルモデル
+class BaseLabel(models.Model):
+    name = models.CharField(unique=True, max_length=10)
+
+##
 ## ユーザ関係モデル
 ##
 # ラベル集合
 # e.g 学部生,院生を含んでいる「学生」といった集合。参照時便利にするためでラベルではない
-class LabelSet(models.Model):
-    name = models.CharField(unique=True, max_length=10)
+class LabelSet(BaseLabel):
     def __str__(self):
         return self.name
 
 # 属性ラベルモデル
-class Label(models.Model):
-    name = models.CharField(unique=True, max_length=10)
+class Label(BaseLabel):
     labelset = models.ForeignKey(LabelSet, on_delete=models.PROTECT, null=True)
 
     def __str__(self):

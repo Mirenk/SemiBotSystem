@@ -1,7 +1,7 @@
 from rest_framework import viewsets
-from .serializer import CandidateSerializer, LabelSerializer, LabelSetSerializer
+from .serializer import CandidateSerializer, LabelSerializer, LabelSetSerializer, LabelValueSerializer
 
-from .models import Candidate, Label, LabelSet
+from .models import Candidate, Label, LabelSet, LabelValue
 
 class CandidateViewSet(viewsets.ModelViewSet):
     queryset = Candidate.objects.all()
@@ -13,4 +13,8 @@ class LabelViewSet(viewsets.ModelViewSet):
 
 class LabelSetViewSet(viewsets.ModelViewSet):
     queryset = LabelSet.objects.all()
-    serializer_class = LabelSetSerializerSetSerializer
+    serializer_class = LabelSetSerializer
+
+class LabelValueViewSet(viewsets.ModelViewSet):
+    queryset = LabelValue.objects.all()
+    serializer_class = LabelValueSerializer

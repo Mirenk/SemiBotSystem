@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from django.contrib.auth.models import User
-from .models import Candidate, Label, LabelSet
+from .models import Candidate, Label, LabelSet, LabelValue
 
 class LabelSerializer(serializers.ModelSerializer):
     class Meta:
@@ -29,3 +29,10 @@ class CandidateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Candidate
         fields = ['id', 'username', 'first_name', 'last_name', 'label', 'message_addr']
+
+class LabelValueSerializer(serializers.ModelSerializer):
+    label = LabelSerializer()
+
+    class Meta:
+        model = LabelValue
+        fields = ['label', 'value']

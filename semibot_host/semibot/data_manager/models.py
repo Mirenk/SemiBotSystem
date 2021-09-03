@@ -19,7 +19,7 @@ class LabelSet(BaseLabel):
 
 # 属性ラベルモデル
 class Label(BaseLabel):
-    labelset = models.ForeignKey(LabelSet, on_delete=models.PROTECT, null=True)
+    label_set = models.ForeignKey(LabelSet, on_delete=models.PROTECT, null=True)
 
     def __str__(self):
         return self.name
@@ -40,7 +40,7 @@ class LabelValue(models.Model):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['label, value'], name='label_value_unique')
+            models.UniqueConstraint(fields=['label', 'value'], name='label_value_unique')
         ]
 
 # 作業モデル

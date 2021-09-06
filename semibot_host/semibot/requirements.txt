@@ -5,3 +5,4 @@ djangorestframework
 django-filter
 mysqlclient
 django-apscheduler
+django-filter

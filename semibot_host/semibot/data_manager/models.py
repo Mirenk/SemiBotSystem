@@ -55,6 +55,7 @@ class Task(models.Model):
 # 作業と候補者グループのマッチング結果を格納、履歴にもなる
 class TaskRequest(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
+    work_datetime = models.DateTimeField()
     worker = models.ManyToManyField(Candidate, related_name='joined_task', blank=True)
     candidate = models.ManyToManyField(Candidate, related_name='elected_task', blank=True)
     recommend_label_value = models.ManyToManyField(LabelValue, related_name='recommend_task')

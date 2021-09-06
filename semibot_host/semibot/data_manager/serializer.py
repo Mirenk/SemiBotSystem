@@ -52,4 +52,4 @@ class TaskRequestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TaskRequest
-        fields = ['id', 'task', 'worker', 'candidate', 'recommend_label_value', 'is_complete']
+        fields = ['id', 'task', 'work_datetime', 'worker', 'candidate', 'recommend_label_value', 'is_complete']

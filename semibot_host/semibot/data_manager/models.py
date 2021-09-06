@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from concurrency.fields import AutoIncVersionField
 
 ##
 ## ラベル関係モデル
@@ -60,3 +61,4 @@ class TaskRequest(models.Model):
     candidate = models.ManyToManyField(Candidate, related_name='elected_task', blank=True)
     recommend_label_value = models.ManyToManyField(LabelValue, related_name='recommend_task')
     is_complete = models.BooleanField(default=False)
+    version = AutoIncVersionField()

@@ -137,3 +137,6 @@ AUTH_USER_MODEL = 'data_manager.Candidate'
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
 }
+
+# REST URL for matching
+MATCHING_REST_URL_ROOT = 'http://host.docker.internal:8000/data_manager/api/'

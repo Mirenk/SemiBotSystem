@@ -7,3 +7,4 @@ mysqlclient
 django-apscheduler
 django-filter
 django-concurrency
+requests

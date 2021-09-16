@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package matching.server;
 
-import "matching/type.proto";
+import "matching_pb/type.proto";
 import "google/type/datetime.proto";
 
 message AddTaskRequestRequest {

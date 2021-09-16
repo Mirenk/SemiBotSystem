@@ -1,0 +1,86 @@
+syntax = "proto3";
+
+package matching.data_manage;
+
+import "matching/type.proto";
+
+/*
+ * ListLabels messages
+ */
+message ListLabelsRequest {}
+
+message ListLabelsResponse {
+  repeated matching.type.Label labels = 1;
+}
+
+/*
+ * GetCandidatesFromLabel messages
+ */
+message GetCandidatesFromLabelResponse {
+  repeated matching.type.Personaldata personal_data = 1;
+}
+
+/*
+ * ListTasks messages
+ */
+message ListTasksRequest {}
+
+message ListTasksResponse {
+  repeated matching.type.Task tasks = 1;
+}
+
+/*
+ * GetTaskFromName messages
+ */
+message GetTaskFromNameRequest {
+  string name = 1;
+}
+
+/*
+ * GetTaskRequestHistories messages
+ */
+message GetTaskRequestHistoriesResponse {
+  repeated matching.type.TaskRequestData task_requests = 1;
+}
+
+/*
+ * GetPersonalData message
+ */
+message GetPersonalDataFromIdRequest {
+  string id = 1;
+}
+
+/*
+ * RecordTaskRequestHistory message
+ */
+message RecordTaskRequestHistoryRequest {
+  matching.type.TaskRequestData task_request = 1;
+  repeated matching.type.PersonalData candidates = 2;
+  repeated matching.type.Label const_label = 3;
+  repeated matching.type.LabelValue var_label = 4;
+}
+
+message RecordTaskRequestHistoryResult {
+  enum Result {
+    SUCCESS = 0;
+    FAILED = 1;
+  }
+  Result result = 1;
+  string message = 2;
+}
+
+/*
+ * Service: DataManage
+ */
+service DataManage {
+  // 候補者抽出用
+  rpc ListLabels (ListLabelsRequest) returns (ListLabelsResponse);
+  rpc GetCandidatesFromLabel (matching.type.Label) returns (GetCandidatesFromLabelResponse);
+  // マッチング記録取得用
+  rpc ListTasks (ListTasksRequest) returns (ListTasksResponse);
+  rpc GetTaskFromName (GetTaskFromNameRequest) returns (matching.type.Task);
+  rpc GetTaskRequestHistories (matching.type.Label) returns (GetTaskRequestHistoriesResponse);
+  // マッチング結果記録
+  rpc GetPersonalDataFromId (GetPersonalDataFromIdRequest) returns (matching.type.PersonalData);
+  rpc RecordTaskRequestHistory (RecordTaskRequestHistoryRequest) returns (RecordTaskRequestHistoryResult);
+}

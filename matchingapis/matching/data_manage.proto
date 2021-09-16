@@ -17,7 +17,7 @@ message ListLabelsResponse {
  * GetCandidatesFromLabel messages
  */
 message GetCandidatesFromLabelResponse {
-  repeated matching.type.Personaldata personal_data = 1;
+  repeated matching.type.PersonalData personal_data = 1;
 }
 
 /*

@@ -1,19 +1,19 @@
 syntax = "proto3";
 
-package matching.server;
+package matching;
 
-import "matching_pb/type.proto";
+import "type.proto";
 import "google/type/datetime.proto";
 
 message AddTaskRequestRequest {
   // ラベルセット
   // これを優先度順に送り、順に選択していく
   message LabelSet {
-    repeated matching.type.Label const_label = 1;
-    repeated matching.type.LabelValue var_label = 2;
+    repeated matching.Label const_label = 1;
+    repeated matching.LabelValue var_label = 2;
   }
 
-  matching.type.TaskRequestData task_request = 1;
+  matching.TaskRequestData task_request = 1;
   repeated LabelSet label_set = 2;
   google.type.DateTime matching_end_date = 3;
   string callback_url = 4;

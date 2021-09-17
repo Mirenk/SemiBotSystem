@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package matching.data_manage;
+package matching;
 
-import "matching_pb/type.proto";
+import "type.proto";
 
 /*
  * ListLabels messages
@@ -10,14 +10,14 @@ import "matching_pb/type.proto";
 message ListLabelsRequest {}
 
 message ListLabelsResponse {
-  repeated matching.type.Label labels = 1;
+  repeated matching.Label labels = 1;
 }
 
 /*
  * GetCandidatesFromLabel messages
  */
 message GetCandidatesFromLabelResponse {
-  repeated matching.type.PersonalData personal_data = 1;
+  repeated matching.PersonalData personal_data = 1;
 }
 
 /*
@@ -26,7 +26,7 @@ message GetCandidatesFromLabelResponse {
 message ListTasksRequest {}
 
 message ListTasksResponse {
-  repeated matching.type.Task tasks = 1;
+  repeated matching.Task tasks = 1;
 }
 
 /*
@@ -40,7 +40,7 @@ message GetTaskFromNameRequest {
  * GetTaskRequestHistories messages
  */
 message GetTaskRequestHistoriesResponse {
-  repeated matching.type.TaskRequestData task_requests = 1;
+  repeated matching.TaskRequestData task_requests = 1;
 }
 
 /*
@@ -54,10 +54,10 @@ message GetPersonalDataFromIdRequest {
  * RecordTaskRequestHistory message
  */
 message RecordTaskRequestHistoryRequest {
-  matching.type.TaskRequestData task_request = 1;
-  repeated matching.type.PersonalData candidates = 2;
-  repeated matching.type.Label const_label = 3;
-  repeated matching.type.LabelValue var_label = 4;
+  matching.TaskRequestData task_request = 1;
+  repeated matching.PersonalData candidates = 2;
+  repeated matching.Label const_label = 3;
+  repeated matching.LabelValue var_label = 4;
 }
 
 message RecordTaskRequestHistoryResult {
@@ -75,12 +75,12 @@ message RecordTaskRequestHistoryResult {
 service DataManage {
   // 候補者抽出用
   rpc ListLabels (ListLabelsRequest) returns (ListLabelsResponse);
-  rpc GetCandidatesFromLabel (matching.type.Label) returns (GetCandidatesFromLabelResponse);
+  rpc GetCandidatesFromLabel (matching.Label) returns (GetCandidatesFromLabelResponse);
   // マッチング記録取得用
   rpc ListTasks (ListTasksRequest) returns (ListTasksResponse);
-  rpc GetTaskFromName (GetTaskFromNameRequest) returns (matching.type.Task);
-  rpc GetTaskRequestHistories (matching.type.Label) returns (GetTaskRequestHistoriesResponse);
+  rpc GetTaskFromName (GetTaskFromNameRequest) returns (matching.Task);
+  rpc GetTaskRequestHistories (matching.Label) returns (GetTaskRequestHistoriesResponse);
   // マッチング結果記録
-  rpc GetPersonalDataFromId (GetPersonalDataFromIdRequest) returns (matching.type.PersonalData);
+  rpc GetPersonalDataFromId (GetPersonalDataFromIdRequest) returns (matching.PersonalData);
   rpc RecordTaskRequestHistory (RecordTaskRequestHistoryRequest) returns (RecordTaskRequestHistoryResult);
 }

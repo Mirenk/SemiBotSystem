@@ -334,5 +334,4 @@ fabric.properties
 # End of https://www.toptal.com/developers/gitignore/api/pycharm,python,django
 
 # Protobuf Compile Folder
-semibot_host/matchingapis/out/
-semibot_host/semibot/matching_pb
+semibot_host/matchingapis/matching_pb/

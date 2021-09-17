@@ -3,3 +3,5 @@ services:
     semibot_host:
         volumes:
             - "./semibot_host/semibot:/app/semibot"
+        ports:
+            - "50051:50051"

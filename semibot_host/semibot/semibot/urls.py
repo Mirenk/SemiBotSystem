@@ -1,4 +1,4 @@
-"""semibot URL Configuration
+"""semibot URLg Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.2/topics/http/urls/
@@ -15,8 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from data_manager.grpc_service import grpc_hadlers as data_manager_grpc_handler
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('data_manager/', include('data_manager.urls'))
 ]
+
+def grpc_handlers(server):
+    data_manager_grpc_handler(server)

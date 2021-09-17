@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'data_manager',
     'django_filters',
+    'django_grpc_framework',
 ]
 
 MIDDLEWARE = [

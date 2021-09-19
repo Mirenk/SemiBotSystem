@@ -23,7 +23,7 @@ class DataManage(data_manage_pb2_grpc.DataManageServicer):
 
         return response
 
-    def ListCandidates(self, request, context):
+    def ListPersonalData(self, request, context):
         pass
 
     def ListTasks(self, request, context):

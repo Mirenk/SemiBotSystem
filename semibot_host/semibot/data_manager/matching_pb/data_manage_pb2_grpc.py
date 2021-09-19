@@ -22,10 +22,10 @@ class DataManageStub(object):
                 request_serializer=data__manage__pb2.ListLabelsRequest.SerializeToString,
                 response_deserializer=data__manage__pb2.ListLabelsResponse.FromString,
                 )
-        self.GetCandidatesFromLabel = channel.unary_unary(
-                '/matching.DataManage/GetCandidatesFromLabel',
-                request_serializer=type__pb2.Label.SerializeToString,
-                response_deserializer=data__manage__pb2.GetCandidatesFromLabelResponse.FromString,
+        self.GetCandidatesFromLabels = channel.unary_unary(
+                '/matching.DataManage/GetCandidatesFromLabels',
+                request_serializer=data__manage__pb2.GetCandidatesFromlabelsRequest.SerializeToString,
+                response_deserializer=data__manage__pb2.GetCandidatesFromLabelsResponse.FromString,
                 )
         self.ListTasks = channel.unary_unary(
                 '/matching.DataManage/ListTasks',
@@ -66,7 +66,7 @@ class DataManageServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def GetCandidatesFromLabel(self, request, context):
+    def GetCandidatesFromLabels(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -112,10 +112,10 @@ def add_DataManageServicer_to_server(servicer, server):
                     request_deserializer=data__manage__pb2.ListLabelsRequest.FromString,
                     response_serializer=data__manage__pb2.ListLabelsResponse.SerializeToString,
             ),
-            'GetCandidatesFromLabel': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetCandidatesFromLabel,
-                    request_deserializer=type__pb2.Label.FromString,
-                    response_serializer=data__manage__pb2.GetCandidatesFromLabelResponse.SerializeToString,
+            'GetCandidatesFromLabels': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetCandidatesFromLabels,
+                    request_deserializer=data__manage__pb2.GetCandidatesFromlabelsRequest.FromString,
+                    response_serializer=data__manage__pb2.GetCandidatesFromLabelsResponse.SerializeToString,
             ),
             'ListTasks': grpc.unary_unary_rpc_method_handler(
                     servicer.ListTasks,
@@ -172,7 +172,7 @@ class DataManage(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def GetCandidatesFromLabel(request,
+    def GetCandidatesFromLabels(request,
             target,
             options=(),
             channel_credentials=None,
@@ -182,9 +182,9 @@ class DataManage(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/matching.DataManage/GetCandidatesFromLabel',
-            type__pb2.Label.SerializeToString,
-            data__manage__pb2.GetCandidatesFromLabelResponse.FromString,
+        return grpc.experimental.unary_unary(request, target, '/matching.DataManage/GetCandidatesFromLabels',
+            data__manage__pb2.GetCandidatesFromlabelsRequest.SerializeToString,
+            data__manage__pb2.GetCandidatesFromLabelsResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

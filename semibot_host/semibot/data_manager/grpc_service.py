@@ -27,6 +27,24 @@ class DataManage(data_manage_pb2_grpc.DataManageServicer):
 
         return label_values_pb
 
+    # タスク -> ProtobufのTask
+    @classmethod
+    def __get_task_pb_from_task_record(cls, task):
+        # タスク作成
+        task_pb = type_pb2.Task()
+        task_pb.name = task.name
+
+        # ProtobufのLabelリストを生成
+        label_list = cls.__get_label_pb_list_from_label_queryset(task.require_label.all())
+        # ProtobufのLabelValueリストを生成
+        label_value_list = cls.__get_labelvalue_pb_list_from_labelvalue_queryset(task.require_label_value.all())
+
+        # 各ラベル登録
+        task_pb.require_label.extend(label_list)
+        task_pb.require_label_value.extend(label_value_list)
+
+        return task_pb
+
     def ListLabels(self, request, context):
         response = data_manage_pb2.ListLabelsResponse()
         labels_pb = self.__get_label_pb_list_from_label_queryset(Label.objects.all())
@@ -62,18 +80,7 @@ class DataManage(data_manage_pb2_grpc.DataManageServicer):
         task_list = Task.objects.all()
 
         for task in task_list:
-            # タスク作成
-            task_pb = type_pb2.Task()
-            task_pb.name = task.name
-
-            # ProtobufのLabelリストを生成
-            label_list = self.__get_label_pb_list_from_label_queryset(task.require_label.all())
-            # ProtobufのLabelValueリストを生成
-            label_value_list = self.__get_labelvalue_pb_list_from_labelvalue_queryset(task.require_label_value.all())
-
-            # 各ラベル登録
-            task_pb.require_label.extend(label_list)
-            task_pb.require_label_value.extend(label_value_list)
+            task_pb = self.__get_task_pb_from_task_record(task)
 
             # responseに追加
             response.tasks.append(task_pb)

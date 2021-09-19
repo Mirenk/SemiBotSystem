@@ -14,7 +14,7 @@ class DataManage(data_manage_pb2_grpc.DataManageServicer):
 
         return response
 
-    def GetCandidatesFromLabel(self, request, context):
+    def ListCandidates(self, request, context):
         pass
 
     def ListTasks(self, request, context):

@@ -14,13 +14,11 @@ message ListLabelsResponse {
 }
 
 /*
- * GetCandidatesFromLabel messages
+ * ListCandidates messages
  */
-message GetCandidatesFromlabelsRequest {
-  repeated matching.Label labels = 1;
-}
+message ListCandidatesRequest {}
 
-message GetCandidatesFromLabelsResponse {
+message ListCandidatesResponse {
   repeated matching.PersonalData personal_data = 1;
 }
 
@@ -79,7 +77,7 @@ message RecordTaskRequestHistoryResult {
 service DataManage {
   // 候補者抽出用
   rpc ListLabels (ListLabelsRequest) returns (ListLabelsResponse);
-  rpc GetCandidatesFromLabels (GetCandidatesFromlabelsRequest) returns (GetCandidatesFromLabelsResponse);
+  rpc ListCandidates (ListCandidatesRequest) returns (ListCandidatesResponse);
   // マッチング記録取得用
   rpc ListTasks (ListTasksRequest) returns (ListTasksResponse);
   rpc GetTaskFromName (GetTaskFromNameRequest) returns (matching.Task);

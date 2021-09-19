@@ -4,9 +4,9 @@ from django_filters import rest_framework as filters
 
 from .models import *
 
-class CandidateViewSet(viewsets.ModelViewSet):
-    queryset = Candidate.objects.all()
-    serializer_class = CandidateSerializer
+class PersonalDataViewSet(viewsets.ModelViewSet):
+    queryset = PersonalData.objects.all()
+    serializer_class = PersonalDataSerializer
 
 class LabelViewSet(viewsets.ModelViewSet):
     queryset = Label.objects.all()

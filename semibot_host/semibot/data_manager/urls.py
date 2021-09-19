@@ -5,7 +5,7 @@ from .views import *
 
 # REST APIのURL生成
 routers = routers.DefaultRouter()
-routers.register('candidates', CandidateViewSet)
+routers.register('personaldata', PersonalDataViewSet)
 routers.register('labels', LabelViewSet)
 routers.register('labelsets', LabelSetViewSet)
 routers.register('labelvalues', LabelValueViewSet)

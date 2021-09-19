@@ -24,8 +24,8 @@ class LabelSet(BaseLabel):
 class Label(BaseLabel):
     label_set = models.ForeignKey(LabelSet, on_delete=models.PROTECT, null=True, blank=True)
 
-# 候補者モデル
-class Candidate(AbstractUser):
+# 個人情報モデル
+class PersonalData(AbstractUser):
     label = models.ManyToManyField(Label, related_name='candidates', blank=True)
     message_addr = models.URLField()
 
@@ -57,8 +57,8 @@ class Task(models.Model):
 class TaskRequest(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
     work_datetime = models.DateTimeField()
-    worker = models.ManyToManyField(Candidate, related_name='joined_task', blank=True)
-    candidate = models.ManyToManyField(Candidate, related_name='elected_task', blank=True)
+    worker = models.ManyToManyField(PersonalData, related_name='joined_task', blank=True)
+    candidate = models.ManyToManyField(PersonalData, related_name='elected_task', blank=True)
     recommend_label_value = models.ManyToManyField(LabelValue, related_name='recommend_task')
     is_complete = models.BooleanField(default=False)
     version = AutoIncVersionField()

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from django.contrib.auth.models import User
-from .models import Candidate, Label, LabelSet, LabelValue, Task, TaskRequest
+from .models import PersonalData, Label, LabelSet, LabelValue, Task, TaskRequest
 
 class LabelSerializer(serializers.ModelSerializer):
     class Meta:
@@ -23,11 +23,11 @@ class LabelSetSerializer(serializers.ModelSerializer):
             label_abstract_contents = None
             return label_abstract_contents
 
-class CandidateSerializer(serializers.ModelSerializer):
+class PersonalDataSerializer(serializers.ModelSerializer):
     label = LabelSerializer(many=True)
 
     class Meta:
-        model = Candidate
+        model = PersonalData
         fields = ['id', 'username', 'first_name', 'last_name', 'label', 'message_addr']
 
 class LabelValueSerializer(serializers.ModelSerializer):
@@ -46,8 +46,8 @@ class TaskSerializer(serializers.ModelSerializer):
 
 class TaskRequestSerializer(serializers.ModelSerializer):
     task = TaskSerializer()
-    worker = CandidateSerializer(many=True)
-    candidate = CandidateSerializer(many=True)
+    worker = PersonalDataSerializer(many=True)
+    candidate = PersonalDataSerializer(many=True)
     recommend_label_value = LabelValueSerializer(many=True)
 
     class Meta:

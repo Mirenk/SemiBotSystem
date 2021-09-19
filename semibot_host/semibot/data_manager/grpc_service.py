@@ -2,8 +2,13 @@ from .models import *
 
 from .matching_pb import data_manage_pb2, data_manage_pb2_grpc, type_pb2
 
+#
 # サービス定義
+#
 class DataManage(data_manage_pb2_grpc.DataManageServicer):
+    ##################################################
+    ## クラスメソッド(DjangoのModel -> Protobufの変換等) ##
+    ##################################################
     # ラベルのqueryset -> ProtobufのLabelリスト
     @classmethod
     def __get_label_pb_list_from_label_queryset(cls, labels):
@@ -45,6 +50,9 @@ class DataManage(data_manage_pb2_grpc.DataManageServicer):
 
         return task_pb
 
+    #########################
+    ## Protobufのメソッド実装 ##
+    #########################
     def ListLabels(self, request, context):
         response = data_manage_pb2.ListLabelsResponse()
         labels_pb = self.__get_label_pb_list_from_label_queryset(Label.objects.all())
@@ -102,6 +110,8 @@ class DataManage(data_manage_pb2_grpc.DataManageServicer):
     def RecordTaskRequestHistory(self, request, context):
         pass
 
-# Handler
+#
+# Handler(サービスをサーバに登録するための関数)
+#
 def grpc_hadlers(server):
     data_manage_pb2_grpc.add_DataManageServicer_to_server(DataManage(), server)

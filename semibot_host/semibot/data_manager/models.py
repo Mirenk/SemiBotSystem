@@ -47,6 +47,7 @@ class LabelValue(models.Model):
 # これは現実の作業を示している。マッチングシステムのタスクではない。
 class Task(models.Model):
     name = models.CharField(unique=True, max_length=20)
+    require_label = models.ManyToManyField(Label, related_name='require_task')
     require_label_value = models.ManyToManyField(LabelValue, related_name='require_task')
 
     def __str__(self):

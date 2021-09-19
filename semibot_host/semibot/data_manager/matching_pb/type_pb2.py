@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\ntype.proto\x12\x08matching\x1a\x1agoogle/type/datetime.proto\"\x15\n\x05Label\x12\x0c\n\x04name\x18\x01 \x01(\t\";\n\nLabelValue\x12\x1e\n\x05label\x18\x01 \x01(\x0b\x32\x0f.matching.Label\x12\r\n\x05value\x18\x02 \x01(\x05\"_\n\x0cPersonalData\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x14\n\x0cmessage_addr\x18\x03 \x01(\t\x12\x1f\n\x06labels\x18\x04 \x03(\x0b\x32\x0f.matching.Label\"c\n\x04Task\x12\x0c\n\x04name\x18\x01 \x01(\t\x12$\n\x0b\x63onst_label\x18\x02 \x03(\x0b\x32\x0f.matching.Label\x12\'\n\tvar_label\x18\x03 \x03(\x0b\x32\x14.matching.LabelValue\"o\n\x0fTaskRequestData\x12\x14\n\x0crequest_name\x18\x01 \x01(\t\x12\x1c\n\x04task\x18\x02 \x01(\x0b\x32\x0e.matching.Task\x12(\n\ttask_date\x18\x03 \x01(\x0b\x32\x15.google.type.DateTimeb\x06proto3'
+  serialized_pb=b'\n\ntype.proto\x12\x08matching\x1a\x1agoogle/type/datetime.proto\"\x15\n\x05Label\x12\x0c\n\x04name\x18\x01 \x01(\t\";\n\nLabelValue\x12\x1e\n\x05label\x18\x01 \x01(\x0b\x32\x0f.matching.Label\x12\r\n\x05value\x18\x02 \x01(\x05\"_\n\x0cPersonalData\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x14\n\x0cmessage_addr\x18\x03 \x01(\t\x12\x1f\n\x06labels\x18\x04 \x03(\x0b\x32\x0f.matching.Label\"o\n\x04Task\x12\x0c\n\x04name\x18\x01 \x01(\t\x12&\n\rrequire_label\x18\x02 \x03(\x0b\x32\x0f.matching.Label\x12\x31\n\x13require_label_value\x18\x03 \x03(\x0b\x32\x14.matching.LabelValue\"o\n\x0fTaskRequestData\x12\x14\n\x0crequest_name\x18\x01 \x01(\t\x12\x1c\n\x04task\x18\x02 \x01(\x0b\x32\x0e.matching.Task\x12(\n\ttask_date\x18\x03 \x01(\x0b\x32\x15.google.type.DateTimeb\x06proto3'
   ,
   dependencies=[google_dot_type_dot_datetime__pb2.DESCRIPTOR,])
 
@@ -167,14 +167,14 @@ _TASK = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='const_label', full_name='matching.Task.const_label', index=1,
+      name='require_label', full_name='matching.Task.require_label', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='var_label', full_name='matching.Task.var_label', index=2,
+      name='require_label_value', full_name='matching.Task.require_label_value', index=2,
       number=3, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -193,7 +193,7 @@ _TASK = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=233,
-  serialized_end=332,
+  serialized_end=344,
 )
 
 
@@ -238,14 +238,14 @@ _TASKREQUESTDATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=334,
-  serialized_end=445,
+  serialized_start=346,
+  serialized_end=457,
 )
 
 _LABELVALUE.fields_by_name['label'].message_type = _LABEL
 _PERSONALDATA.fields_by_name['labels'].message_type = _LABEL
-_TASK.fields_by_name['const_label'].message_type = _LABEL
-_TASK.fields_by_name['var_label'].message_type = _LABELVALUE
+_TASK.fields_by_name['require_label'].message_type = _LABEL
+_TASK.fields_by_name['require_label_value'].message_type = _LABELVALUE
 _TASKREQUESTDATA.fields_by_name['task'].message_type = _TASK
 _TASKREQUESTDATA.fields_by_name['task_date'].message_type = google_dot_type_dot_datetime__pb2._DATETIME
 DESCRIPTOR.message_types_by_name['Label'] = _LABEL

@@ -25,8 +25,8 @@ message PersonalData {
 
 message Task {
   string name = 1;
-  repeated Label const_label = 2;
-  repeated LabelValue var_label = 3;
+  repeated Label require_label = 2;
+  repeated LabelValue require_label_value = 3;
 }
 
 message TaskRequestData {

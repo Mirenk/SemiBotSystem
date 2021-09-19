@@ -50,3 +50,21 @@ class DataManageTest(RPCTestCase):
         self.assertEqual(res.tasks[0].require_label[0].name, 'test1')
         self.assertEqual(res.tasks[0].require_label_value[0].label.name, 'test2')
         self.assertEqual(res.tasks[0].require_label_value[0].value, 1)
+
+    def test_get_task_from_name(self):
+        label1 = Label.objects.create(name='test1')
+        label2 = Label.objects.create(name='test2')
+        label_value = LabelValue.objects.create(label=label2, value=1)
+
+        testtask = Task.objects.create(name='test')
+        testtask.require_label.add(label1)
+        testtask.require_label_value.add(label_value)
+
+        stub = data_manage_pb2_grpc.DataManageStub(self.channel)
+        res = stub.GetTaskFromName(data_manage_pb2.GetTaskFromNameRequest(name=testtask.name))
+
+        print(res)
+        self.assertEqual(res.name, testtask.name)
+        self.assertEqual(res.require_label[0].name, 'test1')
+        self.assertEqual(res.require_label_value[0].label.name, 'test2')
+        self.assertEqual(res.require_label_value[0].value, 1)

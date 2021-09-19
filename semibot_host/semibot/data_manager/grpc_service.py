@@ -88,7 +88,10 @@ class DataManage(data_manage_pb2_grpc.DataManageServicer):
         return response
 
     def GetTaskFromName(self, request, context):
-        pass
+        task_name = request.name
+        task = Task.objects.filter(name=task_name).first()
+
+        return self.__get_task_pb_from_task_record(task)
 
     def GetTaskRequestHistories(self, request, context):
         pass

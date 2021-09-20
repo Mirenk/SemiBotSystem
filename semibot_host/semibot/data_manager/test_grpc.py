@@ -88,3 +88,13 @@ class DataManageTest(RPCTestCase):
         self.assertEqual(len(res.task_requests), 2)
         self.assertEqual(res.task_requests[0].name, t_r1.name)
         self.assertEqual(res.task_requests[1].name, t_r2.name)
+
+    def test_get_personaldata_from_id(self):
+        testperson = PersonalData.objects.create(username='testuser', first_name='test', last_name='user', message_addr='http://example.com')
+
+        stub = data_manage_pb2_grpc.DataManageStub(self.channel)
+        res = stub.GetPersonalDataFromId(data_manage_pb2.GetPersonalDataFromIdRequest(id='testuser'))
+
+        print(res)
+        self.assertEqual(res.name, testperson.first_name + testperson.last_name)
+        self.assertEqual(res.message_addr, testperson.message_addr)

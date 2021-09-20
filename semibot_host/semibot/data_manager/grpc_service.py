@@ -155,7 +155,10 @@ class DataManage(data_manage_pb2_grpc.DataManageServicer):
         return response
 
     def GetPersonalDataFromId(self, request, context):
-        pass
+        personal_data = PersonalData.objects.filter(username=request.id).first()
+        personal_data_pb = self.__get_personaldata_pb_from_personaldata_record(personal_data)
+
+        return personal_data_pb
 
     def RecordTaskRequestHistory(self, request, context):
         pass

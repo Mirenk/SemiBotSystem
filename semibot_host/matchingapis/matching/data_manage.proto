@@ -74,7 +74,7 @@ service DataManage {
   // マッチング記録取得用
   rpc ListTasks (ListTasksRequest) returns (ListTasksResponse);
   rpc GetTaskFromName (GetTaskFromNameRequest) returns (matching.Task);
-  rpc GetTaskRequestHistories (matching.Label) returns (GetTaskRequestHistoriesResponse);
+  rpc GetTaskRequestHistories (matching.Task) returns (GetTaskRequestHistoriesResponse);
   // マッチング結果記録
   rpc GetPersonalDataFromId (GetPersonalDataFromIdRequest) returns (matching.PersonalData);
   rpc RecordTaskRequestHistory (matching.TaskRequestData) returns (RecordTaskRequestHistoryResult);

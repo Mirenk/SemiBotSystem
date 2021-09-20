@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x11\x64\x61ta_manage.proto\x12\x08matching\x1a\ntype.proto\"\x13\n\x11ListLabelsRequest\"5\n\x12ListLabelsResponse\x12\x1f\n\x06labels\x18\x01 \x03(\x0b\x32\x0f.matching.Label\"\x19\n\x17ListPersonalDataRequest\"I\n\x18ListPersonalDataResponse\x12-\n\rpersonal_data\x18\x01 \x03(\x0b\x32\x16.matching.PersonalData\"\x12\n\x10ListTasksRequest\"2\n\x11ListTasksResponse\x12\x1d\n\x05tasks\x18\x01 \x03(\x0b\x32\x0e.matching.Task\"&\n\x16GetTaskFromNameRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"S\n\x1fGetTaskRequestHistoriesResponse\x12\x30\n\rtask_requests\x18\x01 \x03(\x0b\x32\x19.matching.TaskRequestData\"*\n\x1cGetPersonalDataFromIdRequest\x12\n\n\x02id\x18\x01 \x01(\t\"\x95\x01\n\x1eRecordTaskRequestHistoryResult\x12?\n\x06result\x18\x01 \x01(\x0e\x32/.matching.RecordTaskRequestHistoryResult.Result\x12\x0f\n\x07message\x18\x02 \x01(\t\"!\n\x06Result\x12\x0b\n\x07SUCCESS\x10\x00\x12\n\n\x06\x46\x41ILED\x10\x01\x32\xcc\x04\n\nDataManage\x12G\n\nListLabels\x12\x1b.matching.ListLabelsRequest\x1a\x1c.matching.ListLabelsResponse\x12Y\n\x10ListPersonalData\x12!.matching.ListPersonalDataRequest\x1a\".matching.ListPersonalDataResponse\x12\x44\n\tListTasks\x12\x1a.matching.ListTasksRequest\x1a\x1b.matching.ListTasksResponse\x12\x43\n\x0fGetTaskFromName\x12 .matching.GetTaskFromNameRequest\x1a\x0e.matching.Task\x12U\n\x17GetTaskRequestHistories\x12\x0f.matching.Label\x1a).matching.GetTaskRequestHistoriesResponse\x12W\n\x15GetPersonalDataFromId\x12&.matching.GetPersonalDataFromIdRequest\x1a\x16.matching.PersonalData\x12_\n\x18RecordTaskRequestHistory\x12\x19.matching.TaskRequestData\x1a(.matching.RecordTaskRequestHistoryResultb\x06proto3'
+  serialized_pb=b'\n\x11\x64\x61ta_manage.proto\x12\x08matching\x1a\ntype.proto\"\x13\n\x11ListLabelsRequest\"5\n\x12ListLabelsResponse\x12\x1f\n\x06labels\x18\x01 \x03(\x0b\x32\x0f.matching.Label\"\x19\n\x17ListPersonalDataRequest\"I\n\x18ListPersonalDataResponse\x12-\n\rpersonal_data\x18\x01 \x03(\x0b\x32\x16.matching.PersonalData\"\x12\n\x10ListTasksRequest\"2\n\x11ListTasksResponse\x12\x1d\n\x05tasks\x18\x01 \x03(\x0b\x32\x0e.matching.Task\"&\n\x16GetTaskFromNameRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"S\n\x1fGetTaskRequestHistoriesResponse\x12\x30\n\rtask_requests\x18\x01 \x03(\x0b\x32\x19.matching.TaskRequestData\"*\n\x1cGetPersonalDataFromIdRequest\x12\n\n\x02id\x18\x01 \x01(\t\"\x95\x01\n\x1eRecordTaskRequestHistoryResult\x12?\n\x06result\x18\x01 \x01(\x0e\x32/.matching.RecordTaskRequestHistoryResult.Result\x12\x0f\n\x07message\x18\x02 \x01(\t\"!\n\x06Result\x12\x0b\n\x07SUCCESS\x10\x00\x12\n\n\x06\x46\x41ILED\x10\x01\x32\xcb\x04\n\nDataManage\x12G\n\nListLabels\x12\x1b.matching.ListLabelsRequest\x1a\x1c.matching.ListLabelsResponse\x12Y\n\x10ListPersonalData\x12!.matching.ListPersonalDataRequest\x1a\".matching.ListPersonalDataResponse\x12\x44\n\tListTasks\x12\x1a.matching.ListTasksRequest\x1a\x1b.matching.ListTasksResponse\x12\x43\n\x0fGetTaskFromName\x12 .matching.GetTaskFromNameRequest\x1a\x0e.matching.Task\x12T\n\x17GetTaskRequestHistories\x12\x0e.matching.Task\x1a).matching.GetTaskRequestHistoriesResponse\x12W\n\x15GetPersonalDataFromId\x12&.matching.GetPersonalDataFromIdRequest\x1a\x16.matching.PersonalData\x12_\n\x18RecordTaskRequestHistory\x12\x19.matching.TaskRequestData\x1a(.matching.RecordTaskRequestHistoryResultb\x06proto3'
   ,
   dependencies=[type__pb2.DESCRIPTOR,])
 
@@ -456,7 +456,7 @@ _DATAMANAGE = _descriptor.ServiceDescriptor(
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
   serialized_start=615,
-  serialized_end=1203,
+  serialized_end=1202,
   methods=[
   _descriptor.MethodDescriptor(
     name='ListLabels',
@@ -503,7 +503,7 @@ _DATAMANAGE = _descriptor.ServiceDescriptor(
     full_name='matching.DataManage.GetTaskRequestHistories',
     index=4,
     containing_service=None,
-    input_type=type__pb2._LABEL,
+    input_type=type__pb2._TASK,
     output_type=_GETTASKREQUESTHISTORIESRESPONSE,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,

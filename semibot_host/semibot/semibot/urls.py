@@ -19,7 +19,6 @@ from data_manager.grpc_service import grpc_hadlers as data_manager_grpc_handler
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('data_manager/', include('data_manager.urls'))
 ]
 
 def grpc_handlers(server):

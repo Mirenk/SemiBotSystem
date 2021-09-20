@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\ntype.proto\x12\x08matching\x1a\x1fgoogle/protobuf/timestamp.proto\"\x15\n\x05Label\x12\x0c\n\x04name\x18\x01 \x01(\t\";\n\nLabelValue\x12\x1e\n\x05label\x18\x01 \x01(\x0b\x32\x0f.matching.Label\x12\r\n\x05value\x18\x02 \x01(\x05\"_\n\x0cPersonalData\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x14\n\x0cmessage_addr\x18\x03 \x01(\t\x12\x1f\n\x06labels\x18\x04 \x03(\x0b\x32\x0f.matching.Label\"o\n\x04Task\x12\x0c\n\x04name\x18\x01 \x01(\t\x12&\n\rrequire_label\x18\x02 \x03(\x0b\x32\x0f.matching.Label\x12\x31\n\x13require_label_value\x18\x03 \x03(\x0b\x32\x14.matching.LabelValue\"\xfb\x01\n\x0fTaskRequestData\x12\x14\n\x0crequest_name\x18\x01 \x01(\t\x12\x1c\n\x04task\x18\x02 \x01(\x0b\x32\x0e.matching.Task\x12-\n\ttask_date\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12&\n\x06worker\x18\x04 \x03(\x0b\x32\x16.matching.PersonalData\x12(\n\x0frecommend_label\x18\x05 \x03(\x0b\x32\x0f.matching.Label\x12\x33\n\x15recommend_label_value\x18\x06 \x03(\x0b\x32\x14.matching.LabelValueb\x06proto3'
+  serialized_pb=b'\n\ntype.proto\x12\x08matching\x1a\x1fgoogle/protobuf/timestamp.proto\"\x15\n\x05Label\x12\x0c\n\x04name\x18\x01 \x01(\t\";\n\nLabelValue\x12\x1e\n\x05label\x18\x01 \x01(\x0b\x32\x0f.matching.Label\x12\r\n\x05value\x18\x02 \x01(\x05\"_\n\x0cPersonalData\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x14\n\x0cmessage_addr\x18\x03 \x01(\t\x12\x1f\n\x06labels\x18\x04 \x03(\x0b\x32\x0f.matching.Label\"o\n\x04Task\x12\x0c\n\x04name\x18\x01 \x01(\t\x12&\n\rrequire_label\x18\x02 \x03(\x0b\x32\x0f.matching.Label\x12\x31\n\x13require_label_value\x18\x03 \x03(\x0b\x32\x14.matching.LabelValue\"\xf3\x01\n\x0fTaskRequestData\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x1c\n\x04task\x18\x02 \x01(\x0b\x32\x0e.matching.Task\x12-\n\ttask_date\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12&\n\x06worker\x18\x04 \x03(\x0b\x32\x16.matching.PersonalData\x12(\n\x0frecommend_label\x18\x05 \x03(\x0b\x32\x0f.matching.Label\x12\x33\n\x15recommend_label_value\x18\x06 \x03(\x0b\x32\x14.matching.LabelValueb\x06proto3'
   ,
   dependencies=[google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,])
 
@@ -206,7 +206,7 @@ _TASKREQUESTDATA = _descriptor.Descriptor(
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='request_name', full_name='matching.TaskRequestData.request_name', index=0,
+      name='name', full_name='matching.TaskRequestData.name', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -260,7 +260,7 @@ _TASKREQUESTDATA = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=352,
-  serialized_end=603,
+  serialized_end=595,
 )
 
 _LABELVALUE.fields_by_name['label'].message_type = _LABEL

@@ -3,7 +3,7 @@ syntax = "proto3";
 package matching;
 
 import "type.proto";
-import "google/type/datetime.proto";
+import "google/protobuf/timestamp.proto";
 
 message AddTaskRequestRequest {
   // ラベルセット
@@ -15,7 +15,7 @@ message AddTaskRequestRequest {
 
   matching.TaskRequestData task_request = 1;
   repeated LabelSet label_set = 2;
-  google.type.DateTime matching_end_date = 3;
+  google.protobuf.Timestamp matching_end_date = 3;
   string callback_url = 4;
 }
 

@@ -11,7 +11,7 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
-from google.type import datetime_pb2 as google_dot_type_dot_datetime__pb2
+from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
@@ -20,9 +20,9 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\ntype.proto\x12\x08matching\x1a\x1agoogle/type/datetime.proto\"\x15\n\x05Label\x12\x0c\n\x04name\x18\x01 \x01(\t\";\n\nLabelValue\x12\x1e\n\x05label\x18\x01 \x01(\x0b\x32\x0f.matching.Label\x12\r\n\x05value\x18\x02 \x01(\x05\"_\n\x0cPersonalData\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x14\n\x0cmessage_addr\x18\x03 \x01(\t\x12\x1f\n\x06labels\x18\x04 \x03(\x0b\x32\x0f.matching.Label\"o\n\x04Task\x12\x0c\n\x04name\x18\x01 \x01(\t\x12&\n\rrequire_label\x18\x02 \x03(\x0b\x32\x0f.matching.Label\x12\x31\n\x13require_label_value\x18\x03 \x03(\x0b\x32\x14.matching.LabelValue\"\xfa\x01\n\x0fTaskRequestData\x12\x14\n\x0crequest_name\x18\x01 \x01(\t\x12\x1c\n\x04task\x18\x02 \x01(\x0b\x32\x0e.matching.Task\x12(\n\ttask_date\x18\x03 \x01(\x0b\x32\x15.google.type.DateTime\x12*\n\ncandidates\x18\x04 \x03(\x0b\x32\x16.matching.PersonalData\x12(\n\x0frecommend_label\x18\x05 \x03(\x0b\x32\x0f.matching.Label\x12\x33\n\x15recommend_label_value\x18\x06 \x03(\x0b\x32\x14.matching.LabelValueb\x06proto3'
+  serialized_pb=b'\n\ntype.proto\x12\x08matching\x1a\x1fgoogle/protobuf/timestamp.proto\"\x15\n\x05Label\x12\x0c\n\x04name\x18\x01 \x01(\t\";\n\nLabelValue\x12\x1e\n\x05label\x18\x01 \x01(\x0b\x32\x0f.matching.Label\x12\r\n\x05value\x18\x02 \x01(\x05\"_\n\x0cPersonalData\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x14\n\x0cmessage_addr\x18\x03 \x01(\t\x12\x1f\n\x06labels\x18\x04 \x03(\x0b\x32\x0f.matching.Label\"o\n\x04Task\x12\x0c\n\x04name\x18\x01 \x01(\t\x12&\n\rrequire_label\x18\x02 \x03(\x0b\x32\x0f.matching.Label\x12\x31\n\x13require_label_value\x18\x03 \x03(\x0b\x32\x14.matching.LabelValue\"\xff\x01\n\x0fTaskRequestData\x12\x14\n\x0crequest_name\x18\x01 \x01(\t\x12\x1c\n\x04task\x18\x02 \x01(\x0b\x32\x0e.matching.Task\x12-\n\ttask_date\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12*\n\ncandidates\x18\x04 \x03(\x0b\x32\x16.matching.PersonalData\x12(\n\x0frecommend_label\x18\x05 \x03(\x0b\x32\x0f.matching.Label\x12\x33\n\x15recommend_label_value\x18\x06 \x03(\x0b\x32\x14.matching.LabelValueb\x06proto3'
   ,
-  dependencies=[google_dot_type_dot_datetime__pb2.DESCRIPTOR,])
+  dependencies=[google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,])
 
 
 
@@ -54,8 +54,8 @@ _LABEL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=52,
-  serialized_end=73,
+  serialized_start=57,
+  serialized_end=78,
 )
 
 
@@ -93,8 +93,8 @@ _LABELVALUE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=75,
-  serialized_end=134,
+  serialized_start=80,
+  serialized_end=139,
 )
 
 
@@ -146,8 +146,8 @@ _PERSONALDATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=136,
-  serialized_end=231,
+  serialized_start=141,
+  serialized_end=236,
 )
 
 
@@ -192,8 +192,8 @@ _TASK = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=233,
-  serialized_end=344,
+  serialized_start=238,
+  serialized_end=349,
 )
 
 
@@ -259,8 +259,8 @@ _TASKREQUESTDATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=347,
-  serialized_end=597,
+  serialized_start=352,
+  serialized_end=607,
 )
 
 _LABELVALUE.fields_by_name['label'].message_type = _LABEL
@@ -268,7 +268,7 @@ _PERSONALDATA.fields_by_name['labels'].message_type = _LABEL
 _TASK.fields_by_name['require_label'].message_type = _LABEL
 _TASK.fields_by_name['require_label_value'].message_type = _LABELVALUE
 _TASKREQUESTDATA.fields_by_name['task'].message_type = _TASK
-_TASKREQUESTDATA.fields_by_name['task_date'].message_type = google_dot_type_dot_datetime__pb2._DATETIME
+_TASKREQUESTDATA.fields_by_name['task_date'].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
 _TASKREQUESTDATA.fields_by_name['candidates'].message_type = _PERSONALDATA
 _TASKREQUESTDATA.fields_by_name['recommend_label'].message_type = _LABEL
 _TASKREQUESTDATA.fields_by_name['recommend_label_value'].message_type = _LABELVALUE

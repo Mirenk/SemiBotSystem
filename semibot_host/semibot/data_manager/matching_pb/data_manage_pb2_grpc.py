@@ -49,7 +49,7 @@ class DataManageStub(object):
                 )
         self.RecordTaskRequestHistory = channel.unary_unary(
                 '/matching.DataManage/RecordTaskRequestHistory',
-                request_serializer=data__manage__pb2.RecordTaskRequestHistoryRequest.SerializeToString,
+                request_serializer=type__pb2.TaskRequestData.SerializeToString,
                 response_deserializer=data__manage__pb2.RecordTaskRequestHistoryResult.FromString,
                 )
 
@@ -139,7 +139,7 @@ def add_DataManageServicer_to_server(servicer, server):
             ),
             'RecordTaskRequestHistory': grpc.unary_unary_rpc_method_handler(
                     servicer.RecordTaskRequestHistory,
-                    request_deserializer=data__manage__pb2.RecordTaskRequestHistoryRequest.FromString,
+                    request_deserializer=type__pb2.TaskRequestData.FromString,
                     response_serializer=data__manage__pb2.RecordTaskRequestHistoryResult.SerializeToString,
             ),
     }
@@ -268,7 +268,7 @@ class DataManage(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/matching.DataManage/RecordTaskRequestHistory',
-            data__manage__pb2.RecordTaskRequestHistoryRequest.SerializeToString,
+            type__pb2.TaskRequestData.SerializeToString,
             data__manage__pb2.RecordTaskRequestHistoryResult.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

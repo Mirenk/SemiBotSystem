@@ -33,5 +33,9 @@ message TaskRequestData {
   string request_name = 1;
   Task task = 2;
   google.type.DateTime task_date = 3;
+  // 記録時のみ利用
+  repeated PersonalData candidates = 4;
+  repeated Label recommend_label = 5;
+  repeated LabelValue recommend_label_value = 6;
 }
 

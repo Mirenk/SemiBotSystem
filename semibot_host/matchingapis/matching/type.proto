@@ -34,7 +34,7 @@ message TaskRequestData {
   Task task = 2;
   google.protobuf.Timestamp task_date = 3;
   // 記録時のみ利用
-  repeated PersonalData candidates = 4;
+  repeated PersonalData worker = 4;
   repeated Label recommend_label = 5;
   repeated LabelValue recommend_label_value = 6;
 }

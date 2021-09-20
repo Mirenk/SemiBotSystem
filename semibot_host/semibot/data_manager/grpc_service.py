@@ -1,7 +1,10 @@
 from .models import *
+from django.db import transaction
 
 from .matching_pb import data_manage_pb2, data_manage_pb2_grpc, type_pb2
 from google.protobuf import timestamp_pb2
+
+from datetime import datetime
 
 #
 # サービス定義
@@ -161,7 +164,68 @@ class DataManage(data_manage_pb2_grpc.DataManageServicer):
         return personal_data_pb
 
     def RecordTaskRequestHistory(self, request, context):
-        pass
+        response = data_manage_pb2.RecordTaskRequestHistoryResult()
+
+        with transaction.atomic():
+            # 記録用オブジェクト作成
+            task_request = TaskRequest()
+            task_request.name = request.name
+            task_request.work_datetime = datetime.fromtimestamp(request.task_date.seconds)
+
+            # タスク処理
+            task = Task.objects.filter(name=request.task.name).first()
+            if task is None:
+                response.result = data_manage_pb2.RecordTaskRequestHistoryResult.Result.FAILED
+                response.message = 'Not found task: ' + request.task.name
+                del task_request
+                return response
+            task_request.task = task
+
+            # ManyToManyのための一時記録
+            task_request.save()
+
+            # 参加者処理
+            worker_pb = request.worker
+            for personal_data_pb in worker_pb:
+                personal_data = PersonalData.objects.filter(username=personal_data_pb.id).first()
+
+                if personal_data is None:
+                    response.result = data_manage_pb2.RecordTaskRequestHistoryResult.Result.FAILED
+                    response.message = 'Not found personal_data: ' + personal_data_pb.name
+                    del task_request
+                    return response
+
+                task_request.worker.add(personal_data)
+
+            # 固定ラベル処理
+            labels_pb = request.recommend_label
+            for label_pb in labels_pb:
+                label = Label.objects.filter(name=label_pb.name).first()
+
+                if label is None:
+                    response.result = data_manage_pb2.RecordTaskRequestHistoryResult.Result.FAILED
+                    response.message = 'Not found label: ' + label_pb.name
+                    del task_request
+                    return response
+
+                task_request.recommend_label.add(label)
+
+            # 数値ラベル処理
+            label_values_pb = request.recommend_label_value
+            for label_value_pb in label_values_pb:
+                label = Label.objects.filter(name=label_value_pb.label.name).first()
+                if label is None:
+                    response.result = data_manage_pb2.RecordTaskRequestHistoryResult.Result.FAILED
+                    response.message = 'Not found label: ' + label_pb.name
+                    del task_request
+                    return response
+
+                label_value, create = LabelValue.objects.get_or_create(label_id=label.id, value=label_value_pb.value)
+
+                task_request.recommend_label_value.add(label_value)
+
+        response.result = data_manage_pb2.RecordTaskRequestHistoryResult.Result.SUCCESS
+        return response
 
 #
 # Handler(サービスをサーバに登録するための関数)

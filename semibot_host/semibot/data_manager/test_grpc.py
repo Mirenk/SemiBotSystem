@@ -98,3 +98,35 @@ class DataManageTest(RPCTestCase):
         print(res)
         self.assertEqual(res.name, testperson.first_name + testperson.last_name)
         self.assertEqual(res.message_addr, testperson.message_addr)
+
+    def test_record_taskrequest_history(self):
+        testtask = Task.objects.create(name='test')
+        tesktask_pb = type_pb2.Task(name='test')
+
+        testperson = PersonalData.objects.create(username='testuser', first_name='test', last_name='user', message_addr='http://example.com')
+        testperson_pb = type_pb2.PersonalData(id='testuser', name='testuser', message_addr='http://example.com')
+
+
+        label = Label.objects.create(name='test')
+        label_pb = type_pb2.Label(name='test')
+
+        label2 = Label.objects.create(name='test2')
+        label2_pb = type_pb2.Label(name='test2')
+        label_value = LabelValue.objects.create(label=label2, value=1)
+        label_value_pb = type_pb2.LabelValue(label=label2_pb, value=1)
+
+        task_request = type_pb2.TaskRequestData()
+        task_request.name = 'testrequest'
+        task_request.task.CopyFrom(tesktask_pb)
+        task_request.worker.append(testperson_pb)
+        task_request.recommend_label.append(label_pb)
+        task_request.recommend_label_value.append(label_value_pb)
+
+        stub = data_manage_pb2_grpc.DataManageStub(self.channel)
+        res = stub.RecordTaskRequestHistory(task_request)
+
+        print(res)
+
+        self.assertEqual(res.result, data_manage_pb2.RecordTaskRequestHistoryResult.Result.SUCCESS)
+
+

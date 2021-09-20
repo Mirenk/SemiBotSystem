@@ -50,6 +50,28 @@ class DataManage(data_manage_pb2_grpc.DataManageServicer):
 
         return task_pb
 
+    # 個人情報のqueryset -> ProtobufのPersonalDataリスト
+    @classmethod
+    def __get_personaldata_list_from_personaldata_queryset(cls, personal_data_list):
+        personal_data_pb_list = []
+
+        for personal_data in personal_data_list:
+            # ラベル以外のPersonalDataを先に作成
+            personal_data_pb = type_pb2.PersonalData()
+            personal_data_pb.id = personal_data.username
+            personal_data_pb.name = personal_data.first_name + personal_data.last_name
+            personal_data_pb.message_addr = personal_data.message_addr
+
+            # ProtobufのLabelリストを生成
+            label_list = cls.__get_label_pb_list_from_label_queryset(personal_data.label.all())
+
+            # ラベルを登録
+            personal_data_pb.labels.extend(label_list)
+
+            personal_data_pb_list.append(personal_data_pb)
+
+        return personal_data_pb_list
+
     #########################
     ## Protobufのメソッド実装 ##
     #########################
@@ -65,21 +87,8 @@ class DataManage(data_manage_pb2_grpc.DataManageServicer):
         response = data_manage_pb2.ListPersonalDataResponse()
         personal_data_list = PersonalData.objects.all()
 
-        for personal_data in personal_data_list:
-            # ラベル以外のPersonalDataを先に作成
-            personal_data_pb = type_pb2.PersonalData()
-            personal_data_pb.id = personal_data.username
-            personal_data_pb.name = personal_data.first_name + personal_data.last_name
-            personal_data_pb.message_addr = personal_data.message_addr
-
-            # ProtobufのLabelリストを生成
-            label_list = self.__get_label_pb_list_from_label_queryset(personal_data.label.all())
-
-            # ラベルを登録
-            personal_data_pb.labels.extend(label_list)
-
-            # responseに追加
-            response.personal_data.append(personal_data_pb)
+        # responseに追加
+        response.personal_data.extend(self.__get_personaldata_list_from_personaldata_queryset(personal_data_list))
 
         return response
 

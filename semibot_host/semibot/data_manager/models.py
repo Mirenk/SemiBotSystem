@@ -54,12 +54,11 @@ class Task(models.Model):
         return self.name
 
 # 依頼モデル
-# 作業と候補者グループのマッチング結果を格納、履歴にもなる
+# 作業と候補者グループのマッチング結果を格納、履歴になる
 class TaskRequest(models.Model):
+    name = models.CharField(unique=True, max_length=20)
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
     work_datetime = models.DateTimeField()
     worker = models.ManyToManyField(PersonalData, related_name='joined_task', blank=True)
-    candidate = models.ManyToManyField(PersonalData, related_name='elected_task', blank=True)
+    recommend_label = models.ManyToManyField(Label, related_name='recommend_task')
     recommend_label_value = models.ManyToManyField(LabelValue, related_name='recommend_task')
-    is_complete = models.BooleanField(default=False)
-    version = AutoIncVersionField()

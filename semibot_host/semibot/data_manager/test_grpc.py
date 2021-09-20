@@ -1,7 +1,9 @@
 import grpc
 from django_grpc_framework.test import RPCTestCase
-from .matching_pb import data_manage_pb2, data_manage_pb2_grpc
-from data_manager.models import Label, LabelValue, PersonalData, Task
+from .matching_pb import data_manage_pb2, data_manage_pb2_grpc, type_pb2
+from data_manager.models import Label, LabelValue, PersonalData, Task, TaskRequest
+import time
+from datetime import datetime
 
 class DataManageTest(RPCTestCase):
     def test_list_labels(self):
@@ -68,3 +70,21 @@ class DataManageTest(RPCTestCase):
         self.assertEqual(res.require_label[0].name, 'test1')
         self.assertEqual(res.require_label_value[0].label.name, 'test2')
         self.assertEqual(res.require_label_value[0].value, 1)
+
+    def test_get_task_request_histories(self):
+        testtask = Task.objects.create(name='test')
+        dumtask = Task.objects.create(name='dummy')
+
+        now = time.time()
+
+        t_r1 = TaskRequest.objects.create(name='test1', task=testtask, work_datetime=datetime.fromtimestamp(now))
+        t_r2 = TaskRequest.objects.create(name='test2', task=testtask, work_datetime=datetime.fromtimestamp(now))
+        t_r3 = TaskRequest.objects.create(name='test3', task=dumtask, work_datetime=datetime.fromtimestamp(now))
+
+        stub = data_manage_pb2_grpc.DataManageStub(self.channel)
+        res = stub.GetTaskRequestHistories(type_pb2.Task(name='test'))
+
+        print(res)
+        self.assertEqual(len(res.task_requests), 2)
+        self.assertEqual(res.task_requests[0].name, t_r1.name)
+        self.assertEqual(res.task_requests[1].name, t_r2.name)

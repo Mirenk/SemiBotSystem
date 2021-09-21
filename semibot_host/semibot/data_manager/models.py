@@ -62,8 +62,3 @@ class TaskRequest(models.Model):
     worker = models.ManyToManyField(PersonalData, related_name='joined_task', blank=True)
     recommend_label = models.ManyToManyField(Label, related_name='recommend_task')
     recommend_label_value = models.ManyToManyField(LabelValue, related_name='recommend_task')
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['name', 'work_datetime'], name='name_datetime_unique')
-        ]

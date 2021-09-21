@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from data_manager.grpc_service import grpc_handlers as data_manager_grpc_handler
+from matching.grpc_service import grpc_handlers as matching_grpc_handler
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -23,3 +24,4 @@ urlpatterns = [
 
 def grpc_handlers(server):
     data_manager_grpc_handler(server)
+    matching_grpc_handler(server)

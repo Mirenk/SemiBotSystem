@@ -230,5 +230,5 @@ class DataManage(data_manage_pb2_grpc.DataManageServicer):
 #
 # Handler(サービスをサーバに登録するための関数)
 #
-def grpc_hadlers(server):
+def grpc_handlers(server):
     data_manage_pb2_grpc.add_DataManageServicer_to_server(DataManage(), server)

@@ -27,7 +27,13 @@ class TaskRequestRequest(models.Model):
     name = models.CharField(max_length=20)
     task = models.CharField(max_length=20)
     task_datetime = models.DateTimeField()
-    label_set = models.ManyToManyField(LabelSet)
+    label_set = models.ManyToManyField(LabelSet, through='ThroughRequestLabelSet')
     matching_end_datetime = models.DateTimeField()
     callback_url = models.URLField()
 
+# 依頼リクエスト-ラベルセット間、順序を保つために使用
+class ThroughRequestLabelSet(models.Model):
+    task_request = models.ForeignKey(TaskRequestRequest, on_delete=models.CASCADE)
+    label_set = models.ForeignKey(LabelSet, on_delete=models.CASCADE)
+    class Meta:
+        ordering = ('id', )

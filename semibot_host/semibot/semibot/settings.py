@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'data_manager',
     'django_filters',
     'django_grpc_framework',
+    'matching',
 ]
 
 MIDDLEWARE = [

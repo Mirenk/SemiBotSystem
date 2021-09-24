@@ -9,3 +9,8 @@ djangogrpcframework
 grpcio
 grpcio-tools
 googleapis-common-protos
+celery
+redis
+django-celery-results
+django-celery-beat
+django-redis

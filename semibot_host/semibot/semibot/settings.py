@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -41,6 +42,8 @@ INSTALLED_APPS = [
     'data_manager',
     'django_grpc_framework',
     'matching',
+    'django_celery_beat',
+    'django_celery_results',
 ]
 
 MIDDLEWARE = [
@@ -133,3 +136,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Custom User Model
 AUTH_USER_MODEL = 'data_manager.PersonalData'
+
+# Celery (for asynchronous)
+CELERY_RESULT_BACKEND = 'django-db' # for django_celery_results
+CELERY_BROKER_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379/1')

@@ -2,10 +2,7 @@ Django
 slackclient
 django-crispy-forms
 djangorestframework
-django-filter
 mysqlclient
-django-apscheduler
-django-filter
 django-concurrency
 requests
 djangogrpcframework

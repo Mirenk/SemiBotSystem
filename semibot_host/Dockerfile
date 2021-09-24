@@ -8,3 +8,6 @@ COPY semibot/requirements.txt /app/semibot/
 RUN pip install -r requirements.txt
 
 COPY /semibot/. /app/semibot/
+
+RUN apt update
+RUN apt install -y redis-server

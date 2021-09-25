@@ -17,6 +17,11 @@ message AddTaskRequestRequest {
   repeated LabelSet label_set = 2;
   google.protobuf.Timestamp matching_end_date = 3;
   string callback_url = 4;
+  // 最低必要人数
+  uint32 require_candidates = 5;
+  // 最大人数、0であれば制限なし
+  // 0<require_candidates<=max_candidates
+  uint32 max_candidates = 6;
 }
 
 message AddTaskRequestResponse {

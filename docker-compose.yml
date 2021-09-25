@@ -25,6 +25,10 @@ services:
             - "./semibot_db/init:/docker-entrypoint-initdb.d" # db初期化
             - "mysql:/var/lib/mysql" # db永続化(コンテナ再起動後もデータ保持)
 
+    # For celery
+    redis:
+        image: redis:alpine
+
 volumes:
     mysql: # db用名前付きボリューム
 

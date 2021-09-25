@@ -43,6 +43,8 @@ class TaskRequestRequest(models.Model):
     requesting_candidates = models.ManyToManyField(Candidate, blank=True, related_name="reserve_task_request")
     # 再募集間隔
     rematching_duration = models.DurationField()
+    # 次の再募集
+    next_rematching = models.DateTimeField()
 
 # 依頼リクエスト-ラベルセット間、順序を保つために使用
 class ThroughRequestLabelSet(models.Model):

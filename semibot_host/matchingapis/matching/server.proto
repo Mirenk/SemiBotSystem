@@ -4,6 +4,7 @@ package matching;
 
 import "type.proto";
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
 
 message AddTaskRequestRequest {
   // ラベルセット
@@ -22,6 +23,8 @@ message AddTaskRequestRequest {
   // 最大人数、0であれば制限なし
   // 0<require_candidates<=max_candidates
   uint32 max_candidates = 6;
+  // 再募集間隔
+  google.protobuf.Duration rematching_duration = 7;
 }
 
 message AddTaskRequestResponse {

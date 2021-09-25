@@ -28,6 +28,7 @@ services:
     # For celery
     redis:
         image: redis:alpine
+        container_name: semibot_redis
 
 volumes:
     mysql: # db用名前付きボリューム

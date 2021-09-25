@@ -139,4 +139,4 @@ AUTH_USER_MODEL = 'data_manager.PersonalData'
 
 # Celery (for asynchronous)
 CELERY_RESULT_BACKEND = 'django-db' # for django_celery_results
-CELERY_BROKER_URL = os.environ.get('REDIS_URL', 'redis://redis:6379/1')
+CELERY_BROKER_URL = os.environ.get('REDIS_URL', 'redis://semibot_redis:6379/1')

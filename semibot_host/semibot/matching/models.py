@@ -37,7 +37,10 @@ class TaskRequestRequest(models.Model):
     callback_url = models.URLField()
     require_candidates = models.IntegerField()
     max_candidates = models.IntegerField()
-    joined_candidates = models.ManyToManyField(Candidate, blank=True)
+    # 参加表明をした候補者
+    joined_candidates = models.ManyToManyField(Candidate, blank=True, related_name="joined_task_request")
+    # 返事待機中の候補者
+    requesting_candidates = models.ManyToManyField(Candidate, blank=True, related_name="reserve_task_request")
 
 # 依頼リクエスト-ラベルセット間、順序を保つために使用
 class ThroughRequestLabelSet(models.Model):

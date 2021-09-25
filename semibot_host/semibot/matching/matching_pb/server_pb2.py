@@ -13,6 +13,7 @@ _sym_db = _symbol_database.Default()
 
 import type_pb2 as type__pb2
 from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__pb2
+from google.protobuf import duration_pb2 as google_dot_protobuf_dot_duration__pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
@@ -21,9 +22,9 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x0cserver.proto\x12\x08matching\x1a\ntype.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xe1\x02\n\x15\x41\x64\x64TaskRequestRequest\x12/\n\x0ctask_request\x18\x01 \x01(\x0b\x32\x19.matching.TaskRequestData\x12;\n\tlabel_set\x18\x02 \x03(\x0b\x32(.matching.AddTaskRequestRequest.LabelSet\x12\x35\n\x11matching_end_date\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x14\n\x0c\x63\x61llback_url\x18\x04 \x01(\t\x12\x1a\n\x12require_candidates\x18\x05 \x01(\r\x12\x16\n\x0emax_candidates\x18\x06 \x01(\r\x1aY\n\x08LabelSet\x12$\n\x0b\x63onst_label\x18\x01 \x03(\x0b\x32\x0f.matching.Label\x12\'\n\tvar_label\x18\x02 \x03(\x0b\x32\x14.matching.LabelValue\"\x85\x01\n\x16\x41\x64\x64TaskRequestResponse\x12\x37\n\x06result\x18\x01 \x01(\x0e\x32\'.matching.AddTaskRequestResponse.Result\x12\x0f\n\x07message\x18\x02 \x01(\t\"!\n\x06Result\x12\x0b\n\x07SUCCESS\x10\x00\x12\n\n\x06\x46\x41ILED\x10\x01\x32\x65\n\x0eMatchingServer\x12S\n\x0e\x41\x64\x64TaskRequest\x12\x1f.matching.AddTaskRequestRequest\x1a .matching.AddTaskRequestResponseb\x06proto3'
+  serialized_pb=b'\n\x0cserver.proto\x12\x08matching\x1a\ntype.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1egoogle/protobuf/duration.proto\"\x99\x03\n\x15\x41\x64\x64TaskRequestRequest\x12/\n\x0ctask_request\x18\x01 \x01(\x0b\x32\x19.matching.TaskRequestData\x12;\n\tlabel_set\x18\x02 \x03(\x0b\x32(.matching.AddTaskRequestRequest.LabelSet\x12\x35\n\x11matching_end_date\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x14\n\x0c\x63\x61llback_url\x18\x04 \x01(\t\x12\x1a\n\x12require_candidates\x18\x05 \x01(\r\x12\x16\n\x0emax_candidates\x18\x06 \x01(\r\x12\x36\n\x13rematching_duration\x18\x07 \x01(\x0b\x32\x19.google.protobuf.Duration\x1aY\n\x08LabelSet\x12$\n\x0b\x63onst_label\x18\x01 \x03(\x0b\x32\x0f.matching.Label\x12\'\n\tvar_label\x18\x02 \x03(\x0b\x32\x14.matching.LabelValue\"\x85\x01\n\x16\x41\x64\x64TaskRequestResponse\x12\x37\n\x06result\x18\x01 \x01(\x0e\x32\'.matching.AddTaskRequestResponse.Result\x12\x0f\n\x07message\x18\x02 \x01(\t\"!\n\x06Result\x12\x0b\n\x07SUCCESS\x10\x00\x12\n\n\x06\x46\x41ILED\x10\x01\x32\x65\n\x0eMatchingServer\x12S\n\x0e\x41\x64\x64TaskRequest\x12\x1f.matching.AddTaskRequestRequest\x1a .matching.AddTaskRequestResponseb\x06proto3'
   ,
-  dependencies=[type__pb2.DESCRIPTOR,google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,])
+  dependencies=[type__pb2.DESCRIPTOR,google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,google_dot_protobuf_dot_duration__pb2.DESCRIPTOR,])
 
 
 
@@ -47,8 +48,8 @@ _ADDTASKREQUESTRESPONSE_RESULT = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=528,
-  serialized_end=561,
+  serialized_start=616,
+  serialized_end=649,
 )
 _sym_db.RegisterEnumDescriptor(_ADDTASKREQUESTRESPONSE_RESULT)
 
@@ -87,8 +88,8 @@ _ADDTASKREQUESTREQUEST_LABELSET = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=336,
-  serialized_end=425,
+  serialized_start=424,
+  serialized_end=513,
 )
 
 _ADDTASKREQUESTREQUEST = _descriptor.Descriptor(
@@ -141,6 +142,13 @@ _ADDTASKREQUESTREQUEST = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='rematching_duration', full_name='matching.AddTaskRequestRequest.rematching_duration', index=6,
+      number=7, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -153,8 +161,8 @@ _ADDTASKREQUESTREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=72,
-  serialized_end=425,
+  serialized_start=104,
+  serialized_end=513,
 )
 
 
@@ -193,8 +201,8 @@ _ADDTASKREQUESTRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=428,
-  serialized_end=561,
+  serialized_start=516,
+  serialized_end=649,
 )
 
 _ADDTASKREQUESTREQUEST_LABELSET.fields_by_name['const_label'].message_type = type__pb2._LABEL
@@ -203,6 +211,7 @@ _ADDTASKREQUESTREQUEST_LABELSET.containing_type = _ADDTASKREQUESTREQUEST
 _ADDTASKREQUESTREQUEST.fields_by_name['task_request'].message_type = type__pb2._TASKREQUESTDATA
 _ADDTASKREQUESTREQUEST.fields_by_name['label_set'].message_type = _ADDTASKREQUESTREQUEST_LABELSET
 _ADDTASKREQUESTREQUEST.fields_by_name['matching_end_date'].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
+_ADDTASKREQUESTREQUEST.fields_by_name['rematching_duration'].message_type = google_dot_protobuf_dot_duration__pb2._DURATION
 _ADDTASKREQUESTRESPONSE.fields_by_name['result'].enum_type = _ADDTASKREQUESTRESPONSE_RESULT
 _ADDTASKREQUESTRESPONSE_RESULT.containing_type = _ADDTASKREQUESTRESPONSE
 DESCRIPTOR.message_types_by_name['AddTaskRequestRequest'] = _ADDTASKREQUESTREQUEST
@@ -240,8 +249,8 @@ _MATCHINGSERVER = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=563,
-  serialized_end=664,
+  serialized_start=651,
+  serialized_end=752,
   methods=[
   _descriptor.MethodDescriptor(
     name='AddTaskRequest',

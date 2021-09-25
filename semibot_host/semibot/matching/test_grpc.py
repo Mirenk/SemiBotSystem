@@ -1,9 +1,9 @@
 import time
-from google.protobuf import timestamp_pb2
+from google.protobuf import timestamp_pb2, duration_pb2
 from django_grpc_framework.test import RPCTestCase
 from .matching_pb import server_pb2, server_pb2_grpc, type_pb2
 from .models import TaskRequestRequest
-from datetime import datetime
+from datetime import datetime, timedelta
 
 class MathcingServerTest(RPCTestCase):
     def test_add_task_request(self):
@@ -42,6 +42,10 @@ class MathcingServerTest(RPCTestCase):
         request.require_candidates = 2
         request.max_candidates = 3
 
+        rematching_duration_pb = duration_pb2.Duration()
+        rematching_duration_pb.FromTimedelta(td=timedelta(weeks=1))
+        request.rematching_duration.CopyFrom(rematching_duration_pb)
+
         print(request)
 
         stub = server_pb2_grpc.MatchingServerStub(self.channel)
@@ -55,6 +59,7 @@ class MathcingServerTest(RPCTestCase):
         self.assertEqual(int(record.matching_end_datetime.timestamp()), int(end_date.timestamp()))
         self.assertEqual(record.require_candidates, 2)
         self.assertEqual(record.max_candidates, 3)
+        self.assertEqual(record.rematching_duration, timedelta(weeks=1))
 
         label_set = record.label_set.all()
 

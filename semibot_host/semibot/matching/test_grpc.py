@@ -39,6 +39,8 @@ class MathcingServerTest(RPCTestCase):
         request.matching_end_date.CopyFrom(end_date_pb)
 
         request.callback_url = 'http://example.com'
+        request.require_candidates = 2
+        request.max_candidates = 3
 
         print(request)
 
@@ -51,6 +53,8 @@ class MathcingServerTest(RPCTestCase):
         self.assertEqual(record.task, 'testtask')
         self.assertEqual(int(record.task_datetime.timestamp()), int(task_date.timestamp()))
         self.assertEqual(int(record.matching_end_datetime.timestamp()), int(end_date.timestamp()))
+        self.assertEqual(record.require_candidates, 2)
+        self.assertEqual(record.max_candidates, 3)
 
         label_set = record.label_set.all()
 

@@ -20,6 +20,8 @@ class MatchingServer(server_pb2_grpc.MatchingServerServicer):
             task_request.task_datetime = datetime.fromtimestamp(request.task_request.task_date.seconds)
             task_request.matching_end_datetime = datetime.fromtimestamp(request.matching_end_date.seconds)
             task_request.callback_url = request.callback_url
+            task_request.require_candidates = request.require_candidates
+            task_request.max_candidates = request.max_candidates
 
             # ManyToManyのための一時記録
             task_request.save()

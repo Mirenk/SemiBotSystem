@@ -21,6 +21,11 @@ class LabelSet(models.Model):
     const_label = models.ManyToManyField(Label, blank=True)
     var_label = models.ManyToManyField(LabelValue, blank=True)
 
+# 候補者モデル
+# 依頼につけるのみなので、useridのみ保持
+class Candidate(models.Model):
+    userid = models.CharField(unique=True, max_length=20)
+
 # 依頼リクエスト
 # TODO: 重複登録の防止、ほぼ同一のような依頼リクエストが来ることも考えられるため、それも考慮
 class TaskRequestRequest(models.Model):
@@ -32,6 +37,7 @@ class TaskRequestRequest(models.Model):
     callback_url = models.URLField()
     require_candidates = models.IntegerField()
     max_candidates = models.IntegerField()
+    joined_candidates = models.ManyToManyField(Candidate, blank=True)
 
 # 依頼リクエスト-ラベルセット間、順序を保つために使用
 class ThroughRequestLabelSet(models.Model):

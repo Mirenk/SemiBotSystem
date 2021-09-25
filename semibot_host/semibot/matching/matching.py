@@ -15,6 +15,6 @@ def send_message(task_request: TaskRequestRequest):
     pass
 
 # 参加受付処理
-# 依頼に候補者を繋げる、現段階では人数以上になってもつなげておいて、アプリ側に判断をゆだねる
+# task_requestの必要人数と最大人数を加味しながら依頼に候補者を繋げる
 def join_task(task_request: TaskRequestRequest, userid: str):
     pass

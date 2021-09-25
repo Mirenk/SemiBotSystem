@@ -30,6 +30,8 @@ class TaskRequestRequest(models.Model):
     label_set = models.ManyToManyField(LabelSet, through='ThroughRequestLabelSet')
     matching_end_datetime = models.DateTimeField()
     callback_url = models.URLField()
+    require_candidates = models.IntegerField()
+    max_candidates = models.IntegerField()
 
 # 依頼リクエスト-ラベルセット間、順序を保つために使用
 class ThroughRequestLabelSet(models.Model):

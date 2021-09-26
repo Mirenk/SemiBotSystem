@@ -24,9 +24,11 @@ class MathcingServerTest(RPCTestCase):
         label2 = type_pb2.Label(name='test2')
         label_value = type_pb2.LabelValue(value=1)
         label_value.label.CopyFrom(label2)
+        dyn_label = type_pb2.Label(name='past_joined')
 
         labelset1 = server_pb2.AddTaskRequestRequest.LabelSet()
         labelset1.const_label.append(label1)
+        labelset1.const_label.append(dyn_label)
         labelset1.var_label.append(label_value)
         labelset2 = server_pb2.AddTaskRequestRequest.LabelSet()
         labelset2.const_label.append(label1)
@@ -65,3 +67,4 @@ class MathcingServerTest(RPCTestCase):
 
         self.assertEqual(label_set[0].var_label.first().value, 1)
         self.assertEqual(label_set[1].var_label.first(), None)
+        self.assertEqual(label_set[0].const_label.filter(name='past_joined').first().is_dynamic, True)

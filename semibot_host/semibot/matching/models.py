@@ -4,6 +4,7 @@ from django.db import models
 # ラベル
 class Label(models.Model):
     name = models.CharField(unique=True, max_length=20)
+    is_dynamic = models.BooleanField(default=False)
 
 # 数値ラベル
 class LabelValue(models.Model):

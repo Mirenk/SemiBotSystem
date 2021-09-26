@@ -21,6 +21,8 @@ message PersonalData {
   string name = 2;
   string message_addr = 3;
   repeated Label labels = 4;
+  // マッチング処理時のみ利用
+  repeated LabelValue var_labels = 5;
 }
 
 message Task {

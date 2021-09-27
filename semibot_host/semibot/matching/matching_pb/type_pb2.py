@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\ntype.proto\x12\x08matching\x1a\x1fgoogle/protobuf/timestamp.proto\"\x15\n\x05Label\x12\x0c\n\x04name\x18\x01 \x01(\t\";\n\nLabelValue\x12\x1e\n\x05label\x18\x01 \x01(\x0b\x32\x0f.matching.Label\x12\r\n\x05value\x18\x02 \x01(\x05\"\x89\x01\n\x0cPersonalData\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x14\n\x0cmessage_addr\x18\x03 \x01(\t\x12\x1f\n\x06labels\x18\x04 \x03(\x0b\x32\x0f.matching.Label\x12(\n\nvar_labels\x18\x05 \x03(\x0b\x32\x14.matching.LabelValue\"o\n\x04Task\x12\x0c\n\x04name\x18\x01 \x01(\t\x12&\n\rrequire_label\x18\x02 \x03(\x0b\x32\x0f.matching.Label\x12\x31\n\x13require_label_value\x18\x03 \x03(\x0b\x32\x14.matching.LabelValue\"\xf3\x01\n\x0fTaskRequestData\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x1c\n\x04task\x18\x02 \x01(\x0b\x32\x0e.matching.Task\x12-\n\ttask_date\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12&\n\x06worker\x18\x04 \x03(\x0b\x32\x16.matching.PersonalData\x12(\n\x0frecommend_label\x18\x05 \x03(\x0b\x32\x0f.matching.Label\x12\x33\n\x15recommend_label_value\x18\x06 \x03(\x0b\x32\x14.matching.LabelValueb\x06proto3'
+  serialized_pb=b'\n\ntype.proto\x12\x08matching\x1a\x1fgoogle/protobuf/timestamp.proto\"\x15\n\x05Label\x12\x0c\n\x04name\x18\x01 \x01(\t\";\n\nLabelValue\x12\x1e\n\x05label\x18\x01 \x01(\x0b\x32\x0f.matching.Label\x12\r\n\x05value\x18\x02 \x01(\x05\"\xdc\x01\n\x0cPersonalData\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x14\n\x0cmessage_addr\x18\x03 \x01(\t\x12\x32\n\x06labels\x18\x04 \x03(\x0b\x32\".matching.PersonalData.LabelsEntry\x12(\n\nvar_labels\x18\x05 \x03(\x0b\x32\x14.matching.LabelValue\x1a>\n\x0bLabelsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\x1e\n\x05value\x18\x02 \x01(\x0b\x32\x0f.matching.Label:\x02\x38\x01\"\xc6\x01\n\x04Task\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x37\n\rrequire_label\x18\x02 \x03(\x0b\x32 .matching.Task.RequireLabelEntry\x12\x31\n\x13require_label_value\x18\x03 \x03(\x0b\x32\x14.matching.LabelValue\x1a\x44\n\x11RequireLabelEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\x1e\n\x05value\x18\x02 \x01(\x0b\x32\x0f.matching.Label:\x02\x38\x01\"\xaf\x03\n\x0fTaskRequestData\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x1c\n\x04task\x18\x02 \x01(\x0b\x32\x0e.matching.Task\x12-\n\ttask_date\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x35\n\x06worker\x18\x04 \x03(\x0b\x32%.matching.TaskRequestData.WorkerEntry\x12\x46\n\x0frecommend_label\x18\x05 \x03(\x0b\x32-.matching.TaskRequestData.RecommendLabelEntry\x12\x33\n\x15recommend_label_value\x18\x06 \x03(\x0b\x32\x14.matching.LabelValue\x1a\x45\n\x0bWorkerEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12%\n\x05value\x18\x02 \x01(\x0b\x32\x16.matching.PersonalData:\x02\x38\x01\x1a\x46\n\x13RecommendLabelEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\x1e\n\x05value\x18\x02 \x01(\x0b\x32\x0f.matching.Label:\x02\x38\x01\x62\x06proto3'
   ,
   dependencies=[google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,])
 
@@ -98,6 +98,44 @@ _LABELVALUE = _descriptor.Descriptor(
 )
 
 
+_PERSONALDATA_LABELSENTRY = _descriptor.Descriptor(
+  name='LabelsEntry',
+  full_name='matching.PersonalData.LabelsEntry',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='key', full_name='matching.PersonalData.LabelsEntry.key', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='value', full_name='matching.PersonalData.LabelsEntry.value', index=1,
+      number=2, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=b'8\001',
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=300,
+  serialized_end=362,
+)
+
 _PERSONALDATA = _descriptor.Descriptor(
   name='PersonalData',
   full_name='matching.PersonalData',
@@ -144,7 +182,7 @@ _PERSONALDATA = _descriptor.Descriptor(
   ],
   extensions=[
   ],
-  nested_types=[],
+  nested_types=[_PERSONALDATA_LABELSENTRY, ],
   enum_types=[
   ],
   serialized_options=None,
@@ -154,9 +192,47 @@ _PERSONALDATA = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=142,
-  serialized_end=279,
+  serialized_end=362,
 )
 
+
+_TASK_REQUIRELABELENTRY = _descriptor.Descriptor(
+  name='RequireLabelEntry',
+  full_name='matching.Task.RequireLabelEntry',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='key', full_name='matching.Task.RequireLabelEntry.key', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='value', full_name='matching.Task.RequireLabelEntry.value', index=1,
+      number=2, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=b'8\001',
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=495,
+  serialized_end=563,
+)
 
 _TASK = _descriptor.Descriptor(
   name='Task',
@@ -190,7 +266,7 @@ _TASK = _descriptor.Descriptor(
   ],
   extensions=[
   ],
-  nested_types=[],
+  nested_types=[_TASK_REQUIRELABELENTRY, ],
   enum_types=[
   ],
   serialized_options=None,
@@ -199,10 +275,86 @@ _TASK = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=281,
-  serialized_end=392,
+  serialized_start=365,
+  serialized_end=563,
 )
 
+
+_TASKREQUESTDATA_WORKERENTRY = _descriptor.Descriptor(
+  name='WorkerEntry',
+  full_name='matching.TaskRequestData.WorkerEntry',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='key', full_name='matching.TaskRequestData.WorkerEntry.key', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='value', full_name='matching.TaskRequestData.WorkerEntry.value', index=1,
+      number=2, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=b'8\001',
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=856,
+  serialized_end=925,
+)
+
+_TASKREQUESTDATA_RECOMMENDLABELENTRY = _descriptor.Descriptor(
+  name='RecommendLabelEntry',
+  full_name='matching.TaskRequestData.RecommendLabelEntry',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='key', full_name='matching.TaskRequestData.RecommendLabelEntry.key', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='value', full_name='matching.TaskRequestData.RecommendLabelEntry.value', index=1,
+      number=2, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=b'8\001',
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=927,
+  serialized_end=997,
+)
 
 _TASKREQUESTDATA = _descriptor.Descriptor(
   name='TaskRequestData',
@@ -257,7 +409,7 @@ _TASKREQUESTDATA = _descriptor.Descriptor(
   ],
   extensions=[
   ],
-  nested_types=[],
+  nested_types=[_TASKREQUESTDATA_WORKERENTRY, _TASKREQUESTDATA_RECOMMENDLABELENTRY, ],
   enum_types=[
   ],
   serialized_options=None,
@@ -266,19 +418,27 @@ _TASKREQUESTDATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=395,
-  serialized_end=638,
+  serialized_start=566,
+  serialized_end=997,
 )
 
 _LABELVALUE.fields_by_name['label'].message_type = _LABEL
-_PERSONALDATA.fields_by_name['labels'].message_type = _LABEL
+_PERSONALDATA_LABELSENTRY.fields_by_name['value'].message_type = _LABEL
+_PERSONALDATA_LABELSENTRY.containing_type = _PERSONALDATA
+_PERSONALDATA.fields_by_name['labels'].message_type = _PERSONALDATA_LABELSENTRY
 _PERSONALDATA.fields_by_name['var_labels'].message_type = _LABELVALUE
-_TASK.fields_by_name['require_label'].message_type = _LABEL
+_TASK_REQUIRELABELENTRY.fields_by_name['value'].message_type = _LABEL
+_TASK_REQUIRELABELENTRY.containing_type = _TASK
+_TASK.fields_by_name['require_label'].message_type = _TASK_REQUIRELABELENTRY
 _TASK.fields_by_name['require_label_value'].message_type = _LABELVALUE
+_TASKREQUESTDATA_WORKERENTRY.fields_by_name['value'].message_type = _PERSONALDATA
+_TASKREQUESTDATA_WORKERENTRY.containing_type = _TASKREQUESTDATA
+_TASKREQUESTDATA_RECOMMENDLABELENTRY.fields_by_name['value'].message_type = _LABEL
+_TASKREQUESTDATA_RECOMMENDLABELENTRY.containing_type = _TASKREQUESTDATA
 _TASKREQUESTDATA.fields_by_name['task'].message_type = _TASK
 _TASKREQUESTDATA.fields_by_name['task_date'].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
-_TASKREQUESTDATA.fields_by_name['worker'].message_type = _PERSONALDATA
-_TASKREQUESTDATA.fields_by_name['recommend_label'].message_type = _LABEL
+_TASKREQUESTDATA.fields_by_name['worker'].message_type = _TASKREQUESTDATA_WORKERENTRY
+_TASKREQUESTDATA.fields_by_name['recommend_label'].message_type = _TASKREQUESTDATA_RECOMMENDLABELENTRY
 _TASKREQUESTDATA.fields_by_name['recommend_label_value'].message_type = _LABELVALUE
 DESCRIPTOR.message_types_by_name['Label'] = _LABEL
 DESCRIPTOR.message_types_by_name['LabelValue'] = _LABELVALUE
@@ -302,25 +462,61 @@ LabelValue = _reflection.GeneratedProtocolMessageType('LabelValue', (_message.Me
 _sym_db.RegisterMessage(LabelValue)
 
 PersonalData = _reflection.GeneratedProtocolMessageType('PersonalData', (_message.Message,), {
+
+  'LabelsEntry' : _reflection.GeneratedProtocolMessageType('LabelsEntry', (_message.Message,), {
+    'DESCRIPTOR' : _PERSONALDATA_LABELSENTRY,
+    '__module__' : 'type_pb2'
+    # @@protoc_insertion_point(class_scope:matching.PersonalData.LabelsEntry)
+    })
+  ,
   'DESCRIPTOR' : _PERSONALDATA,
   '__module__' : 'type_pb2'
   # @@protoc_insertion_point(class_scope:matching.PersonalData)
   })
 _sym_db.RegisterMessage(PersonalData)
+_sym_db.RegisterMessage(PersonalData.LabelsEntry)
 
 Task = _reflection.GeneratedProtocolMessageType('Task', (_message.Message,), {
+
+  'RequireLabelEntry' : _reflection.GeneratedProtocolMessageType('RequireLabelEntry', (_message.Message,), {
+    'DESCRIPTOR' : _TASK_REQUIRELABELENTRY,
+    '__module__' : 'type_pb2'
+    # @@protoc_insertion_point(class_scope:matching.Task.RequireLabelEntry)
+    })
+  ,
   'DESCRIPTOR' : _TASK,
   '__module__' : 'type_pb2'
   # @@protoc_insertion_point(class_scope:matching.Task)
   })
 _sym_db.RegisterMessage(Task)
+_sym_db.RegisterMessage(Task.RequireLabelEntry)
 
 TaskRequestData = _reflection.GeneratedProtocolMessageType('TaskRequestData', (_message.Message,), {
+
+  'WorkerEntry' : _reflection.GeneratedProtocolMessageType('WorkerEntry', (_message.Message,), {
+    'DESCRIPTOR' : _TASKREQUESTDATA_WORKERENTRY,
+    '__module__' : 'type_pb2'
+    # @@protoc_insertion_point(class_scope:matching.TaskRequestData.WorkerEntry)
+    })
+  ,
+
+  'RecommendLabelEntry' : _reflection.GeneratedProtocolMessageType('RecommendLabelEntry', (_message.Message,), {
+    'DESCRIPTOR' : _TASKREQUESTDATA_RECOMMENDLABELENTRY,
+    '__module__' : 'type_pb2'
+    # @@protoc_insertion_point(class_scope:matching.TaskRequestData.RecommendLabelEntry)
+    })
+  ,
   'DESCRIPTOR' : _TASKREQUESTDATA,
   '__module__' : 'type_pb2'
   # @@protoc_insertion_point(class_scope:matching.TaskRequestData)
   })
 _sym_db.RegisterMessage(TaskRequestData)
+_sym_db.RegisterMessage(TaskRequestData.WorkerEntry)
+_sym_db.RegisterMessage(TaskRequestData.RecommendLabelEntry)
 
 
+_PERSONALDATA_LABELSENTRY._options = None
+_TASK_REQUIRELABELENTRY._options = None
+_TASKREQUESTDATA_WORKERENTRY._options = None
+_TASKREQUESTDATA_RECOMMENDLABELENTRY._options = None
 # @@protoc_insertion_point(module_scope)

@@ -12,8 +12,8 @@ class DataManageTest(RPCTestCase):
         stub = data_manage_pb2_grpc.DataManageStub(self.channel)
         res = stub.ListLabels(data_manage_pb2.ListLabelsRequest())
         print(res)
-        self.assertEqual(res.labels[0].name, 'test1')
-        self.assertEqual(res.labels[1].name, 'test2')
+        self.assertEqual(res.labels['test1'].name, 'test1')
+        self.assertEqual(res.labels['test2'].name, 'test2')
         self.assertEqual(len(res.labels), 2)
 
     def test_list_personal_data(self):
@@ -29,11 +29,11 @@ class DataManageTest(RPCTestCase):
         res = stub.ListPersonalData(data_manage_pb2.ListPersonalDataRequest())
 
         print(res)
-        self.assertEqual(res.personal_data[0].id, testperson.username)
-        self.assertEqual(res.personal_data[0].name, testperson.first_name + testperson.last_name)
-        self.assertEqual(res.personal_data[0].message_addr, testperson.message_addr)
-        self.assertEqual(res.personal_data[0].labels[0].name, 'test1')
-        self.assertEqual(res.personal_data[0].labels[1].name, 'test2')
+        self.assertEqual(res.personal_data['testuser'].id, testperson.username)
+        self.assertEqual(res.personal_data['testuser'].name, testperson.first_name + testperson.last_name)
+        self.assertEqual(res.personal_data['testuser'].message_addr, testperson.message_addr)
+        self.assertEqual(res.personal_data['testuser'].labels['test1'].name, 'test1')
+        self.assertEqual(res.personal_data['testuser'].labels['test2'].name, 'test2')
 
     def test_list_task(self):
         label1 = Label.objects.create(name='test1')
@@ -49,7 +49,7 @@ class DataManageTest(RPCTestCase):
 
         print(res)
         self.assertEqual(res.tasks[0].name, testtask.name)
-        self.assertEqual(res.tasks[0].require_label[0].name, 'test1')
+        self.assertEqual(res.tasks[0].require_label['test1'].name, 'test1')
         self.assertEqual(res.tasks[0].require_label_value[0].label.name, 'test2')
         self.assertEqual(res.tasks[0].require_label_value[0].value, 1)
 
@@ -67,7 +67,7 @@ class DataManageTest(RPCTestCase):
 
         print(res)
         self.assertEqual(res.name, testtask.name)
-        self.assertEqual(res.require_label[0].name, 'test1')
+        self.assertEqual(res.require_label['test1'].name, 'test1')
         self.assertEqual(res.require_label_value[0].label.name, 'test2')
         self.assertEqual(res.require_label_value[0].value, 1)
 
@@ -118,8 +118,8 @@ class DataManageTest(RPCTestCase):
         task_request = type_pb2.TaskRequestData()
         task_request.name = 'testrequest'
         task_request.task.CopyFrom(tesktask_pb)
-        task_request.worker.append(testperson_pb)
-        task_request.recommend_label.append(label_pb)
+        task_request.worker[testperson_pb.id].CopyFrom(testperson_pb)
+        task_request.recommend_label[label_pb.name].CopyFrom(label_pb)
         task_request.recommend_label_value.append(label_value_pb)
 
         stub = data_manage_pb2_grpc.DataManageStub(self.channel)

@@ -13,16 +13,12 @@ class DataManage(data_manage_pb2_grpc.DataManageServicer):
     ##################################################
     ## クラスメソッド(DjangoのModel -> Protobufの変換等) ##
     ##################################################
-    # ラベルのqueryset -> ProtobufのLabelリスト
+    # ラベルのqueryset -> ProtobufのLabel辞書登録
     @classmethod
-    def __get_label_pb_list_from_label_queryset(cls, labels):
-        labels_pb = []
-
+    def __set_label_pb_dict_from_label_queryset(cls, labels, labels_pb):
         for label in labels:
             label_pb = type_pb2.Label(name=label.name)
-            labels_pb.append(label_pb)
-
-        return labels_pb
+            labels_pb[label.name].CopyFrom(label_pb)
 
     # 値付きラベルのqueryset -> ProtobufのLabelValueリスト
     @classmethod
@@ -43,13 +39,12 @@ class DataManage(data_manage_pb2_grpc.DataManageServicer):
         task_pb = type_pb2.Task()
         task_pb.name = task.name
 
-        # ProtobufのLabelリストを生成
-        label_list = cls.__get_label_pb_list_from_label_queryset(task.require_label.all())
+        # ProtobufのLabel辞書を生成
+        cls.__set_label_pb_dict_from_label_queryset(task.require_label.all(), task_pb.require_label)
         # ProtobufのLabelValueリストを生成
         label_value_list = cls.__get_labelvalue_pb_list_from_labelvalue_queryset(task.require_label_value.all())
 
         # 各ラベル登録
-        task_pb.require_label.extend(label_list)
         task_pb.require_label_value.extend(label_value_list)
 
         return task_pb
@@ -63,34 +58,26 @@ class DataManage(data_manage_pb2_grpc.DataManageServicer):
         personal_data_pb.name = personal_data.first_name + personal_data.last_name
         personal_data_pb.message_addr = personal_data.message_addr
 
-        # ProtobufのLabelリストを生成
-        label_list = cls.__get_label_pb_list_from_label_queryset(personal_data.label.all())
-
-        # ラベルを登録
-        personal_data_pb.labels.extend(label_list)
+        # Label辞書を登録
+        cls.__set_label_pb_dict_from_label_queryset(personal_data.label.all(), personal_data_pb.labels)
 
         return personal_data_pb
 
-    # 個人情報のqueryset -> ProtobufのPersonalDataリスト
+    # 個人情報のqueryset -> ProtobufのPersonalData辞書登録
     @classmethod
-    def __get_personaldata_list_from_personaldata_queryset(cls, personal_data_list):
-        personal_data_pb_list = []
+    def __set_personaldata_dict_from_personaldata_queryset(cls, personal_data_list, personal_data_dict):
 
         for personal_data in personal_data_list:
             personal_data_pb = cls.__get_personaldata_pb_from_personaldata_record(personal_data)
 
-            personal_data_pb_list.append(personal_data_pb)
-
-        return personal_data_pb_list
+            personal_data_dict[personal_data.username].CopyFrom(personal_data_pb)
 
     #########################
     ## Protobufのメソッド実装 ##
     #########################
     def ListLabels(self, request, context):
         response = data_manage_pb2.ListLabelsResponse()
-        labels_pb = self.__get_label_pb_list_from_label_queryset(Label.objects.all())
-
-        response.labels.extend(labels_pb)
+        self.__set_label_pb_dict_from_label_queryset(Label.objects.all(), response.labels)
 
         return response
 
@@ -99,7 +86,7 @@ class DataManage(data_manage_pb2_grpc.DataManageServicer):
         personal_data_list = PersonalData.objects.all()
 
         # responseに追加
-        response.personal_data.extend(self.__get_personaldata_list_from_personaldata_queryset(personal_data_list))
+        self.__set_personaldata_dict_from_personaldata_queryset(personal_data_list, response.personal_data)
 
         return response
 
@@ -143,11 +130,9 @@ class DataManage(data_manage_pb2_grpc.DataManageServicer):
             # 時刻
             task_request_pb.task_date.CopyFrom(timestamp_pb2.Timestamp(seconds=int(task_request.work_datetime.timestamp())))
             # 参加者
-            worker_pb_list = self.__get_personaldata_list_from_personaldata_queryset(task_request.worker.all())
-            task_request_pb.worker.extend(worker_pb_list)
+            self.__set_personaldata_dict_from_personaldata_queryset(task_request.worker.all(), task_request_pb.worker)
             # 固定ラベル
-            recommend_label_pb_list = self.__get_label_pb_list_from_label_queryset(task_request.recommend_label.all())
-            task_request_pb.recommend_label.extend(recommend_label_pb_list)
+            self.__set_label_pb_dict_from_label_queryset(task_request.recommend_label.all(), task_request_pb.recommend_label)
             # 数値ラベル
             recommend_label_value_pb_list = self.__get_labelvalue_pb_list_from_labelvalue_queryset(task_request.recommend_label_value.all())
             task_request_pb.recommend_label_value.extend(recommend_label_value_pb_list)
@@ -186,12 +171,12 @@ class DataManage(data_manage_pb2_grpc.DataManageServicer):
 
             # 参加者処理
             worker_pb = request.worker
-            for personal_data_pb in worker_pb:
-                personal_data = PersonalData.objects.filter(username=personal_data_pb.id).first()
+            for username in worker_pb.keys():
+                personal_data = PersonalData.objects.filter(username=username).first()
 
                 if personal_data is None:
                     response.result = data_manage_pb2.RecordTaskRequestHistoryResult.Result.FAILED
-                    response.message = 'Not found personal_data: ' + personal_data_pb.name
+                    response.message = 'Not found personal_data: ' + username
                     del task_request
                     return response
 
@@ -199,12 +184,12 @@ class DataManage(data_manage_pb2_grpc.DataManageServicer):
 
             # 固定ラベル処理
             labels_pb = request.recommend_label
-            for label_pb in labels_pb:
-                label = Label.objects.filter(name=label_pb.name).first()
+            for label_name in labels_pb.keys():
+                label = Label.objects.filter(name=label_name).first()
 
                 if label is None:
                     response.result = data_manage_pb2.RecordTaskRequestHistoryResult.Result.FAILED
-                    response.message = 'Not found label: ' + label_pb.name
+                    response.message = 'Not found label: ' + label_name
                     del task_request
                     return response
 

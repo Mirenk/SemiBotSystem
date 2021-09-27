@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x11\x64\x61ta_manage.proto\x12\x08matching\x1a\ntype.proto\"\x13\n\x11ListLabelsRequest\"5\n\x12ListLabelsResponse\x12\x1f\n\x06labels\x18\x01 \x03(\x0b\x32\x0f.matching.Label\"\x19\n\x17ListPersonalDataRequest\"I\n\x18ListPersonalDataResponse\x12-\n\rpersonal_data\x18\x01 \x03(\x0b\x32\x16.matching.PersonalData\"\x12\n\x10ListTasksRequest\"2\n\x11ListTasksResponse\x12\x1d\n\x05tasks\x18\x01 \x03(\x0b\x32\x0e.matching.Task\"&\n\x16GetTaskFromNameRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"S\n\x1fGetTaskRequestHistoriesResponse\x12\x30\n\rtask_requests\x18\x01 \x03(\x0b\x32\x19.matching.TaskRequestData\"*\n\x1cGetPersonalDataFromIdRequest\x12\n\n\x02id\x18\x01 \x01(\t\"\x95\x01\n\x1eRecordTaskRequestHistoryResult\x12?\n\x06result\x18\x01 \x01(\x0e\x32/.matching.RecordTaskRequestHistoryResult.Result\x12\x0f\n\x07message\x18\x02 \x01(\t\"!\n\x06Result\x12\x0b\n\x07SUCCESS\x10\x00\x12\n\n\x06\x46\x41ILED\x10\x01\x32\xcb\x04\n\nDataManage\x12G\n\nListLabels\x12\x1b.matching.ListLabelsRequest\x1a\x1c.matching.ListLabelsResponse\x12Y\n\x10ListPersonalData\x12!.matching.ListPersonalDataRequest\x1a\".matching.ListPersonalDataResponse\x12\x44\n\tListTasks\x12\x1a.matching.ListTasksRequest\x1a\x1b.matching.ListTasksResponse\x12\x43\n\x0fGetTaskFromName\x12 .matching.GetTaskFromNameRequest\x1a\x0e.matching.Task\x12T\n\x17GetTaskRequestHistories\x12\x0e.matching.Task\x1a).matching.GetTaskRequestHistoriesResponse\x12W\n\x15GetPersonalDataFromId\x12&.matching.GetPersonalDataFromIdRequest\x1a\x16.matching.PersonalData\x12_\n\x18RecordTaskRequestHistory\x12\x19.matching.TaskRequestData\x1a(.matching.RecordTaskRequestHistoryResultb\x06proto3'
+  serialized_pb=b'\n\x11\x64\x61ta_manage.proto\x12\x08matching\x1a\ntype.proto\"\x13\n\x11ListLabelsRequest\"\x8e\x01\n\x12ListLabelsResponse\x12\x38\n\x06labels\x18\x01 \x03(\x0b\x32(.matching.ListLabelsResponse.LabelsEntry\x1a>\n\x0bLabelsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\x1e\n\x05value\x18\x02 \x01(\x0b\x32\x0f.matching.Label:\x02\x38\x01\"\x19\n\x17ListPersonalDataRequest\"\xb4\x01\n\x18ListPersonalDataResponse\x12K\n\rpersonal_data\x18\x01 \x03(\x0b\x32\x34.matching.ListPersonalDataResponse.PersonalDataEntry\x1aK\n\x11PersonalDataEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12%\n\x05value\x18\x02 \x01(\x0b\x32\x16.matching.PersonalData:\x02\x38\x01\"\x12\n\x10ListTasksRequest\"2\n\x11ListTasksResponse\x12\x1d\n\x05tasks\x18\x01 \x03(\x0b\x32\x0e.matching.Task\"&\n\x16GetTaskFromNameRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"S\n\x1fGetTaskRequestHistoriesResponse\x12\x30\n\rtask_requests\x18\x01 \x03(\x0b\x32\x19.matching.TaskRequestData\"*\n\x1cGetPersonalDataFromIdRequest\x12\n\n\x02id\x18\x01 \x01(\t\"\x95\x01\n\x1eRecordTaskRequestHistoryResult\x12?\n\x06result\x18\x01 \x01(\x0e\x32/.matching.RecordTaskRequestHistoryResult.Result\x12\x0f\n\x07message\x18\x02 \x01(\t\"!\n\x06Result\x12\x0b\n\x07SUCCESS\x10\x00\x12\n\n\x06\x46\x41ILED\x10\x01\x32\xcb\x04\n\nDataManage\x12G\n\nListLabels\x12\x1b.matching.ListLabelsRequest\x1a\x1c.matching.ListLabelsResponse\x12Y\n\x10ListPersonalData\x12!.matching.ListPersonalDataRequest\x1a\".matching.ListPersonalDataResponse\x12\x44\n\tListTasks\x12\x1a.matching.ListTasksRequest\x1a\x1b.matching.ListTasksResponse\x12\x43\n\x0fGetTaskFromName\x12 .matching.GetTaskFromNameRequest\x1a\x0e.matching.Task\x12T\n\x17GetTaskRequestHistories\x12\x0e.matching.Task\x1a).matching.GetTaskRequestHistoriesResponse\x12W\n\x15GetPersonalDataFromId\x12&.matching.GetPersonalDataFromIdRequest\x1a\x16.matching.PersonalData\x12_\n\x18RecordTaskRequestHistory\x12\x19.matching.TaskRequestData\x1a(.matching.RecordTaskRequestHistoryResultb\x06proto3'
   ,
   dependencies=[type__pb2.DESCRIPTOR,])
 
@@ -46,8 +46,8 @@ _RECORDTASKREQUESTHISTORYRESULT_RESULT = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=579,
-  serialized_end=612,
+  serialized_start=777,
+  serialized_end=810,
 )
 _sym_db.RegisterEnumDescriptor(_RECORDTASKREQUESTHISTORYRESULT_RESULT)
 
@@ -77,6 +77,44 @@ _LISTLABELSREQUEST = _descriptor.Descriptor(
 )
 
 
+_LISTLABELSRESPONSE_LABELSENTRY = _descriptor.Descriptor(
+  name='LabelsEntry',
+  full_name='matching.ListLabelsResponse.LabelsEntry',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='key', full_name='matching.ListLabelsResponse.LabelsEntry.key', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='value', full_name='matching.ListLabelsResponse.LabelsEntry.value', index=1,
+      number=2, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=b'8\001',
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=145,
+  serialized_end=207,
+)
+
 _LISTLABELSRESPONSE = _descriptor.Descriptor(
   name='ListLabelsResponse',
   full_name='matching.ListLabelsResponse',
@@ -95,7 +133,7 @@ _LISTLABELSRESPONSE = _descriptor.Descriptor(
   ],
   extensions=[
   ],
-  nested_types=[],
+  nested_types=[_LISTLABELSRESPONSE_LABELSENTRY, ],
   enum_types=[
   ],
   serialized_options=None,
@@ -104,8 +142,8 @@ _LISTLABELSRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=64,
-  serialized_end=117,
+  serialized_start=65,
+  serialized_end=207,
 )
 
 
@@ -129,10 +167,48 @@ _LISTPERSONALDATAREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=119,
-  serialized_end=144,
+  serialized_start=209,
+  serialized_end=234,
 )
 
+
+_LISTPERSONALDATARESPONSE_PERSONALDATAENTRY = _descriptor.Descriptor(
+  name='PersonalDataEntry',
+  full_name='matching.ListPersonalDataResponse.PersonalDataEntry',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='key', full_name='matching.ListPersonalDataResponse.PersonalDataEntry.key', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='value', full_name='matching.ListPersonalDataResponse.PersonalDataEntry.value', index=1,
+      number=2, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=b'8\001',
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=342,
+  serialized_end=417,
+)
 
 _LISTPERSONALDATARESPONSE = _descriptor.Descriptor(
   name='ListPersonalDataResponse',
@@ -152,7 +228,7 @@ _LISTPERSONALDATARESPONSE = _descriptor.Descriptor(
   ],
   extensions=[
   ],
-  nested_types=[],
+  nested_types=[_LISTPERSONALDATARESPONSE_PERSONALDATAENTRY, ],
   enum_types=[
   ],
   serialized_options=None,
@@ -161,8 +237,8 @@ _LISTPERSONALDATARESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=146,
-  serialized_end=219,
+  serialized_start=237,
+  serialized_end=417,
 )
 
 
@@ -186,8 +262,8 @@ _LISTTASKSREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=221,
-  serialized_end=239,
+  serialized_start=419,
+  serialized_end=437,
 )
 
 
@@ -218,8 +294,8 @@ _LISTTASKSRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=241,
-  serialized_end=291,
+  serialized_start=439,
+  serialized_end=489,
 )
 
 
@@ -250,8 +326,8 @@ _GETTASKFROMNAMEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=293,
-  serialized_end=331,
+  serialized_start=491,
+  serialized_end=529,
 )
 
 
@@ -282,8 +358,8 @@ _GETTASKREQUESTHISTORIESRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=333,
-  serialized_end=416,
+  serialized_start=531,
+  serialized_end=614,
 )
 
 
@@ -314,8 +390,8 @@ _GETPERSONALDATAFROMIDREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=418,
-  serialized_end=460,
+  serialized_start=616,
+  serialized_end=658,
 )
 
 
@@ -354,12 +430,16 @@ _RECORDTASKREQUESTHISTORYRESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=463,
-  serialized_end=612,
+  serialized_start=661,
+  serialized_end=810,
 )
 
-_LISTLABELSRESPONSE.fields_by_name['labels'].message_type = type__pb2._LABEL
-_LISTPERSONALDATARESPONSE.fields_by_name['personal_data'].message_type = type__pb2._PERSONALDATA
+_LISTLABELSRESPONSE_LABELSENTRY.fields_by_name['value'].message_type = type__pb2._LABEL
+_LISTLABELSRESPONSE_LABELSENTRY.containing_type = _LISTLABELSRESPONSE
+_LISTLABELSRESPONSE.fields_by_name['labels'].message_type = _LISTLABELSRESPONSE_LABELSENTRY
+_LISTPERSONALDATARESPONSE_PERSONALDATAENTRY.fields_by_name['value'].message_type = type__pb2._PERSONALDATA
+_LISTPERSONALDATARESPONSE_PERSONALDATAENTRY.containing_type = _LISTPERSONALDATARESPONSE
+_LISTPERSONALDATARESPONSE.fields_by_name['personal_data'].message_type = _LISTPERSONALDATARESPONSE_PERSONALDATAENTRY
 _LISTTASKSRESPONSE.fields_by_name['tasks'].message_type = type__pb2._TASK
 _GETTASKREQUESTHISTORIESRESPONSE.fields_by_name['task_requests'].message_type = type__pb2._TASKREQUESTDATA
 _RECORDTASKREQUESTHISTORYRESULT.fields_by_name['result'].enum_type = _RECORDTASKREQUESTHISTORYRESULT_RESULT
@@ -384,11 +464,19 @@ ListLabelsRequest = _reflection.GeneratedProtocolMessageType('ListLabelsRequest'
 _sym_db.RegisterMessage(ListLabelsRequest)
 
 ListLabelsResponse = _reflection.GeneratedProtocolMessageType('ListLabelsResponse', (_message.Message,), {
+
+  'LabelsEntry' : _reflection.GeneratedProtocolMessageType('LabelsEntry', (_message.Message,), {
+    'DESCRIPTOR' : _LISTLABELSRESPONSE_LABELSENTRY,
+    '__module__' : 'data_manage_pb2'
+    # @@protoc_insertion_point(class_scope:matching.ListLabelsResponse.LabelsEntry)
+    })
+  ,
   'DESCRIPTOR' : _LISTLABELSRESPONSE,
   '__module__' : 'data_manage_pb2'
   # @@protoc_insertion_point(class_scope:matching.ListLabelsResponse)
   })
 _sym_db.RegisterMessage(ListLabelsResponse)
+_sym_db.RegisterMessage(ListLabelsResponse.LabelsEntry)
 
 ListPersonalDataRequest = _reflection.GeneratedProtocolMessageType('ListPersonalDataRequest', (_message.Message,), {
   'DESCRIPTOR' : _LISTPERSONALDATAREQUEST,
@@ -398,11 +486,19 @@ ListPersonalDataRequest = _reflection.GeneratedProtocolMessageType('ListPersonal
 _sym_db.RegisterMessage(ListPersonalDataRequest)
 
 ListPersonalDataResponse = _reflection.GeneratedProtocolMessageType('ListPersonalDataResponse', (_message.Message,), {
+
+  'PersonalDataEntry' : _reflection.GeneratedProtocolMessageType('PersonalDataEntry', (_message.Message,), {
+    'DESCRIPTOR' : _LISTPERSONALDATARESPONSE_PERSONALDATAENTRY,
+    '__module__' : 'data_manage_pb2'
+    # @@protoc_insertion_point(class_scope:matching.ListPersonalDataResponse.PersonalDataEntry)
+    })
+  ,
   'DESCRIPTOR' : _LISTPERSONALDATARESPONSE,
   '__module__' : 'data_manage_pb2'
   # @@protoc_insertion_point(class_scope:matching.ListPersonalDataResponse)
   })
 _sym_db.RegisterMessage(ListPersonalDataResponse)
+_sym_db.RegisterMessage(ListPersonalDataResponse.PersonalDataEntry)
 
 ListTasksRequest = _reflection.GeneratedProtocolMessageType('ListTasksRequest', (_message.Message,), {
   'DESCRIPTOR' : _LISTTASKSREQUEST,
@@ -447,6 +543,8 @@ RecordTaskRequestHistoryResult = _reflection.GeneratedProtocolMessageType('Recor
 _sym_db.RegisterMessage(RecordTaskRequestHistoryResult)
 
 
+_LISTLABELSRESPONSE_LABELSENTRY._options = None
+_LISTPERSONALDATARESPONSE_PERSONALDATAENTRY._options = None
 
 _DATAMANAGE = _descriptor.ServiceDescriptor(
   name='DataManage',
@@ -455,8 +553,8 @@ _DATAMANAGE = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=615,
-  serialized_end=1202,
+  serialized_start=813,
+  serialized_end=1400,
   methods=[
   _descriptor.MethodDescriptor(
     name='ListLabels',

@@ -20,14 +20,14 @@ message PersonalData {
   string id = 1;
   string name = 2;
   string message_addr = 3;
-  map<string, Label> labels = 4;
+  map<string, Label> labels = 4; // key == Label.name
   // マッチング処理時のみ利用
   repeated LabelValue var_labels = 5;
 }
 
 message Task {
   string name = 1;
-  map<string, Label> require_label = 2;
+  map<string, Label> require_label = 2; // key == Label.name
   repeated LabelValue require_label_value = 3;
 }
 
@@ -36,8 +36,8 @@ message TaskRequestData {
   Task task = 2;
   google.protobuf.Timestamp task_date = 3;
   // 記録時のみ利用
-  map<string, PersonalData> worker = 4;
-  map<string, Label> recommend_label = 5;
+  map<string, PersonalData> worker = 4; // key == PersonalData.id
+  map<string, Label> recommend_label = 5; // key == Label.name
   repeated LabelValue recommend_label_value = 6;
 }
 

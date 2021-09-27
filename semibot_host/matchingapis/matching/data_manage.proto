@@ -10,7 +10,7 @@ import "type.proto";
 message ListLabelsRequest {}
 
 message ListLabelsResponse {
-  map<string, matching.Label> labels = 1;
+  map<string, matching.Label> labels = 1; // key == Label.name
 }
 
 /*
@@ -19,7 +19,7 @@ message ListLabelsResponse {
 message ListPersonalDataRequest {}
 
 message ListPersonalDataResponse {
-  map<string, matching.PersonalData> personal_data = 1;
+  map<string, matching.PersonalData> personal_data = 1; // key == PersonalData.id
 }
 
 /*

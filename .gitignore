@@ -335,3 +335,6 @@ fabric.properties
 
 # Protobuf Compile Folder
 semibot_host/matchingapis/matching_pb/
+
+# Test CSV
+semibot_host/semibot/matching/tests/test_csv/

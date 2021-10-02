@@ -8,8 +8,8 @@ class DynamicLabel:
     メソッド追加方法
     @classmethod
     def メソッド名(cls,
-                personal_data: List[type_pb2.PersonalData],
-                task_request_history: List[type_pb2.TaskRequestData]):
+                personal_data: dict[type_pb2.PersonalData],
+                task_request_history: list[type_pb2.TaskRequestData]):
         ~処理~
 
     type_pb2.PersonalDataのlabelsかvar_labelsにつける。
@@ -22,7 +22,7 @@ class DynamicLabel:
     @classmethod
     def __join_count(cls,
                     personal_data: dict[str, type_pb2.PersonalData],
-                    task_request_history: List[type_pb2.TaskRequestData]):
+                    task_request_history: list[type_pb2.TaskRequestData]):
         user_dict = {}
         for key in personal_data.keys():
             user_dict[key] = 0
@@ -37,7 +37,7 @@ class DynamicLabel:
     @classmethod
     def few_join(cls,
                  personal_data: dict[str, type_pb2.PersonalData],
-                 task_request_history: List[type_pb2.TaskRequestData]):
+                 task_request_history: list[type_pb2.TaskRequestData]):
 
         user_dict = cls.__join_count(personal_data, task_request_history)
         # ラベル付け
@@ -55,7 +55,7 @@ class DynamicLabel:
     @classmethod
     def __last_join_date(cls,
                     personal_data: dict[type_pb2.PersonalData],
-                    task_request_history: List[type_pb2.TaskRequestData]):
+                    task_request_history: list[type_pb2.TaskRequestData]):
         user_dict = {}
         for key in personal_data.keys():
             user_dict[key] = 0
@@ -71,7 +71,7 @@ class DynamicLabel:
     @classmethod
     def past_joined(cls,
                     personal_data: dict[type_pb2.PersonalData],
-                    task_request_history: List[type_pb2.TaskRequestData]):
+                    task_request_history: list[type_pb2.TaskRequestData]):
 
         user_dict = cls.__last_join_date(personal_data, task_request_history)
         # ラベル付け
@@ -89,5 +89,5 @@ class DynamicLabel:
     @classmethod
     def recent_joined(cls,
                       personal_data: dict[type_pb2.PersonalData],
-                      task_request_history: List[type_pb2.TaskRequestData]):
+                      task_request_history: list[type_pb2.TaskRequestData]):
             pass

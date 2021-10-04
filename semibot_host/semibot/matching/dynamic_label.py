@@ -41,7 +41,7 @@ class DynamicLabel:
 
         user_dict = cls.__join_count(personal_data, task_request_history)
         # ラベル付け
-        label = type_pb2.Label(name='join_count')
+        label = type_pb2.Label(name='few_join')
         var_label = type_pb2.LabelValue()
         var_label.label.CopyFrom(label)
         for id, count in user_dict.items():

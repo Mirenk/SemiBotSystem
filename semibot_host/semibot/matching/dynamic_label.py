@@ -4,6 +4,15 @@ from typing import List
 from .matching_pb import type_pb2
 
 class DynamicLabel:
+    # 実行用
+    @classmethod
+    def add_dynamic_label(cls,
+                          personal_data: dict[str, type_pb2.PersonalData],
+                          task_request_history: list[type_pb2.TaskRequestData],
+                          label_name: str):
+        label_method = getattr(cls, label_name)
+        label_method(personal_data, task_request_history)
+
     """
     メソッド追加方法
     @classmethod

@@ -6,7 +6,6 @@ from google.protobuf import timestamp_pb2
 
 import csv
 import os.path
-import pprint
 
 class DynamicLabelTest(TestCase):
     # CSVファイルパス -> Label辞書

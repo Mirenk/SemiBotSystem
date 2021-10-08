@@ -1,0 +1,47 @@
+import grpc
+from matching_pb import data_manage_pb2, data_manage_pb2_grpc, type_pb2
+from django.conf import settings
+
+##
+## データ管理システムから各データを取得するクラス
+##
+## MATCHING_DATAMANAGE_HOSTの環境変数で接続先変更
+##
+
+# ラベル辞書取得
+def get_label_dict():
+    with grpc.insecure_channel(settings.MATCHING_DATAMANAGE_HOST) as channel:
+        stub = data_manage_pb2_grpc.DataManageStub(channel)
+        res = stub.ListLabels(data_manage_pb2.ListLabelsRequest())
+
+    return res
+
+# 個人情報辞書取得
+def get_personal_data_dict():
+    with grpc.insecure_channel(settings.MATCHING_DATAMANAGE_HOST) as channel:
+        stub = data_manage_pb2_grpc.DataManageStub(channel)
+        res = stub.ListPersonalData(data_manage_pb2.ListPersonalDataRequest())
+
+    return res
+
+# 作業辞書取得
+def get_task_dict():
+    with grpc.insecure_channel(settings.MATCHING_DATAMANAGE_HOST) as channel:
+        stub = data_manage_pb2_grpc.DataManageStub(channel)
+        res = stub.ListTasks(data_manage_pb2.ListTasksRequest())
+
+    return res
+
+# 上記関数を使い、名前のtype_pb2.Taskオブジェクトを返す関数
+def get_task_from_name(name: str):
+    task_dict = get_task_dict()
+
+    return task_dict[name]
+
+# 作業オブジェクトに対応した作業履歴を取得
+def get_task_request_histories(task: type_pb2.Task):
+    with grpc.insecure_channel(settings.MATCHING_DATAMANAGE_HOST) as channel:
+        stub = data_manage_pb2_grpc.DataManageStub(channel)
+        res = stub.GetTaskRequestHistories(task)
+
+    return res

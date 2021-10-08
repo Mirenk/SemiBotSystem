@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package matching;
+package matching_pb;
 
 import "type.proto";
 import "google/protobuf/timestamp.proto";

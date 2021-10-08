@@ -1,7 +1,7 @@
 from .models import *
 from django.db import transaction
 
-from .matching_pb import data_manage_pb2, data_manage_pb2_grpc, type_pb2
+from matching_pb import data_manage_pb2, data_manage_pb2_grpc, type_pb2
 from google.protobuf import timestamp_pb2
 
 from datetime import datetime

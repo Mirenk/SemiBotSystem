@@ -1,7 +1,7 @@
 import time
 from google.protobuf import timestamp_pb2, duration_pb2
 from django_grpc_framework.test import RPCTestCase
-from matching.matching_pb import server_pb2, server_pb2_grpc, type_pb2
+from matching_pb import server_pb2, server_pb2_grpc, type_pb2
 from matching.models import TaskRequestRequest
 from datetime import datetime, timedelta
 

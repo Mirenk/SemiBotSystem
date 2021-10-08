@@ -1,6 +1,6 @@
 import grpc
 from django_grpc_framework.test import RPCTestCase
-from .matching_pb import data_manage_pb2, data_manage_pb2_grpc, type_pb2
+from matching_pb import data_manage_pb2, data_manage_pb2_grpc, type_pb2
 from data_manager.models import Label, LabelValue, PersonalData, Task, TaskRequest
 import time
 from datetime import datetime

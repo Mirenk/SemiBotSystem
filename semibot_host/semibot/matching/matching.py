@@ -1,8 +1,6 @@
-from .matching_pb import type_pb2, data_manage_pb2, data_manage_pb2_grpc
-from .models import TaskRequestRequest
-from .dynamic_label import DynamicLabel
-from django.conf import settings
-import grpc
+from matching_pb import type_pb2
+from matching.models import TaskRequestRequest, Candidate
+from matching.dynamic_label import DynamicLabel
 
 # 候補者グループ選択
 def select_candidate_group(task_request: TaskRequestRequest,

@@ -1,4 +1,4 @@
-from matching.matching_pb import type_pb2
+from matching_pb import type_pb2
 from datetime import datetime
 from google.protobuf import timestamp_pb2
 

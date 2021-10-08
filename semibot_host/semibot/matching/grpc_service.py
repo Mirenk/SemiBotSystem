@@ -2,7 +2,7 @@ import inspect
 
 from .models import *
 
-from .matching_pb import server_pb2, server_pb2_grpc
+from matching_pb import server_pb2, server_pb2_grpc
 from .dynamic_label import DynamicLabel
 
 from django.db import transaction

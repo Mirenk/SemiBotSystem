@@ -1,7 +1,7 @@
 # 履歴から生成されるラベル(動的ラベル)
 # クラスメソッドで動作を書いていく
 from typing import List
-from .matching_pb import type_pb2
+from matching_pb import type_pb2
 
 class DynamicLabel:
     # 実行用

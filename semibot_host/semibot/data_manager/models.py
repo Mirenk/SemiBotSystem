@@ -47,7 +47,7 @@ class LabelValue(models.Model):
 # これは現実の作業を示している。マッチングシステムのタスクではない。
 class Task(models.Model):
     name = models.CharField(unique=True, max_length=20)
-    require_label = models.ManyToManyField(Label, related_name='require_task')
+    require_label = models.ManyToManyField(Label, related_name='require_task', blank=True)
     require_label_value = models.ManyToManyField(LabelValue, related_name='require_task')
 
     def __str__(self):
@@ -60,5 +60,5 @@ class TaskRequest(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
     work_datetime = models.DateTimeField()
     worker = models.ManyToManyField(PersonalData, related_name='joined_task', blank=True)
-    recommend_label = models.ManyToManyField(Label, related_name='recommend_task')
-    recommend_label_value = models.ManyToManyField(LabelValue, related_name='recommend_task')
+    recommend_label = models.ManyToManyField(Label, related_name='recommend_task', blank=True)
+    recommend_label_value = models.ManyToManyField(LabelValue, related_name='recommend_task', blank=True)

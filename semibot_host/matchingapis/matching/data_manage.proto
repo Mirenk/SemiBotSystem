@@ -10,7 +10,7 @@ import "type.proto";
 message ListLabelsRequest {}
 
 message ListLabelsResponse {
-  map<string, matching.Label> labels = 1; // key == Label.name
+  map<string, matching_pb.Label> labels = 1; // key == Label.name
 }
 
 /*
@@ -19,7 +19,7 @@ message ListLabelsResponse {
 message ListPersonalDataRequest {}
 
 message ListPersonalDataResponse {
-  map<string, matching.PersonalData> personal_data = 1; // key == PersonalData.id
+  map<string, matching_pb.PersonalData> personal_data = 1; // key == PersonalData.id
 }
 
 /*
@@ -28,7 +28,7 @@ message ListPersonalDataResponse {
 message ListTasksRequest {}
 
 message ListTasksResponse {
-  repeated matching.Task tasks = 1;
+  repeated matching_pb.Task tasks = 1;
 }
 
 /*
@@ -42,7 +42,7 @@ message GetTaskFromNameRequest {
  * GetTaskRequestHistories messages
  */
 message GetTaskRequestHistoriesResponse {
-  repeated matching.TaskRequestData task_requests = 1;
+  repeated matching_pb.TaskRequestData task_requests = 1;
 }
 
 /*
@@ -73,9 +73,9 @@ service DataManage {
   rpc ListPersonalData (ListPersonalDataRequest) returns (ListPersonalDataResponse);
   // マッチング記録取得用
   rpc ListTasks (ListTasksRequest) returns (ListTasksResponse);
-  rpc GetTaskFromName (GetTaskFromNameRequest) returns (matching.Task);
-  rpc GetTaskRequestHistories (matching.Task) returns (GetTaskRequestHistoriesResponse);
+  rpc GetTaskFromName (GetTaskFromNameRequest) returns (matching_pb.Task);
+  rpc GetTaskRequestHistories (matching_pb.Task) returns (GetTaskRequestHistoriesResponse);
   // マッチング結果記録
-  rpc GetPersonalDataFromId (GetPersonalDataFromIdRequest) returns (matching.PersonalData);
-  rpc RecordTaskRequestHistory (matching.TaskRequestData) returns (RecordTaskRequestHistoryResult);
+  rpc GetPersonalDataFromId (GetPersonalDataFromIdRequest) returns (matching_pb.PersonalData);
+  rpc RecordTaskRequestHistory (matching_pb.TaskRequestData) returns (RecordTaskRequestHistoryResult);
 }

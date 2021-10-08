@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package matching_pb;
 
-import "type.proto";
+import "matching_pb/type.proto";
 
 /*
  * ListLabels messages

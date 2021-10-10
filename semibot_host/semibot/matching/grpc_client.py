@@ -25,7 +25,7 @@ def get_personal_data_dict():
     return res
 
 # 作業辞書取得
-def get_task_dict():
+def get_task_list():
     with grpc.insecure_channel(settings.MATCHING_DATAMANAGE_HOST) as channel:
         stub = data_manage_pb2_grpc.DataManageStub(channel)
         res = stub.ListTasks(data_manage_pb2.ListTasksRequest())
@@ -34,9 +34,11 @@ def get_task_dict():
 
 # 上記関数を使い、名前のtype_pb2.Taskオブジェクトを返す関数
 def get_task_from_name(name: str):
-    task_dict = get_task_dict()
+    with grpc.insecure_channel(settings.MATCHING_DATAMANAGE_HOST) as channel:
+        stub = data_manage_pb2_grpc.DataManageStub(channel)
+        res = stub.GetTaskFromName(data_manage_pb2.GetTaskFromNameRequest(name=name))
 
-    return task_dict[name]
+    return res
 
 # 作業オブジェクトに対応した作業履歴を取得
 def get_task_request_histories(task: type_pb2.Task):

@@ -48,7 +48,7 @@ class LabelValue(models.Model):
 class Task(models.Model):
     name = models.CharField(unique=True, max_length=20)
     require_label = models.ManyToManyField(Label, related_name='require_task', blank=True)
-    require_label_value = models.ManyToManyField(LabelValue, related_name='require_task')
+    require_label_value = models.ManyToManyField(LabelValue, related_name='require_task', blank=True)
 
     def __str__(self):
         return self.name

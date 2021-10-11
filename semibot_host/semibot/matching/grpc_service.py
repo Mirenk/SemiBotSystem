@@ -1,5 +1,7 @@
 import inspect
 
+import json
+
 from .models import *
 
 from matching_pb import server_pb2, server_pb2_grpc
@@ -7,6 +9,8 @@ from .dynamic_label import DynamicLabel
 
 from django.db import transaction
 from datetime import datetime
+
+from django_celery_beat.models import ClockedSchedule, PeriodicTask
 
 #
 # サービス定義
@@ -68,6 +72,19 @@ class MatchingServer(server_pb2_grpc.MatchingServerServicer):
                 task_request.label_set.add(label_set)
 
         response.result = server_pb2.AddTaskRequestResponse.Result.SUCCESS
+
+        # 人数チェックのタスク登録
+        # これ出来たら定期実行の関数要らなくなるんだが？殺すぞ～！
+        schedule, create = ClockedSchedule.objects.get_or_create(
+            clocked_time=task_request.next_rematching
+        )
+        PeriodicTask.objects.create(
+            clocked=schedule,
+            name=task_request.name,
+            task='matching.tasks.check_joined_candidates',
+            args=json.dumps([task_request.id]),
+            one_off=True,
+        )
 
         return response
 

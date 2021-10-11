@@ -4,6 +4,7 @@ from django_grpc_framework.test import RPCTestCase
 from matching_pb import server_pb2, server_pb2_grpc, type_pb2
 from matching.models import TaskRequestRequest
 from datetime import datetime, timedelta
+from django_celery_beat.models import PeriodicTask
 
 class MathcingServerTest(RPCTestCase):
     def test_add_task_request(self):
@@ -68,3 +69,6 @@ class MathcingServerTest(RPCTestCase):
         self.assertEqual(label_set[0].var_label.first().value, 1)
         self.assertEqual(label_set[1].var_label.first(), None)
         self.assertEqual(label_set[0].const_label.filter(name='past_joined').first().is_dynamic, True)
+
+        print('test_grpc_service: PeriodicTask')
+        print(PeriodicTask.objects.all().first())

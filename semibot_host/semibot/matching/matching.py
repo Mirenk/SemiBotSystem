@@ -1,6 +1,7 @@
 from matching_pb import type_pb2
 from matching.models import TaskRequestRequest, Candidate
 from matching.dynamic_label import DynamicLabel
+import matching.grpc_client as grpc_client
 
 # 候補者グループ選択
 def select_candidate_group(task_request: TaskRequestRequest,
@@ -82,14 +83,23 @@ def select_candidate_group(task_request: TaskRequestRequest,
     # 動的ラベルの数値ラベル
     # TODO: ゼミ管理で使用しないため、未実装
 
-    # TODO: 以下を実装すれば候補者グループ処理終了
-    # 4. 最低人数を満たしていなかったらDBのlabel_setを破棄し、もう一度自身を呼ぶ
-    # このとき各引数を取り直す
+    ## 4. 最低人数を満たしていなかったらDBのlabel_setを破棄し、もう一度自身を呼ぶ
+    ## このとき各引数を取り直す
+    if len(personal_data_id_list) < task_request.require_candidates:
+        task_request.label_set.remove(label_set)
+        personal_data = grpc_client.get_personal_data_dict()
+        select_candidate_group()
+        return
 
     # 5. 最大人数を越していたら上から最大人数を取る(フィルタ)
     # ここでグループは確定
+    if len(personal_data_id_list) > task_request.max_candidates:
+        personal_data_id_list = personal_data_id_list[:task_request.max_candidates]
 
     # task_requestのrequesting_candidatesに候補者を付け、send_messageを呼び動作終了
+    for userid in personal_data_id_list:
+        record, create = Candidate.objects.get_or_create(userid=userid)
+        task_request.requesting_candidates.add(record)
 
     # debug
     print('DEBUG: select_candidate_group')

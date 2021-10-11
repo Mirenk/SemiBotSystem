@@ -88,7 +88,7 @@ def select_candidate_group(task_request: TaskRequestRequest,
     if len(personal_data_id_list) < task_request.require_candidates:
         task_request.label_set.remove(label_set)
         personal_data = grpc_client.get_personal_data_dict()
-        select_candidate_group()
+        select_candidate_group(task_request, personal_data, task_request_history)
         return
 
     # 5. 最大人数を越していたら上から最大人数を取る(フィルタ)

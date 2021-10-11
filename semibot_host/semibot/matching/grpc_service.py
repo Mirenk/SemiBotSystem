@@ -74,7 +74,6 @@ class MatchingServer(server_pb2_grpc.MatchingServerServicer):
         response.result = server_pb2.AddTaskRequestResponse.Result.SUCCESS
 
         # 人数チェックのタスク登録
-        # これ出来たら定期実行の関数要らなくなるんだが？殺すぞ～！
         schedule, create = ClockedSchedule.objects.get_or_create(
             clocked_time=task_request.next_rematching
         )

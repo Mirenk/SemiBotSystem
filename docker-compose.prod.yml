@@ -4,7 +4,10 @@ services:
         ports:
             - "80:8000"
         restart: always
-        command: python manage.py runserver 0:8000
+        command: >
+            bash -c "DJANGO_SETTINGS_MODULE=semibot.settings celery -A semibot beat --scheduler django_celery_beat.schedulers:DatabaseScheduler --pidfile /celerybeat.pid &
+            celery -A semibot worker &
+            python3 manage.py runserver 0:8000"
         
     semibot_db:
         restart: always

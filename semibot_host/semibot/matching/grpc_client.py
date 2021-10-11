@@ -14,7 +14,7 @@ def get_label_dict():
         stub = data_manage_pb2_grpc.DataManageStub(channel)
         res = stub.ListLabels(data_manage_pb2.ListLabelsRequest())
 
-    return res
+    return res.labels
 
 # 個人情報辞書取得
 def get_personal_data_dict():
@@ -22,7 +22,7 @@ def get_personal_data_dict():
         stub = data_manage_pb2_grpc.DataManageStub(channel)
         res = stub.ListPersonalData(data_manage_pb2.ListPersonalDataRequest())
 
-    return res
+    return res.personal_data
 
 # 作業辞書取得
 def get_task_list():
@@ -30,7 +30,7 @@ def get_task_list():
         stub = data_manage_pb2_grpc.DataManageStub(channel)
         res = stub.ListTasks(data_manage_pb2.ListTasksRequest())
 
-    return res
+    return res.tasks
 
 # 上記関数を使い、名前のtype_pb2.Taskオブジェクトを返す関数
 def get_task_from_name(name: str):
@@ -46,4 +46,4 @@ def get_task_request_histories(task: type_pb2.Task):
         stub = data_manage_pb2_grpc.DataManageStub(channel)
         res = stub.GetTaskRequestHistories(task)
 
-    return res
+    return res.task_requests

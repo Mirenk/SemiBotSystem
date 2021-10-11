@@ -85,6 +85,18 @@ class MatchingServer(server_pb2_grpc.MatchingServerServicer):
             one_off=True,
         )
 
+        # 終了のタスク登録
+        schedule, create = ClockedSchedule.objects.get_or_create(
+            clocked_time=task_request.next_rematching
+        )
+        PeriodicTask.objects.create(
+            clocked=schedule,
+            name='end_' + task_request.name,
+            task='matching.tasks.check_joined_candidates',
+            args=json.dumps([task_request.id]),
+            one_off=True,
+        )
+
         return response
 
 #

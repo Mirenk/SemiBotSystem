@@ -71,4 +71,6 @@ class MathcingServerTest(RPCTestCase):
         self.assertEqual(label_set[0].const_label.filter(name='past_joined').first().is_dynamic, True)
 
         print('test_grpc_service: PeriodicTask')
-        print(PeriodicTask.objects.all().first())
+        periodic_tasks = PeriodicTask.objects.all()
+        for periodic_task in periodic_tasks:
+            print(periodic_task)

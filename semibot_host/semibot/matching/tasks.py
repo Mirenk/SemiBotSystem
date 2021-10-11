@@ -26,6 +26,17 @@ def check_joined_candidates(task_request_id: int):
         matching.select_candidate_group(task_request, personal_data, task_request_history)
         return
 
+# 終了関数
+# TODO:募集終了でも足りなかった場合の検討
+@shared_task
+def end_matching_task(task_request_id: int):
+    task_request = TaskRequestRequest.objects.get(id=task_request_id)
+
+    # 書き込み
+    # TODO: 人数が多かった場合、workerを優先度が高い(送付が速かった順)にする
+    print("check_time: End ",task_request.name,"'s matching")
+    client.record_task_request_history(task_request)
+    matching.send_message(task_request=task_request)
 
 # 時刻確認関数
 # プロジェクトに定期実行登録が必要、詳しくは　https://docs.celeryproject.org/en/latest/userguide/periodic-tasks.html

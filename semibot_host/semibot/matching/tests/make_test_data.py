@@ -2,6 +2,9 @@ from matching_pb import type_pb2
 from datetime import datetime
 from google.protobuf import timestamp_pb2
 
+from matching.models import TaskRequestRequest, Label, LabelValue, LabelSet
+from datetime import datetime, timedelta
+
 import csv
 
 # CSVファイルパス -> Label辞書
@@ -84,3 +87,35 @@ def make_task_request_history_from_csv(personal_data: dict[str, type_pb2.Persona
         task_history_list = [x[1] for x in task_history_list]
 
         return task_history_list
+
+# テスト依頼作成
+def make_test_task_request():
+    # 依頼データ生成
+    task_request = TaskRequestRequest()
+    task_request.name = 'test'
+    task_request.task = '全体ゼミ'
+    task_request.task_datetime = datetime.now() + timedelta(weeks=3)
+    task_request.matching_end_datetime = datetime.now() + timedelta(weeks=2)
+    task_request.require_candidates = 4
+    task_request.max_candidates = 5
+    task_request.callback_url = 'http://example.com'
+    task_request.rematching_duration = timedelta(weeks=1)
+    task_request.next_rematching = datetime.now() + timedelta(weeks=1)
+    task_request.save()
+
+    # ラベルセット生成
+    bachelor_const = Label.objects.create(name='学部生')
+    master_const = Label.objects.create(name='院生')
+    bachelor_val = LabelValue.objects.create(label=bachelor_const, value=3)
+    master_val = LabelValue.objects.create(label=master_const, value=2)
+    few_label = Label.objects.create(name='few_join', is_dynamic=True)
+    past_label = Label.objects.create(name='past_joined', is_dynamic=True)
+    label_set = LabelSet.objects.create()
+    label_set.var_label.add(bachelor_val)
+    label_set.var_label.add(master_val)
+    label_set.const_label.add(few_label)
+    label_set.const_label.add(past_label)
+
+    task_request.label_set.add(label_set)
+
+    return task_request

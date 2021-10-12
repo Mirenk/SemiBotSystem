@@ -141,3 +141,14 @@ def join_task(task_request: TaskRequestRequest, userid: str):
         task_request.requesting_candidates.remove(candidate)
         task_request.joined_candidates.add(candidate)
         print('join_task: Joined ', candidate.personal_data.userid)
+
+# 参加キャンセル処理
+def cancel_task(task_request: TaskRequestRequest, userid: str):
+    # 処理候補者抽出
+    candidate = task_request.joined_candidates.filter(personal_data__userid=userid).first()
+
+    # join_taskと逆のことを行う
+    with transaction.atomic():
+        task_request.joined_candidates.remove(candidate)
+        task_request.requesting_candidates.add(candidate)
+        print('join_task: Canceled ', candidate.personal_data.userid)

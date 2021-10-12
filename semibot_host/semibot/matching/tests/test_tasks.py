@@ -2,7 +2,7 @@ from django.test import TestCase
 from .make_test_data import *
 from datetime import datetime
 from matching.tasks import check_joined_candidates, end_matching_task
-from matching.matching import join_task
+from matching.matching import join_task, cancel_task
 
 class TaskTest(TestCase):
     def test_check_joined_candidates(self):
@@ -23,10 +23,15 @@ class TaskTest(TestCase):
         # 一回目の募集
         check_joined_candidates(task_request.id)
         task_request = TaskRequestRequest.objects.get(id=task_request.id)
-        # 3人参加させる
-        for candidate in task_request.requesting_candidates.all()[0:3]:
+        # 全員参加させる
+        for candidate in task_request.requesting_candidates.all():
             print('test_end_matching_task: joining', candidate.personal_data.userid)
             join_task(task_request, candidate.personal_data.userid)
+
+        # 二人キャンセルさせる
+        for candidate in task_request.joined_candidates.all()[:2]:
+            print('test_end_matching_task: canceling', candidate.personal_data.userid)
+            cancel_task(task_request, candidate.personal_data.userid)
 
         print('test_end_matching_task: second matching')
         # 二回目の募集

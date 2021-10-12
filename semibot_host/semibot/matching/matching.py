@@ -1,7 +1,8 @@
 from matching_pb import type_pb2
-from matching.models import TaskRequestRequest, PersonalData
+from matching.models import TaskRequestRequest, PersonalData, Candidate
 from matching.dynamic_label import DynamicLabel
 import matching.grpc_client as grpc_client
+from datetime import datetime
 
 # 候補者グループ選択
 def select_candidate_group(task_request: TaskRequestRequest,
@@ -17,7 +18,7 @@ def select_candidate_group(task_request: TaskRequestRequest,
     # この時task_requestにrequest_candidatesに候補者が存在した場合、関連を解除しリストには入れない
     personal_data_id_list = []
     for userid in personal_data.keys():
-        requesting_candidate = task_request.requesting_candidates.filter(userid=userid).first()
+        requesting_candidate = task_request.requesting_candidates.filter(personal_data__userid=userid).first()
         if requesting_candidate is None:
             personal_data_id_list.append(userid)
         else:
@@ -97,8 +98,11 @@ def select_candidate_group(task_request: TaskRequestRequest,
         personal_data_id_list = personal_data_id_list[:task_request.max_candidates]
 
     # task_requestのrequesting_candidatesに候補者を付け、send_messageを呼び動作終了
+    now = datetime.now()
     for userid in personal_data_id_list:
-        record, create = PersonalData.objects.get_or_create(userid=userid)
+        personal_data_record, create = PersonalData.objects.get_or_create(userid=userid)
+        record = Candidate.objects.create(personal_data=personal_data_record, request_datetime=now)
+
         task_request.requesting_candidates.add(record)
 
     # debug

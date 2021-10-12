@@ -27,6 +27,12 @@ class LabelSet(models.Model):
 class PersonalData(models.Model):
     userid = models.CharField(unique=True, max_length=20)
 
+# 候補者モデル
+# 依頼送付した時刻を保持する
+class Candidate(models.Model):
+    personal_data = models.ForeignKey(PersonalData, on_delete=models.CASCADE, related_name='candidate_personaldata')
+    request_datetime = models.DateTimeField()
+
 # 依頼リクエスト
 # TODO: 重複登録の防止、ほぼ同一のような依頼リクエストが来ることも考えられるため、それも考慮
 class TaskRequestRequest(models.Model):
@@ -39,9 +45,9 @@ class TaskRequestRequest(models.Model):
     require_candidates = models.IntegerField()
     max_candidates = models.IntegerField()
     # 参加表明をした候補者
-    joined_candidates = models.ManyToManyField(PersonalData, blank=True, related_name="joined_task_request")
+    joined_candidates = models.ManyToManyField(Candidate, blank=True, related_name="joined_task_request")
     # 返事待機中の候補者
-    requesting_candidates = models.ManyToManyField(PersonalData, blank=True, related_name="reserve_task_request")
+    requesting_candidates = models.ManyToManyField(Candidate, blank=True, related_name="reserve_task_request")
     # 再募集間隔
     rematching_duration = models.DurationField()
     # 次の再募集

@@ -3,6 +3,7 @@ from matching.models import TaskRequestRequest, PersonalData, Candidate
 from matching.dynamic_label import DynamicLabel
 import matching.grpc_client as grpc_client
 from datetime import datetime
+from django.db import transaction
 
 # 候補者グループ選択
 def select_candidate_group(task_request: TaskRequestRequest,
@@ -15,14 +16,14 @@ def select_candidate_group(task_request: TaskRequestRequest,
     # 処理用のIDのみリスト生成
     # このリストをフィルタやソートして、候補者グループを決定する
     # とりあえずユーザID順に並んでいるとする
-    # この時task_requestにrequest_candidatesに候補者が存在した場合、関連を解除しリストには入れない
+    # この時task_requestにrequest_candidatesに候補者が存在した場合、リストには入れない
+    # joined_candidatesも調べる
     personal_data_id_list = []
-    for userid in personal_data.keys():
+    for userid in list(personal_data):
         requesting_candidate = task_request.requesting_candidates.filter(personal_data__userid=userid).first()
         if requesting_candidate is None:
             personal_data_id_list.append(userid)
         else:
-            task_request.requesting_candidates.remove(requesting_candidate)
             del personal_data[userid]
 
     ## 1. 固定ラベルでフィルタ
@@ -98,18 +99,21 @@ def select_candidate_group(task_request: TaskRequestRequest,
         personal_data_id_list = personal_data_id_list[:task_request.max_candidates]
 
     # task_requestのrequesting_candidatesに候補者を付け、send_messageを呼び動作終了
+    # この時にjoined_candidateに存在したらrequesting_candidateに追加しない
     now = datetime.now()
     for userid in personal_data_id_list:
         personal_data_record, create = PersonalData.objects.get_or_create(userid=userid)
         record = Candidate.objects.create(personal_data=personal_data_record, request_datetime=now)
 
-        task_request.requesting_candidates.add(record)
+        if task_request.joined_candidates.filter(personal_data__userid=userid).first() is None:
+            print('select_candidate_group: add', personal_data_record.userid)
+            task_request.requesting_candidates.add(record)
 
     task_request.save() # 一応セーブ
     send_request_message(task_request)
 
     # debug
-    print('DEBUG: select_candidate_group')
+    print('select_candidate_group: Candidate list: ')
     for personal_data_id in personal_data_id_list:
         print(personal_data_id)
 
@@ -121,9 +125,19 @@ def send_request_message(task_request: TaskRequestRequest):
     pass
 
 def send_result_message(task_request: TaskRequestRequest):
-    pass
+    workers = task_request.joined_candidates.all()
+
+    for worker in workers:
+        print(worker.personal_data.userid)
 
 # 参加受付処理
-# task_requestの必要人数と最大人数を加味しながら依頼に候補者を繋げる
 def join_task(task_request: TaskRequestRequest, userid: str):
-    pass
+    # 処理候補者抽出
+    candidate = task_request.requesting_candidates.filter(personal_data__userid=userid).first()
+
+    # 依頼送付中から外し参加に付ける
+    # トランザクション処理を行う
+    with transaction.atomic():
+        task_request.requesting_candidates.remove(candidate)
+        task_request.joined_candidates.add(candidate)
+        print('join_task: Joined ', candidate.personal_data.userid)

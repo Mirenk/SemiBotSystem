@@ -38,7 +38,9 @@ class DynamicLabel:
 
         for task_request in task_request_history:
             for worker in task_request.worker.values():
-                user_dict[worker.id] = user_dict[worker.id] + 1
+                # フィルタ済みの場合、ユーザ辞書に存在しないのでチェックしてから足す
+                if worker.id in user_dict:
+                    user_dict[worker.id] = user_dict[worker.id] + 1
 
         return user_dict
 
@@ -71,8 +73,10 @@ class DynamicLabel:
 
         for task_request in task_request_history:
             for worker in task_request.worker.values():
-                if user_dict[worker.id] < task_request.task_date.seconds:
-                    user_dict[worker.id] = task_request.task_date.seconds
+                # __join_countと同様
+                if worker.id in user_dict:
+                    if user_dict[worker.id] < task_request.task_date.seconds:
+                        user_dict[worker.id] = task_request.task_date.seconds
 
         return user_dict
 

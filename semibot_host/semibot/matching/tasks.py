@@ -41,7 +41,8 @@ def end_matching_task(task_request_id: int):
 
     # 候補者が多かった場合、削除
     if candidates.count() > task_request.max_candidates:
-        candidates[task_request.max_candidates:].delete()
+        for remove_candidate in candidates[task_request.max_candidates:]:
+            task_request.joined_candidates.remove(remove_candidate)
 
     # 書き込み
     print("check_time: End ",task_request.name,"'s matching")
@@ -50,3 +51,6 @@ def end_matching_task(task_request_id: int):
 
     # タスクを削除
     PeriodicTask.objects.filter(name='end_' + task_request.name).delete()
+
+    # 依頼を削除して終了
+    task_request.delete()

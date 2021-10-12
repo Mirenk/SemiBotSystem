@@ -46,7 +46,7 @@ def end_matching_task(task_request_id: int):
     # 書き込み
     print("check_time: End ",task_request.name,"'s matching")
     client.record_task_request_history(task_request)
-    matching.send_message(task_request=task_request)
+    matching.send_result_message(task_request=task_request)
 
     # タスクを削除
     PeriodicTask.objects.filter(name='end_' + task_request.name).delete()

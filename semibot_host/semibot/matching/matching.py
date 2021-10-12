@@ -105,14 +105,22 @@ def select_candidate_group(task_request: TaskRequestRequest,
 
         task_request.requesting_candidates.add(record)
 
+    task_request.save() # 一応セーブ
+    send_request_message(task_request)
+
     # debug
     print('DEBUG: select_candidate_group')
     for personal_data_id in personal_data_id_list:
         print(personal_data_id)
 
 # 依頼送付
-# task_requestのrequesting_candidatesに送付
-def send_message(task_request: TaskRequestRequest):
+def __send_message(personal_data: type_pb2.PersonalData):
+    pass
+
+def send_request_message(task_request: TaskRequestRequest):
+    pass
+
+def send_result_message(task_request: TaskRequestRequest):
     pass
 
 # 参加受付処理

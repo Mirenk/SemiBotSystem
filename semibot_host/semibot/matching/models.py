@@ -22,9 +22,9 @@ class LabelSet(models.Model):
     const_label = models.ManyToManyField(Label, blank=True)
     var_label = models.ManyToManyField(LabelValue, blank=True)
 
-# 候補者モデル
-# 依頼につけるのみなので、useridのみ保持
-class Candidate(models.Model):
+# 個人情報モデル
+# useridのみ保持
+class PersonalData(models.Model):
     userid = models.CharField(unique=True, max_length=20)
 
 # 依頼リクエスト
@@ -39,9 +39,9 @@ class TaskRequestRequest(models.Model):
     require_candidates = models.IntegerField()
     max_candidates = models.IntegerField()
     # 参加表明をした候補者
-    joined_candidates = models.ManyToManyField(Candidate, blank=True, related_name="joined_task_request")
+    joined_candidates = models.ManyToManyField(PersonalData, blank=True, related_name="joined_task_request")
     # 返事待機中の候補者
-    requesting_candidates = models.ManyToManyField(Candidate, blank=True, related_name="reserve_task_request")
+    requesting_candidates = models.ManyToManyField(PersonalData, blank=True, related_name="reserve_task_request")
     # 再募集間隔
     rematching_duration = models.DurationField()
     # 次の再募集

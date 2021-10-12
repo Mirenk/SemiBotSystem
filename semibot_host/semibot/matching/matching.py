@@ -1,5 +1,5 @@
 from matching_pb import type_pb2
-from matching.models import TaskRequestRequest, Candidate
+from matching.models import TaskRequestRequest, PersonalData
 from matching.dynamic_label import DynamicLabel
 import matching.grpc_client as grpc_client
 
@@ -98,7 +98,7 @@ def select_candidate_group(task_request: TaskRequestRequest,
 
     # task_requestのrequesting_candidatesに候補者を付け、send_messageを呼び動作終了
     for userid in personal_data_id_list:
-        record, create = Candidate.objects.get_or_create(userid=userid)
+        record, create = PersonalData.objects.get_or_create(userid=userid)
         task_request.requesting_candidates.add(record)
 
     # debug

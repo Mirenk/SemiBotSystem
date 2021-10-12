@@ -35,9 +35,15 @@ def check_joined_candidates(task_request_id: int):
 @shared_task
 def end_matching_task(task_request_id: int):
     task_request = TaskRequestRequest.objects.get(id=task_request_id)
+    # 候補者取得
+    # この時、依頼送付が古い人順に並べる
+    candidates = task_request.joined_candidates.all().order_by('request_datetime')
+
+    # 候補者が多かった場合、削除
+    if candidates.count() > task_request.max_candidates:
+        candidates[task_request.max_candidates:].delete()
 
     # 書き込み
-    # TODO: 人数が多かった場合、workerを優先度が高い(送付が速かった順)にする
     print("check_time: End ",task_request.name,"'s matching")
     client.record_task_request_history(task_request)
     matching.send_message(task_request=task_request)

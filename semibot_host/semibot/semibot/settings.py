@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'matching',
     'django_celery_beat',
     'django_celery_results',
+    'semi_app',
 ]
 
 MIDDLEWARE = [
@@ -143,3 +144,7 @@ CELERY_BROKER_URL = os.environ.get('REDIS_URL', 'redis://semibot_redis:6379/1')
 
 # DataManage gRPC Service URL
 MATCHING_DATAMANAGE_HOST = os.environ.get('DATAMANAGE_HOST', 'localhost:50051')
+
+# Login Settings
+LOGIN_URL = 'semi_app:login'
+LOGIN_REDIRECT_URL = 'semi_app:top'

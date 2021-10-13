@@ -20,6 +20,7 @@ from matching.grpc_service import grpc_handlers as matching_grpc_handler
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('semi_app.urls')),
 ]
 
 def grpc_handlers(server):

@@ -1,9 +1,14 @@
 from matching_pb import type_pb2
-from matching.models import TaskRequestRequest, PersonalData, Candidate
+from matching.models import TaskRequestRequest, Candidate
 from matching.dynamic_label import DynamicLabel
 import matching.grpc_client as grpc_client
 from datetime import datetime
 from django.db import transaction
+from django.contrib.auth import get_user_model
+
+# ユーザモデル定義
+# これでどのような認証を使っても動作が変わらない
+User = get_user_model()
 
 # 候補者グループ選択
 def select_candidate_group(task_request: TaskRequestRequest,
@@ -20,7 +25,7 @@ def select_candidate_group(task_request: TaskRequestRequest,
     # joined_candidatesも調べる
     personal_data_id_list = []
     for userid in list(personal_data):
-        requesting_candidate = task_request.requesting_candidates.filter(personal_data__userid=userid).first()
+        requesting_candidate = task_request.requesting_candidates.filter(personal_data__username=userid).first()
         if requesting_candidate is None:
             personal_data_id_list.append(userid)
         else:
@@ -102,11 +107,11 @@ def select_candidate_group(task_request: TaskRequestRequest,
     # この時にjoined_candidateに存在したらrequesting_candidateに追加しない
     now = datetime.now()
     for userid in personal_data_id_list:
-        personal_data_record, create = PersonalData.objects.get_or_create(userid=userid)
+        personal_data_record, create = User.objects.get_or_create(username=userid)
         record = Candidate.objects.create(personal_data=personal_data_record, request_datetime=now)
 
-        if task_request.joined_candidates.filter(personal_data__userid=userid).first() is None:
-            print('select_candidate_group: add', personal_data_record.userid)
+        if task_request.joined_candidates.filter(personal_data__username=userid).first() is None:
+            print('select_candidate_group: add', personal_data_record.username)
             task_request.requesting_candidates.add(record)
 
     task_request.save() # 一応セーブ
@@ -128,27 +133,27 @@ def send_result_message(task_request: TaskRequestRequest):
     workers = task_request.joined_candidates.all()
 
     for worker in workers:
-        print(worker.personal_data.userid)
+        print(worker.personal_data.username)
 
 # 参加受付処理
-def join_task(task_request: TaskRequestRequest, userid: str):
+def join_task(task_request: TaskRequestRequest, user: User):
     # 処理候補者抽出
-    candidate = task_request.requesting_candidates.filter(personal_data__userid=userid).first()
+    candidate = task_request.requesting_candidates.filter(personal_data=user).first()
 
     # 依頼送付中から外し参加に付ける
     # トランザクション処理を行う
     with transaction.atomic():
         task_request.requesting_candidates.remove(candidate)
         task_request.joined_candidates.add(candidate)
-        print('join_task: Joined ', candidate.personal_data.userid)
+        print('join_task: Joined ', candidate.personal_data.username)
 
 # 参加キャンセル処理
-def cancel_task(task_request: TaskRequestRequest, userid: str):
+def cancel_task(task_request: TaskRequestRequest, user: User):
     # 処理候補者抽出
-    candidate = task_request.joined_candidates.filter(personal_data__userid=userid).first()
+    candidate = task_request.joined_candidates.filter(personal_data=user).first()
 
     # join_taskと逆のことを行う
     with transaction.atomic():
         task_request.joined_candidates.remove(candidate)
         task_request.requesting_candidates.add(candidate)
-        print('join_task: Canceled ', candidate.personal_data.userid)
+        print('join_task: Canceled ', candidate.personal_data.username)

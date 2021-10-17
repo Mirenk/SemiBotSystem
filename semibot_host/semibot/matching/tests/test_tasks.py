@@ -25,20 +25,20 @@ class TaskTest(TestCase):
         task_request = TaskRequestRequest.objects.get(id=task_request.id)
         # 全員参加させる
         for candidate in task_request.requesting_candidates.all():
-            print('test_end_matching_task: joining', candidate.personal_data.userid)
-            join_task(task_request, candidate.personal_data.userid)
+            print('test_end_matching_task: joining', candidate.personal_data.username)
+            join_task(task_request, candidate.personal_data)
 
         # 二人キャンセルさせる
         for candidate in task_request.joined_candidates.all()[:2]:
-            print('test_end_matching_task: canceling', candidate.personal_data.userid)
-            cancel_task(task_request, candidate.personal_data.userid)
+            print('test_end_matching_task: canceling', candidate.personal_data.username)
+            cancel_task(task_request, candidate.personal_data)
 
         print('test_end_matching_task: second matching')
         # 二回目の募集
         check_joined_candidates(task_request.id)
         # 候補者全員参加させる
         for candidate in task_request.requesting_candidates.all():
-            join_task(task_request, candidate.personal_data.userid)
+            join_task(task_request, candidate.personal_data)
 
         end_matching_task(task_request.id)
 

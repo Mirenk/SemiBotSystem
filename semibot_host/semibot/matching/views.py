@@ -3,9 +3,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse_lazy
 from matching.models import TaskRequestRequest
-from matching.matching import join_task
+from matching.matching import join_task, cancel_task
 
-# TODO: ビューを全てアプリ側に任せ、こっちはgRPCで受け付けるようにする(別言語アプリの為に…)
 class JoinView(DetailView, LoginRequiredMixin):
     model = TaskRequestRequest
     template_name_suffix = '_task_join'
@@ -16,7 +15,7 @@ class JoinView(DetailView, LoginRequiredMixin):
         obj = super().get_object(queryset=queryset)
 
         # 依頼送付に居るか調べる
-        candidate = obj.requesting_candidates.filter(personal_data__userid=self.request.user.username).first()
+        candidate = obj.requesting_candidates.filter(personal_data=self.request.user).first()
         if candidate is None:
             raise Http404()
 
@@ -24,7 +23,7 @@ class JoinView(DetailView, LoginRequiredMixin):
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        join_task(self.object, self.request.user.username)
+        join_task(self.object, self.request.user)
         return HttpResponseRedirect(str(self.success_url))
 
 

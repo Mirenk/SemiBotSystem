@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth import get_user_model
 
 
 # ラベル
@@ -22,15 +23,10 @@ class LabelSet(models.Model):
     const_label = models.ManyToManyField(Label, blank=True)
     var_label = models.ManyToManyField(LabelValue, blank=True)
 
-# 個人情報モデル
-# useridのみ保持
-class PersonalData(models.Model):
-    userid = models.CharField(unique=True, max_length=20)
-
 # 候補者モデル
 # 依頼送付した時刻を保持する
 class Candidate(models.Model):
-    personal_data = models.ForeignKey(PersonalData, on_delete=models.CASCADE, related_name='candidate_personaldata')
+    personal_data = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='candidate_personaldata')
     request_datetime = models.DateTimeField()
 
 # 依頼リクエスト

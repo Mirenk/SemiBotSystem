@@ -1,7 +1,7 @@
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView, PasswordChangeDoneView
 from django.views import generic
 from django.urls import reverse_lazy
-from matching.views import JoinView
+from matching.views import JoinView, CancelView
 from .forms import LoginForm, MyPasswordChangeForm
 
 
@@ -35,3 +35,8 @@ class Join(JoinView):
     """参加者受付"""
     success_url = reverse_lazy('semi_app:top')
     template_name = 'semi_app/semi_task_join.html'
+
+class Cancel(CancelView):
+    """参加者キャンセル"""
+    success_url = reverse_lazy('semi_app:top')
+    template_name = 'semi_app/semi_task_cancel.html'

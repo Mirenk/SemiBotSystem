@@ -28,4 +28,22 @@ class JoinView(DetailView, LoginRequiredMixin):
 
 
 class CancelView(DetailView, LoginRequiredMixin):
-    pass
+    model = TaskRequestRequest
+    template_name_suffix = '_task_cancel'
+    success_url = reverse_lazy('cancel_success')
+    context_object_name = 'task_request'
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset=queryset)
+
+        # 依頼送付に居るか調べる
+        candidate = obj.joined_candidates.filter(personal_data=self.request.user).first()
+        if candidate is None:
+            raise Http404()
+
+        return obj
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        cancel_task(self.object, self.request.user)
+        return HttpResponseRedirect(str(self.success_url))

@@ -1,29 +1,32 @@
 from django.views.generic import DetailView
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse_lazy
 from matching.models import TaskRequestRequest
+from matching.matching import join_task
 
-@login_required
-class JoinView(DetailView):
+# TODO: ビューを全てアプリ側に任せ、こっちはgRPCで受け付けるようにする(別言語アプリの為に…)
+class JoinView(DetailView, LoginRequiredMixin):
     model = TaskRequestRequest
     template_name_suffix = '_task_join'
     success_url = reverse_lazy('join_success')
+    context_object_name = 'task_request'
 
     def get_object(self, queryset=None):
         obj = super().get_object(queryset=queryset)
 
         # 依頼送付に居るか調べる
-        candidate = obj.requesting_candidates.filter(persona_data=self.request.user).first()
+        candidate = obj.requesting_candidates.filter(personal_data__userid=self.request.user.username).first()
         if candidate is None:
             raise Http404()
 
         return obj
 
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        join_task(self.object, self.request.user.username)
         return HttpResponseRedirect(str(self.success_url))
 
 
-@login_required
-class CancelView(DetailView):
+class CancelView(DetailView, LoginRequiredMixin):
     pass

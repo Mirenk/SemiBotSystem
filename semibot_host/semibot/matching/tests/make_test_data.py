@@ -35,7 +35,13 @@ def make_personal_data_from_csv(path: str):
             personal_data_pb = type_pb2.PersonalData()
             personal_data_pb.id = row[0]
             personal_data_pb.name = row[1]
-            personal_data_pb.message_addr = row[2]
+
+            # message_addr
+            message_addr_pb = type_pb2.MessageAddress()
+            message_addr_pb.userid = row[0]
+            message_addr_pb.method = 0
+
+            personal_data_pb.message_addr.CopyFrom(message_addr_pb)
 
             personal_data[personal_data_pb.id] = personal_data_pb
 

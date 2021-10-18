@@ -2,6 +2,7 @@ from matching_pb import type_pb2
 from matching.models import TaskRequestRequest, Candidate
 from matching.dynamic_label import DynamicLabel
 import matching.grpc_client as grpc_client
+from matching.message_api import SlackAPI
 from datetime import datetime
 from django.db import transaction
 from django.contrib.auth import get_user_model
@@ -112,10 +113,10 @@ def select_candidate_group(task_request: TaskRequestRequest,
 
         if task_request.joined_candidates.filter(personal_data__username=userid).first() is None:
             print('select_candidate_group: add', personal_data_record.username)
-            task_request.requesting_candidates.add(record)
+            task_request.requesting_candidates.add(record) # 依頼中に追加
+            __send_message(personal_data[userid].message_addr, task_request.request_message) # 依頼送付
 
     task_request.save() # 一応セーブ
-    send_request_message(task_request)
 
     # debug
     print('select_candidate_group: Candidate list: ')
@@ -123,17 +124,25 @@ def select_candidate_group(task_request: TaskRequestRequest,
         print(personal_data_id)
 
 # 依頼送付
-def __send_message(personal_data: type_pb2.PersonalData):
-    pass
+def __send_message(message_addr: type_pb2.MessageAddress, msg: str):
+    method = message_addr.method
 
-def send_request_message(task_request: TaskRequestRequest):
-    pass
+    if type_pb2.MessageAddress.Method.Name(method) == 'SLACK':
+        api = SlackAPI()
+    # elif ~でapiを変えていく
+
+    api.print_send_dm(message_addr.userid, msg) # DEBUG
+#    api.send_dm(message_addr.userid, msg)
 
 def send_result_message(task_request: TaskRequestRequest):
     workers = task_request.joined_candidates.all()
+    msg = task_request.join_complete_message
+
+    personal_data = grpc_client.get_personal_data_dict()
 
     for worker in workers:
-        print(worker.personal_data.username)
+        message_addr = personal_data[worker.personal_data.username].message_addr
+        __send_message(message_addr, msg)
 
 # 参加受付処理
 def join_task(task_request: TaskRequestRequest, user: User):
@@ -147,6 +156,10 @@ def join_task(task_request: TaskRequestRequest, user: User):
         task_request.joined_candidates.add(candidate)
         print('join_task: Joined ', candidate.personal_data.username)
 
+    # メッセージ送信
+    candidate_pb = grpc_client.get_personal_data_from_id(user.username)
+    __send_message(candidate_pb.message_addr, task_request.join_complete_message)
+
 # 参加キャンセル処理
 def cancel_task(task_request: TaskRequestRequest, user: User):
     # 処理候補者抽出
@@ -157,3 +170,7 @@ def cancel_task(task_request: TaskRequestRequest, user: User):
         task_request.joined_candidates.remove(candidate)
         task_request.requesting_candidates.add(candidate)
         print('join_task: Canceled ', candidate.personal_data.username)
+
+    # メッセージ送信
+    candidate_pb = grpc_client.get_personal_data_from_id(user.username)
+    __send_message(candidate_pb.message_addr, task_request.join_complete_message)

@@ -51,6 +51,20 @@ class MatchingServer(server_pb2_grpc.MatchingServerServicer):
             # ManyToManyのための一時記録
             task_request.save()
 
+            # メッセージ類記録
+            task_request.join_url = request.join_url.replace('<task_request_id>', str(task_request.id))
+            task_request.cancel_url = request.cancel_url.replace('<task_request_id>', str(task_request.id))
+
+            task_request.request_message = request.request_message.replace(
+                '<join_url>', task_request.join_url).replace(
+                '<cancel_url>', task_request.cancel_url)
+            task_request.join_complete_message = request.join_complete_message.replace(
+                '<join_url>', task_request.join_url).replace(
+                '<cancel_url>', task_request.cancel_url)
+            task_request.matching_complete_message = request.matching_complete_message.replace(
+                '<join_url>', task_request.join_url).replace(
+                '<cancel_url>', task_request.cancel_url)
+
             # ラベル処理
             label_set_pb_list = request.label_set
             for label_set_pb in label_set_pb_list:
@@ -70,6 +84,8 @@ class MatchingServer(server_pb2_grpc.MatchingServerServicer):
                     label_set.var_label.add(label_value)
 
                 task_request.label_set.add(label_set)
+
+        task_request.save()
 
         response.result = server_pb2.AddTaskRequestResponse.Result.SUCCESS
 

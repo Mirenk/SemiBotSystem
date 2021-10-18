@@ -49,6 +49,12 @@ class MathcingServerTest(RPCTestCase):
         rematching_duration_pb.FromTimedelta(td=timedelta(weeks=1))
         request.rematching_duration.CopyFrom(rematching_duration_pb)
 
+        request.join_url = "http://localhost:8000/<task_request_id>/join"
+        request.cancel_url = "http://localhost:8000/<task_request_id>/cancel"
+        request.request_message = "テスト依頼。\n<join_url>"
+        request.join_complete_message = "受付完了。キャンセルURL\n<cancel_url>"
+        request.matching_complete_message = "選ばれたよ"
+
         print(request)
 
         stub = server_pb2_grpc.MatchingServerStub(self.channel)
@@ -63,6 +69,12 @@ class MathcingServerTest(RPCTestCase):
         self.assertEqual(record.require_candidates, 2)
         self.assertEqual(record.max_candidates, 3)
         self.assertEqual(record.rematching_duration, timedelta(weeks=1))
+
+        self.assertEqual(record.join_url, "http://localhost:8000/" + str(record.id) + "/join")
+        self.assertEqual(record.cancel_url, "http://localhost:8000/" + str(record.id) + "/cancel")
+
+        self.assertEqual(record.request_message, "テスト依頼。\n" + "http://localhost:8000/" + str(record.id) + "/join")
+        self.assertEqual(record.join_complete_message, "受付完了。キャンセルURL\n" + "http://localhost:8000/" + str(record.id) + "/cancel")
 
         label_set = record.label_set.all()
 

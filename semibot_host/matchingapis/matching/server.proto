@@ -25,6 +25,15 @@ message AddTaskRequestRequest {
   uint32 max_candidates = 6;
   // 再募集間隔
   google.protobuf.Duration rematching_duration = 7;
+
+  // メッセージ送信時に利用するフィールド類
+  // urlは<task_request_id>を入れる
+  // メッセージ本文は<join_url>、<cancel_url>が利用可能
+  string join_url = 8;
+  string cancel_url = 9;
+  string request_message = 10;
+  string join_complete_message = 11;
+  string matching_complete_message = 12;
 }
 
 message AddTaskRequestResponse {

@@ -26,6 +26,14 @@ def get_personal_data_dict():
 
     return res.personal_data
 
+# 個人情報取得
+def get_personal_data_from_id(userid: str):
+    with grpc.insecure_channel(settings.MATCHING_DATAMANAGE_HOST) as channel:
+        stub = data_manage_pb2_grpc.DataManageStub(channel)
+        res = stub.GetPersonalDataFromId(data_manage_pb2.GetPersonalDataFromIdRequest(id=userid))
+
+    return res
+
 # 作業辞書取得
 def get_task_list():
     with grpc.insecure_channel(settings.MATCHING_DATAMANAGE_HOST) as channel:

@@ -62,7 +62,7 @@ def record_task_request_history(task_request: TaskRequestRequest):
     task_request_pb.task_date.CopyFrom(timestamp_pb2.Timestamp(seconds=int(task_request.task_datetime.timestamp())))
 
     for candidate in task_request.joined_candidates.all():
-        userid = candidate.personal_data.userid
+        userid = candidate.personal_data.username
         task_request_pb.worker[userid].CopyFrom(personal_data[userid])
 
     # TODO: 現時点では収集に使ったラベルを使用しないため、記録していない

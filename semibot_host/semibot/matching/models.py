@@ -37,9 +37,19 @@ class TaskRequestRequest(models.Model):
     task_datetime = models.DateTimeField()
     label_set = models.ManyToManyField(LabelSet, through='ThroughRequestLabelSet')
     matching_end_datetime = models.DateTimeField()
-    callback_url = models.URLField()
-    require_candidates = models.IntegerField()
-    max_candidates = models.IntegerField()
+    require_candidates = models.IntegerField() # TODO: 最低限必要な人数、Taskのほうと差別化しないと…
+    max_candidates = models.IntegerField() # 最大人数
+    callback_url = models.URLField(blank=True, null=True) # 終了時に叩くURL、使用しないかも
+
+    # メッセージ送信に利用するフィールド
+    # URLでは<task_request_id>、メッセージでは<join_url>,<cancel_url>を指定して、実際に送るときは適切な値が埋め込められる
+    join_url = models.URLField()
+    cancel_url = models.URLField()
+    request_message = models.TextField() # 依頼送付時に送るメッセージ本文
+    join_complete_message = models.TextField() # 参加受付完了時に送るメッセージ本文(キャンセルURLを知らせたりするために使用)
+    matching_complete_message = models.TextField # マッチング完了時に送るメッセージ本文
+
+    # 候補者グループ選択時に利用するフィールド
     # 参加表明をした候補者
     joined_candidates = models.ManyToManyField(Candidate, blank=True, related_name="joined_task_request")
     # 返事待機中の候補者

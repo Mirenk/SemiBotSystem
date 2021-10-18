@@ -56,7 +56,15 @@ class DataManage(data_manage_pb2_grpc.DataManageServicer):
         personal_data_pb = type_pb2.PersonalData()
         personal_data_pb.id = personal_data.username
         personal_data_pb.name = personal_data.first_name + personal_data.last_name
-        personal_data_pb.message_addr = personal_data.message_addr
+
+        # message_addr作成
+        message_addr = personal_data.message_addr.filter(is_primary=True).first()
+        if message_addr is not None:
+            message_addr_pb = type_pb2.MessageAddress()
+            message_addr_pb.userid = message_addr.userid
+            message_addr_pb.method = message_addr.method
+
+            personal_data_pb.message_addr.CopyFrom(message_addr_pb)
 
         # Label辞書を登録
         cls.__set_label_pb_dict_from_label_queryset(personal_data.label.all(), personal_data_pb.labels)

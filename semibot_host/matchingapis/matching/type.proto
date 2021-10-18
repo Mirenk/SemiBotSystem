@@ -16,10 +16,19 @@ message LabelValue {
   int32 value = 2;
 }
 
+message MessageAddress {
+  // 送信手段
+  enum Method {
+    SLACK = 0;
+  }
+  Method method = 1;
+  string userid = 2;
+}
+
 message PersonalData {
   string id = 1;
   string name = 2;
-  string message_addr = 3;
+  MessageAddress message_addr = 3;
   map<string, Label> labels = 4; // key == Label.name
   // マッチング処理時のみ利用
   repeated LabelValue var_labels = 5;

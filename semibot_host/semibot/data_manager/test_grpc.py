@@ -1,7 +1,7 @@
 import grpc
 from django_grpc_framework.test import RPCTestCase
 from matching_pb import data_manage_pb2, data_manage_pb2_grpc, type_pb2
-from data_manager.models import Label, LabelValue, PersonalData, Task, TaskRequest
+from data_manager.models import Label, LabelValue, MessageAddress, PersonalData, Task, TaskRequest
 import time
 from datetime import datetime
 
@@ -20,7 +20,9 @@ class DataManageTest(RPCTestCase):
         label1 = Label.objects.create(name='test1')
         label2 = Label.objects.create(name='test2')
 
-        testperson = PersonalData.objects.create(username='testuser', first_name='test', last_name='user', message_addr='http://example.com')
+        testperson = PersonalData.objects.create(username='testuser', first_name='test', last_name='user')
+
+        testaddr = MessageAddress.objects.create(method=0, userid='testuser', user=testperson, is_primary=True)
 
         testperson.label.add(label1)
         testperson.label.add(label2)
@@ -31,7 +33,6 @@ class DataManageTest(RPCTestCase):
         print(res)
         self.assertEqual(res.personal_data['testuser'].id, testperson.username)
         self.assertEqual(res.personal_data['testuser'].name, testperson.first_name + testperson.last_name)
-        self.assertEqual(res.personal_data['testuser'].message_addr, testperson.message_addr)
         self.assertEqual(res.personal_data['testuser'].labels['test1'].name, 'test1')
         self.assertEqual(res.personal_data['testuser'].labels['test2'].name, 'test2')
 
@@ -90,21 +91,22 @@ class DataManageTest(RPCTestCase):
         self.assertEqual(res.task_requests[1].name, t_r2.name)
 
     def test_get_personaldata_from_id(self):
-        testperson = PersonalData.objects.create(username='testuser', first_name='test', last_name='user', message_addr='http://example.com')
+        testperson = PersonalData.objects.create(username='testuser', first_name='test', last_name='user')
+        testaddr = MessageAddress.objects.create(method=0, userid='testuser', user=testperson, is_primary=True)
 
         stub = data_manage_pb2_grpc.DataManageStub(self.channel)
         res = stub.GetPersonalDataFromId(data_manage_pb2.GetPersonalDataFromIdRequest(id='testuser'))
 
         print(res)
         self.assertEqual(res.name, testperson.first_name + testperson.last_name)
-        self.assertEqual(res.message_addr, testperson.message_addr)
+        self.assertEqual(res.message_addr.method, testaddr.method)
 
     def test_record_taskrequest_history(self):
         testtask = Task.objects.create(name='test')
         tesktask_pb = type_pb2.Task(name='test')
 
-        testperson = PersonalData.objects.create(username='testuser', first_name='test', last_name='user', message_addr='http://example.com')
-        testperson_pb = type_pb2.PersonalData(id='testuser', name='testuser', message_addr='http://example.com')
+        testperson = PersonalData.objects.create(username='testuser', first_name='test', last_name='user')
+        testperson_pb = type_pb2.PersonalData(id='testuser', name='testuser')
 
 
         label = Label.objects.create(name='test')

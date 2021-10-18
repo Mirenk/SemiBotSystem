@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from concurrency.fields import AutoIncVersionField
+from enum import Enum
 
 ##
 ## ラベル関係モデル
@@ -27,7 +27,16 @@ class Label(BaseLabel):
 # 個人情報モデル
 class PersonalData(AbstractUser):
     label = models.ManyToManyField(Label, related_name='candidates', blank=True)
-    message_addr = models.URLField()
+
+# 送信先情報モデル
+class MessageAddress(models.Model):
+    class Method(Enum):
+        SLACK = (0, 'Slack')
+
+    method = models.IntegerField(choices=[x.value for x in Method])
+    userid = models.CharField(max_length=20)
+    user = models.ForeignKey(PersonalData, on_delete=models.CASCADE, related_name='message_addr')
+    is_primary = models.BooleanField(default=False)
 
 ##
 ## 履歴関係モデル

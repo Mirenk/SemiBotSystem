@@ -8,4 +8,5 @@ admin.site.register(LabelSet)
 admin.site.register(LabelValue)
 admin.site.register(Task)
 admin.site.register(TaskRequest)
+admin.site.register(MessageAddress)
 

@@ -1,3 +1,4 @@
 from django.contrib import admin
+from semi_app.models import TaskRequest
 
-# Register your models here.
+admin.site.register(TaskRequest)

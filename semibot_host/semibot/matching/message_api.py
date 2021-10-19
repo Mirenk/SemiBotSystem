@@ -21,7 +21,7 @@ class SlackAPI(BaseMessageAPI):
         except SlackApiError as e:
             assert e.responce["ok"] is False
             assert e.responce["error"]
-            print(f"postMsg: {e.res['error']}")
+            print(f"__post_msg: {e.res['error']}")
 
     def send_dm(self, userid: str, msg: str):
         try:
@@ -29,10 +29,11 @@ class SlackAPI(BaseMessageAPI):
         except SlackApiError as e:
             assert e.responce["ok"] is False
             assert e.responce["error"]
-            print(f"postDirectMsg: {e.response['error']}")
+            print(f"send_dm: {e.response['error']}")
             return
-        dm_channel = res["channel"]["id"]
-        self.__post_msg(dm_channel, msg)
+        else:
+            dm_channel = res["channel"]["id"]
+            self.__post_msg(dm_channel, msg)
 
     # デバッグ用
     def print_send_dm(self, userid: str, msg: str):

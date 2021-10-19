@@ -55,7 +55,7 @@ class DataManage(data_manage_pb2_grpc.DataManageServicer):
         # ラベル以外のPersonalDataを先に作成
         personal_data_pb = type_pb2.PersonalData()
         personal_data_pb.id = personal_data.username
-        personal_data_pb.name = personal_data.first_name + personal_data.last_name
+        personal_data_pb.name = personal_data.last_name + personal_data.first_name
 
         # message_addr作成
         message_addr = personal_data.message_addr.filter(is_primary=True).first()

@@ -2,6 +2,8 @@ from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.forms import ModelForm
 from django import forms
 from semi_app.models import TaskRequest
+from datetime import datetime, timedelta
+from django.utils import timezone
 
 # placeholder内に入力すべき値を表示させるためにやってる
 class LoginForm(AuthenticationForm):
@@ -23,7 +25,6 @@ class DayDurationField(forms.DurationField):
     widget = forms.NumberInput
 
     def to_python(self, value):
-        print(value)
         try:
             int(value)
         except ValueError:
@@ -35,13 +36,32 @@ class DayDurationField(forms.DurationField):
 
 # 依頼入力フォーム
 class TaskRequestForm(ModelForm):
-    start_matching_datetime = forms.DateTimeField(label='募集開始時間')
+    start_matching_datetime = forms.DateTimeField(label='募集開始時刻', required=False)
+    start_matching_now = forms.BooleanField(label='今すぐ募集を開始する', required=False)
     rematching_duration = DayDurationField(label='再募集期間(日)')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        for field in self.fields.values():
-            field.widget.attrs['class'] = 'form-control'
+        for key, field in self.fields.items():
+            if key != 'start_matching_now':
+                field.widget.attrs['class'] = 'form-control'
+            else:
+                field.widget.attrs['class'] = 'form-check-input'
+
+    def clean_start_matching_datetime(self):
+        start_matching_datetime = self.cleaned_data.get('start_matching_datetime')
+        if start_matching_datetime is not None:
+            if start_matching_datetime <= timezone.now() + timedelta(minutes=30):
+                raise forms.ValidationError('募集開始時刻は現在時刻より30分以上空けてください。')
+        return start_matching_datetime
+
+    def clean(self):
+        cleaned_data = super(TaskRequestForm, self).clean()
+        start_matching_datetime = cleaned_data.get('start_matching_datetime')
+        start_matching_now = cleaned_data.get('start_matching_now')
+        if not (start_matching_datetime or start_matching_now):
+            raise forms.ValidationError('募集開始時刻を入力するか、今すぐ募集を開始するにチェックを入れてください。')
+        return cleaned_data
 
     class Meta:
         model = TaskRequest

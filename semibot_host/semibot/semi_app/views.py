@@ -7,6 +7,10 @@ from django.urls import reverse_lazy
 from matching.views import JoinView, CancelView
 from .forms import LoginForm, MyPasswordChangeForm, TaskRequestForm
 from .models import TaskRequest
+import semi_app.helper as helper
+from django_celery_beat.models import ClockedSchedule, PeriodicTask
+from django.utils import timezone
+import json
 
 
 class Top(generic.TemplateView):
@@ -59,8 +63,33 @@ class TaskRequestView(CreateView, LoginRequiredMixin):
         if self.request.POST.get('next', '') == 'back':
             return render(self.request, 'semi_app/task_request_create.html', ctx)
         if self.request.POST.get('next', '') == 'create':
-            return super().form_valid(form)
+            return self.record_or_send_task(form)
         else:
             # 正常動作ではここは通らない。エラーページへの遷移でも良い
             return redirect(reverse_lazy('semi_app:top'))
+
+    def record_or_send_task(self, form):
+        cleaned_data = form.cleaned_data
+        # 今すぐ募集開始の場合
+        if cleaned_data.get('start_matching_now'):
+            helper.send_matching_server(
+                task_datetime=cleaned_data.get('task_datetime'),
+                bachelor_num=cleaned_data.get('bachelor_num'),
+                master_num=cleaned_data.get('master_num')
+            )
+            return redirect(self.success_url)
+        else: # 指定時刻に募集開始の場合
+            res = super(TaskRequestView, self).form_valid(form)
+            # タスク登録
+            schedule, create = ClockedSchedule.objects.get_or_create(
+                clocked_time=cleaned_data.get('start_matching_datetime')
+            )
+            PeriodicTask.objects.create(
+                clocked=schedule,
+                name='全体ゼミ募集_' + timezone.now().strftime('%Y-%m-%d %H:%M'),
+                task='semi_app.tasks.start_matching_task',
+                args=json.dumps([self.object.id]),
+                one_off=True,
+            )
+            return res
 

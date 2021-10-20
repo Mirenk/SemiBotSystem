@@ -6,14 +6,10 @@
     <h1>ゼミ登録確認</h1>
     <p>以下の内容でよろしいですか？</p>
     <dl class="row">
-        <dt class="col-3">日時</dt>
-        <dd class="col-9">{{ form.task_datetime.value }}</dd>
-        <dt class="col-3">学部生人数</dt>
-        <dd class="col-9">{{ form.bachelor_num.value }}</dd>
-        <dt class="col-3">院生人数</dt>
-        <dd class="col-9">{{ form.master_num.value }}</dd>
-        <dt class="col-3">募集開始日時</dt>
-        <dd class="col-9">{{ form.start_matching_datetime.value }}</dd>
+    {% for field in form %}
+        <dt class="col-3">{{ field.label_tag }}</dt>
+        <dt class="col-9">{{ field.value }}</dt>
+    {% endfor %}
     </dl>
     <form action="{% url 'semi_app:add_semi' %}" method="POST">
         {% for field in form %}

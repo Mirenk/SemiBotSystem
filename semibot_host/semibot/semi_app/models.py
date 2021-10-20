@@ -7,4 +7,4 @@ class TaskRequest(models.Model):
     task_datetime = models.DateTimeField()
     bachelor_num = models.IntegerField(validators=[MinValueValidator(1)])
     master_num = models.IntegerField(validators=[MinValueValidator(1)])
-    rematching_
+    rematching_duration = models.DurationField(null=True)

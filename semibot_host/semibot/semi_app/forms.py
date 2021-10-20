@@ -30,3 +30,8 @@ class TaskRequestForm(ModelForm):
     class Meta:
         model = TaskRequest
         fields = '__all__'
+        labels = {
+            'task_datetime': 'ゼミ日時',
+            'bachelor_num': '学部生人数',
+            'master_num': '院生人数',
+        }

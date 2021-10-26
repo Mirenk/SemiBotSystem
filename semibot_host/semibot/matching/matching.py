@@ -6,6 +6,7 @@ from matching.message_api import SlackAPI
 from datetime import datetime
 from django.db import transaction
 from django.contrib.auth import get_user_model
+import os
 
 # ユーザモデル定義
 # これでどのような認証を使っても動作が変わらない
@@ -140,7 +141,9 @@ def send_message(message_addr: type_pb2.MessageAddress, msg: str):
     # elif ~でapiを変えていく
 
     api.print_send_dm(message_addr.userid, msg) # DEBUG
-#    api.send_dm(message_addr.userid, msg)
+    # 環境変数でNOT_SEND_DMをTrueとすることで送信を抑止
+    if os.environ.get('NOT_SEND_DM', 'False') != 'True':
+        api.send_dm(message_addr.userid, msg)
 
 def send_result_message(task_request: TaskRequestRequest):
     workers = task_request.joined_candidates.all()

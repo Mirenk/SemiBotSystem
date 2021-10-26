@@ -209,7 +209,7 @@ class DataManage(data_manage_pb2_grpc.DataManageServicer):
                 label = Label.objects.filter(name=label_value_pb.label.name).first()
                 if label is None:
                     response.result = data_manage_pb2.RecordTaskRequestHistoryResult.Result.FAILED
-                    response.message = 'Not found label: ' + label_pb.name
+                    response.message = 'Not found label: ' + labels_pb.name
                     del task_request
                     return response
 

@@ -4,7 +4,7 @@ from django.db import transaction
 from matching_pb import data_manage_pb2, data_manage_pb2_grpc, type_pb2
 from google.protobuf import timestamp_pb2
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 #
 # サービス定義
@@ -163,7 +163,7 @@ class DataManage(data_manage_pb2_grpc.DataManageServicer):
             # 記録用オブジェクト作成
             task_request = TaskRequest()
             task_request.name = request.name
-            task_request.work_datetime = datetime.fromtimestamp(request.task_date.seconds)
+            task_request.work_datetime = datetime.fromtimestamp(request.task_date.seconds, timezone.utc)
 
             # タスク処理
             task = Task.objects.filter(name=request.task.name).first()

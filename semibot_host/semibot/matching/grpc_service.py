@@ -8,7 +8,8 @@ from matching_pb import server_pb2, server_pb2_grpc
 from .dynamic_label import DynamicLabel
 
 from django.db import transaction
-from datetime import datetime
+from datetime import datetime, timezone
+from django.utils import timezone as django_timezone
 
 from django_celery_beat.models import ClockedSchedule, PeriodicTask
 
@@ -38,15 +39,15 @@ class MatchingServer(server_pb2_grpc.MatchingServerServicer):
             task_request = TaskRequestRequest()
             task_request.name = request.task_request.name
             task_request.task = request.task_request.task.name
-            task_request.task_datetime = datetime.fromtimestamp(request.task_request.task_date.seconds)
-            task_request.matching_end_datetime = datetime.fromtimestamp(request.matching_end_date.seconds)
+            task_request.task_datetime = datetime.fromtimestamp(request.task_request.task_date.seconds, timezone.utc)
+            task_request.matching_end_datetime = datetime.fromtimestamp(request.matching_end_date.seconds, timezone.utc)
             task_request.callback_url = request.callback_url
             task_request.require_candidates = request.require_candidates
             task_request.max_candidates = request.max_candidates
 
             td = request.rematching_duration.ToTimedelta()
             task_request.rematching_duration = td
-            task_request.next_rematching = datetime.now() + td
+            task_request.next_rematching = django_timezone.now() + td
 
             # ManyToManyのための一時記録
             task_request.save()

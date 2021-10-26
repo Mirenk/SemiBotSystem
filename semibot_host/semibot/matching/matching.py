@@ -37,7 +37,11 @@ def select_candidate_group(task_request: TaskRequestRequest,
 
     ## 2. 固定動的ラベルでソート
     # 固定動的ラベル取り出し
-    const_dyn_labels = label_set.const_label.filter(is_dynamic=True)
+    if label_set is not None:
+        const_dyn_labels = label_set.const_label.filter(is_dynamic=True)
+    else: # 依頼に関連付けされているラベルセットがない場合
+        # TODO: 作業を直接参照して取り出し
+        const_dyn_labels = None
 
     if const_dyn_labels is not None:
         for const_dyn_label in const_dyn_labels:
@@ -58,35 +62,39 @@ def select_candidate_group(task_request: TaskRequestRequest,
     ## 3 依頼についている数値ラベルの値になるようにフィルタ
     ## (一応ここでグループが決定されることがある)
     # 数値ラベル取り出し
-    var_labels = label_set.var_label.all()
+    if label_set is not None:
+        var_labels = label_set.var_label.all()
+    else:
+        var_labels = None
 
-    # 固定ラベルの数値ラベルでフィルタ
-    var_const_labels = var_labels.filter(label__is_dynamic=False)
+    if var_labels is not None:
+        # 固定ラベルの数値ラベルでフィルタ
+        var_const_labels = var_labels.filter(label__is_dynamic=False)
 
-    # ラベル名key, 残り数をvalueにした辞書作成
-    tmp_label_dict = {}
-    for var_const_label in var_const_labels:
-        tmp_label_dict[var_const_label.label.name] = var_const_label.value
+        # ラベル名key, 残り数をvalueにした辞書作成
+        tmp_label_dict = {}
+        for var_const_label in var_const_labels:
+            tmp_label_dict[var_const_label.label.name] = var_const_label.value
 
-    # フィルタ開始
-    # 現在のpersonal_data_listの順に見ていき、固定ラベルが付いていたら残しカウントを下げる
-    # 一つではなく複数確認し、カウントを下げる
-    # 一つもついていなかった場合、除外
-    for userid in list(personal_data_id_list):
-        work_personal_data = personal_data[userid]
-        # ラベル存在可否フラグ
-        is_exist = False
-        for label in list(tmp_label_dict):
-            if label in work_personal_data.labels:
-                is_exist = True
-                tmp_label_dict[label] = tmp_label_dict[label] - 1
-                # 数を減らした時点で0になったら、一定数集まったということなのでラベルを削除
-                if tmp_label_dict[label] == 0:
-                    del tmp_label_dict[label]
+        # フィルタ開始
+        # 現在のpersonal_data_listの順に見ていき、固定ラベルが付いていたら残しカウントを下げる
+        # 一つではなく複数確認し、カウントを下げる
+        # 一つもついていなかった場合、除外
+        for userid in list(personal_data_id_list):
+            work_personal_data = personal_data[userid]
+            # ラベル存在可否フラグ
+            is_exist = False
+            for label in list(tmp_label_dict):
+                if label in work_personal_data.labels:
+                    is_exist = True
+                    tmp_label_dict[label] = tmp_label_dict[label] - 1
+                    # 数を減らした時点で0になったら、一定数集まったということなのでラベルを削除
+                    if tmp_label_dict[label] == 0:
+                        del tmp_label_dict[label]
 
-        # 当てはまるラベルが一つもない、または集めるべきラベルがない場合、削除
-        if not is_exist:
-            personal_data_id_list.remove(userid)
+            # 当てはまるラベルが一つもない、または集めるべきラベルがない場合、削除
+            if not is_exist:
+                personal_data_id_list.remove(userid)
 
     # 動的ラベルの数値ラベル
     # TODO: ゼミ管理で使用しないため、未実装

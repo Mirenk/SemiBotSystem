@@ -28,11 +28,16 @@ def send_matching_server(task_datetime: datetime,
     request.max_candidates = bachelor_num + master_num
 
     # ラベルセット生成
+    # ラベルセット
+    label_set = server_pb2.AddTaskRequestRequest.LabelSet()
+
     # 学部生
     if bachelor_num > 0:
         bachelor_const = type_pb2.Label(name='学部生')
         bachelor_val = type_pb2.LabelValue(value=bachelor_num)
         bachelor_val.label.CopyFrom(bachelor_const)
+
+        label_set.var_label.append(bachelor_val)
 
     # 院生
     if master_num > 0:
@@ -40,14 +45,12 @@ def send_matching_server(task_datetime: datetime,
         master_val = type_pb2.LabelValue(value=master_num)
         master_val.label.CopyFrom(master_const)
 
+        label_set.var_label.append(master_val)
+
     # 動的ラベル
     few_join = type_pb2.Label(name='few_join')
     past_joined = type_pb2.Label(name='past_joined')
 
-    # ラベルセット
-    label_set = server_pb2.AddTaskRequestRequest.LabelSet()
-    label_set.var_label.append(bachelor_val)
-    label_set.var_label.append(master_val)
     label_set.const_label.append(few_join)
     label_set.const_label.append(past_joined)
 

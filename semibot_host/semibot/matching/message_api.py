@@ -17,18 +17,13 @@ class SlackAPI(BaseMessageAPI):
     def __post_msg(self, channel, msg):
         try:
             res = self.client.chat_postMessage(channel=channel, text=msg)
-            assert res["message"]["text"] == msg
         except SlackApiError as e:
-            assert e.response["ok"] is False
-            assert e.response["error"]
             print(f"__post_msg: {e.res['error']}")
 
     def send_dm(self, userid: str, msg: str):
         try:
             res = self.client.conversations_open(users=userid)
         except SlackApiError as e:
-            assert e.response["ok"] is False
-            assert e.response["error"]
             print(f"send_dm: {e.response['error']}")
             return
         else:

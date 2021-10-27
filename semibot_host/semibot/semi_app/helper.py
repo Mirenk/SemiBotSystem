@@ -66,11 +66,11 @@ def send_matching_server(task_datetime: datetime,
     # メッセージ
     request.request_message = task_datetime.strftime('%Y-%m-%d %H:%M') \
         + "に行われるゼミの発表候補者になりました。\n" \
-        + "発表者として参加できる場合は以下のURLから参加処理を行ってください。\n" \
+        + "発表者として参加できる場合は以下のURLに学内からアクセスし、参加処理を行ってください。\n" \
         + "<join_url>"
     request.join_complete_message = task_datetime.strftime('%Y-%m-%d %H:%M') \
         + "に行われるゼミの発表者として受け付けました。\n" \
-        + "辞退する場合は以下のURLからキャンセル処理を行ってください。\n" \
+        + "辞退する場合は以下のURLに学内からアクセスし、キャンセル処理を行ってください。\n" \
         + "<cancel_url>"
     request.matching_complete_message = task_datetime.strftime('%Y-%m-%d %H:%M') \
         + "に行われるゼミの発表者になりました。発表準備をお願いします。"

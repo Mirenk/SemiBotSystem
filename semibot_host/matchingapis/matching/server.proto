@@ -33,7 +33,8 @@ message AddTaskRequestRequest {
   string cancel_url = 9;
   string request_message = 10;
   string join_complete_message = 11;
-  string matching_complete_message = 12;
+  string cancel_complete_message = 12;
+  string matching_complete_message = 13;
 }
 
 message AddTaskRequestResponse {

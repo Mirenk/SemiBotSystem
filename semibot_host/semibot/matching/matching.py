@@ -184,4 +184,4 @@ def cancel_task(task_request: TaskRequestRequest, user: User):
 
     # メッセージ送信
     candidate_pb = grpc_client.get_personal_data_from_id(user.username)
-    send_message(candidate_pb.message_addr, task_request.join_complete_message)
+    send_message(candidate_pb.message_addr, task_request.cancel_complete_message)

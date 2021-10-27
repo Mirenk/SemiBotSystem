@@ -77,6 +77,10 @@ def send_matching_server(task_datetime: datetime,
         + "に行われるゼミの発表者として受け付けました。\n" \
         + "辞退する場合は以下のURLに学内からアクセスし、キャンセル処理を行ってください。\n" \
         + "<cancel_url>"
+    request.cancel_complete_message = task_datetime.strftime('%Y-%m-%d %H:%M') \
+        + "に行われるゼミの発表者を辞退しました。\n" \
+        + "再度参加する場合は以下のURLに学内からアクセスし、参加処理を行ってください。\n" \
+        + "<join_url>"
     request.matching_complete_message = task_datetime.strftime('%Y-%m-%d %H:%M') \
         + "に行われるゼミの発表者になりました。発表準備をお願いします。"
 

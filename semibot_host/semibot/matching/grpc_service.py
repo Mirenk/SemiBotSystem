@@ -64,6 +64,9 @@ class MatchingServer(server_pb2_grpc.MatchingServerServicer):
             task_request.join_complete_message = request.join_complete_message.replace(
                 '<join_url>', task_request.join_url).replace(
                 '<cancel_url>', task_request.cancel_url)
+            task_request.cancel_complete_message = request.cancel_complete_message.replace(
+                '<join_url>', task_request.join_url).replace(
+                '<cancel_url>', task_request.cancel_url)
             task_request.matching_complete_message = request.matching_complete_message.replace(
                 '<join_url>', task_request.join_url).replace(
                 '<cancel_url>', task_request.cancel_url)

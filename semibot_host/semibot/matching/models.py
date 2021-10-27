@@ -47,6 +47,7 @@ class TaskRequestRequest(models.Model):
     cancel_url = models.URLField()
     request_message = models.TextField() # 依頼送付時に送るメッセージ本文
     join_complete_message = models.TextField() # 参加受付完了時に送るメッセージ本文(キャンセルURLを知らせたりするために使用)
+    cancel_complete_message = models.TextField()
     matching_complete_message = models.TextField # マッチング完了時に送るメッセージ本文
 
     # 候補者グループ選択時に利用するフィールド

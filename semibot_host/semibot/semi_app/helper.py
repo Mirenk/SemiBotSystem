@@ -65,8 +65,8 @@ def send_matching_server(task_datetime: datetime, bachelor_num: int, master_num:
     request.rematching_duration.CopyFrom(rematching_duration_pb)
 
     # 参加/キャンセルURL
-    request.join_url = reverse('semi_app:join')
-    request.cancel_url = reverse('semi_app:cancel')
+    request.join_url = "http://172.28.84.79:8000/<task_request_id>/join"
+    request.cancel_url = "http://172.28.84.79:8000/<task_request_id>/cancel"
 
     # メッセージ
     request.request_message = task_datetime.strftime('%Y-%m-%d %H:%M') \

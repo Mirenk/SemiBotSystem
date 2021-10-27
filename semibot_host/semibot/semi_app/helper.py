@@ -4,7 +4,6 @@
 from matching_pb import type_pb2, server_pb2, server_pb2_grpc
 from google.protobuf import timestamp_pb2, duration_pb2
 from datetime import datetime, timedelta
-from django.urls import reverse
 import grpc
 
 # 定数類
@@ -12,15 +11,12 @@ import grpc
 BACHELOR_MIN_NUM = 0
 # 院生最低人数
 MASTER_MIN_NUM = 0
-# 再募集間隔
-REMATCHING_DURATION = timedelta(weeks=1)
-# 終了時刻までの間隔(ゼミ日よりどれくらい前か)
-END_DURATION = timedelta(weeks=1)
 
-def send_matching_server(task_datetime: datetime, bachelor_num: int, master_num: int):
-    print('task_datetime: ', task_datetime.strftime('%Y-%m-%d %H:%M'))
-    print('bachelor_num: ', str(bachelor_num))
-    print('master_num: ', str(master_num))
+def send_matching_server(task_datetime: datetime,
+                         bachelor_num: int,
+                         master_num: int,
+                         rematching_duration: timedelta,
+                         matching_end_datetime: datetime):
 
     task_request_data = type_pb2.TaskRequestData()
     task_request_data.task.CopyFrom(type_pb2.Task(name='全体ゼミ'))
@@ -56,12 +52,11 @@ def send_matching_server(task_datetime: datetime, bachelor_num: int, master_num:
     request.label_set.append(label_set)
 
     # 終了時刻
-    end_date = task_datetime + END_DURATION
-    request.matching_end_date.CopyFrom(timestamp_pb2.Timestamp(seconds=int(end_date.timestamp())))
+    request.matching_end_date.CopyFrom(timestamp_pb2.Timestamp(seconds=int(matching_end_datetime.timestamp())))
 
     # 再募集間隔
     rematching_duration_pb = duration_pb2.Duration()
-    rematching_duration_pb.FromTimedelta(td=REMATCHING_DURATION)
+    rematching_duration_pb.FromTimedelta(td=rematching_duration)
     request.rematching_duration.CopyFrom(rematching_duration_pb)
 
     # 参加/キャンセルURL

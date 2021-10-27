@@ -50,10 +50,20 @@ class TaskRequestForm(ModelForm):
 
     def clean_start_matching_datetime(self):
         start_matching_datetime = self.cleaned_data.get('start_matching_datetime')
+        matching_end_datetime = self.cleaned_data.get('matching_end_datetime')
         if start_matching_datetime is not None:
             if start_matching_datetime <= timezone.now() + timedelta(minutes=30):
                 raise forms.ValidationError('募集開始時刻は現在時刻より30分以上空けてください。')
+            if start_matching_datetime < matching_end_datetime:
+                raise forms.ValidationError('募集開始時刻は募集終了時刻より前にしてください。')
         return start_matching_datetime
+
+    def clean_matching_end_datetime(self):
+        matching_end_datetime = self.cleaned_data.get('matching_end_datetime')
+        task_datetime = self.cleaned_data.get('task_datetime')
+        if matching_end_datetime < task_datetime:
+            raise forms.ValidationError('募集終了時刻はゼミ日より前にしてください。')
+        return matching_end_datetime
 
     def clean(self):
         cleaned_data = super(TaskRequestForm, self).clean()
@@ -70,4 +80,5 @@ class TaskRequestForm(ModelForm):
             'task_datetime': 'ゼミ日時',
             'bachelor_num': '学部生人数',
             'master_num': '院生人数',
+            'matching_end_datetime': '募集終了時刻'
         }

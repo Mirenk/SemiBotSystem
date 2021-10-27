@@ -94,7 +94,7 @@ class MatchingServer(server_pb2_grpc.MatchingServerServicer):
 
         # 候補者グループ選択呼び出し
         personal_data = grpc_client.get_personal_data_dict()
-        task_request_history = grpc_client.get_task_request_histories()
+        task_request_history = grpc_client.get_task_request_histories(request.task_request.task)
 
         matching.select_candidate_group(task_request, personal_data, task_request_history)
 

@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from matching.models import TaskRequestRequest
 from matching.matching import join_task, cancel_task
 
-class JoinView(DetailView, LoginRequiredMixin):
+class JoinView(LoginRequiredMixin, DetailView):
     model = TaskRequestRequest
     template_name_suffix = '_task_join'
     success_url = reverse_lazy('join_success')
@@ -27,7 +27,7 @@ class JoinView(DetailView, LoginRequiredMixin):
         return HttpResponseRedirect(str(self.success_url))
 
 
-class CancelView(DetailView, LoginRequiredMixin):
+class CancelView(LoginRequiredMixin, DetailView):
     model = TaskRequestRequest
     template_name_suffix = '_task_cancel'
     success_url = reverse_lazy('cancel_success')

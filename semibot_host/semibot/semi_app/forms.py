@@ -61,7 +61,7 @@ class TaskRequestForm(ModelForm):
     def clean_matching_end_datetime(self):
         matching_end_datetime = self.cleaned_data.get('matching_end_datetime')
         task_datetime = self.cleaned_data.get('task_datetime')
-        if matching_end_datetime < task_datetime:
+        if matching_end_datetime > task_datetime:
             raise forms.ValidationError('募集終了時刻はゼミ日より前にしてください。')
         return matching_end_datetime
 

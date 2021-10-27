@@ -6,6 +6,8 @@ from .models import *
 
 from matching_pb import server_pb2, server_pb2_grpc
 from .dynamic_label import DynamicLabel
+import matching.matching as matching
+import matching.grpc_client as grpc_client
 
 from django.db import transaction
 from datetime import datetime, timezone
@@ -89,6 +91,12 @@ class MatchingServer(server_pb2_grpc.MatchingServerServicer):
         task_request.save()
 
         response.result = server_pb2.AddTaskRequestResponse.Result.SUCCESS
+
+        # 候補者グループ選択呼び出し
+        personal_data = grpc_client.get_personal_data_dict()
+        task_request_history = grpc_client.get_task_request_histories()
+
+        matching.select_candidate_group(task_request, personal_data, task_request_history)
 
         # 人数チェックのタスク登録
         schedule, create = ClockedSchedule.objects.get_or_create(

@@ -9,7 +9,7 @@ from .dynamic_label import DynamicLabel
 import matching.matching as matching
 import matching.grpc_client as grpc_client
 
-from django.db import transaction
+from django.db import transaction, close_old_connections
 from datetime import datetime, timezone
 from django.utils import timezone as django_timezone
 
@@ -36,6 +36,8 @@ class MatchingServer(server_pb2_grpc.MatchingServerServicer):
     def AddTaskRequest(self, request, context):
         response = server_pb2.AddTaskRequestResponse()
 
+        # 時間経過を見て処理前にDBとのコネクションを破棄
+        close_old_connections()
         with transaction.atomic():
             # 記録用オブジェクト作成
             task_request = TaskRequestRequest()

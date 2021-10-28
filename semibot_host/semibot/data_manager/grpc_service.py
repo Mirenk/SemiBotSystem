@@ -1,5 +1,5 @@
 from .models import *
-from django.db import transaction
+from django.db import transaction, close_old_connections
 
 from matching_pb import data_manage_pb2, data_manage_pb2_grpc, type_pb2
 from google.protobuf import timestamp_pb2
@@ -85,12 +85,14 @@ class DataManage(data_manage_pb2_grpc.DataManageServicer):
     #########################
     def ListLabels(self, request, context):
         response = data_manage_pb2.ListLabelsResponse()
+        close_old_connections()
         self.__set_label_pb_dict_from_label_queryset(Label.objects.all(), response.labels)
 
         return response
 
     def ListPersonalData(self, request, context):
         response = data_manage_pb2.ListPersonalDataResponse()
+        close_old_connections()
         personal_data_list = PersonalData.objects.all()
 
         # responseに追加
@@ -100,6 +102,7 @@ class DataManage(data_manage_pb2_grpc.DataManageServicer):
 
     def ListTasks(self, request, context):
         response = data_manage_pb2.ListTasksResponse()
+        close_old_connections()
         task_list = Task.objects.all()
 
         for task in task_list:
@@ -112,6 +115,7 @@ class DataManage(data_manage_pb2_grpc.DataManageServicer):
 
     def GetTaskFromName(self, request, context):
         task_name = request.name
+        close_old_connections()
         task = Task.objects.filter(name=task_name).first()
 
         return self.__get_task_pb_from_task_record(task)
@@ -121,6 +125,7 @@ class DataManage(data_manage_pb2_grpc.DataManageServicer):
 
         # タスク取得
         task_name = request.name
+        close_old_connections()
         task = Task.objects.filter(name=task_name).first()
         # 後でつけるため、変換しておく
         task_pb = self.__get_task_pb_from_task_record(task)
@@ -151,6 +156,7 @@ class DataManage(data_manage_pb2_grpc.DataManageServicer):
         return response
 
     def GetPersonalDataFromId(self, request, context):
+        close_old_connections()
         personal_data = PersonalData.objects.filter(username=request.id).first()
         personal_data_pb = self.__get_personaldata_pb_from_personaldata_record(personal_data)
 
@@ -159,6 +165,7 @@ class DataManage(data_manage_pb2_grpc.DataManageServicer):
     def RecordTaskRequestHistory(self, request, context):
         response = data_manage_pb2.RecordTaskRequestHistoryResult()
 
+        close_old_connections()
         with transaction.atomic():
             # 記録用オブジェクト作成
             task_request = TaskRequest()

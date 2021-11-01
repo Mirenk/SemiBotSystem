@@ -147,7 +147,7 @@ def send_message(message_addr: type_pb2.MessageAddress, msg: str):
 
 def send_result_message(task_request: TaskRequestRequest):
     workers = task_request.joined_candidates.all()
-    msg = task_request.join_complete_message
+    msg = task_request.matching_complete_message
 
     personal_data = grpc_client.get_personal_data_dict()
 

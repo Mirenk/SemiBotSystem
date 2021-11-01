@@ -50,8 +50,9 @@ class MatchingServer(server_pb2_grpc.MatchingServerServicer):
             task_request.max_candidates = request.max_candidates
 
             td = request.rematching_duration.ToTimedelta()
+            now = django_timezone.now()
             task_request.rematching_duration = td
-            task_request.next_rematching = django_timezone.now() + td
+            task_request.next_rematching = now + td
 
             # ManyToManyのための一時記録
             task_request.save()
@@ -109,7 +110,7 @@ class MatchingServer(server_pb2_grpc.MatchingServerServicer):
         )
         PeriodicTask.objects.create(
             clocked=schedule,
-            name=task_request.name,
+            name=task_request.name + now.strftime("%y%m%d%H%M"),
             task='matching.tasks.check_joined_candidates',
             args=json.dumps([task_request.id]),
             one_off=True,
@@ -121,7 +122,7 @@ class MatchingServer(server_pb2_grpc.MatchingServerServicer):
         )
         PeriodicTask.objects.create(
             clocked=schedule,
-            name='end_' + task_request.name,
+            name='end_' + task_request.name + now.strftime("%y%m%d%H%M"),
             task='matching.tasks.check_joined_candidates',
             args=json.dumps([task_request.id]),
             one_off=True,

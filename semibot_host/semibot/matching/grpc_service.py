@@ -123,7 +123,7 @@ class MatchingServer(server_pb2_grpc.MatchingServerServicer):
         PeriodicTask.objects.create(
             clocked=schedule,
             name='end_' + task_request.name + now.strftime("%y%m%d%H%M"),
-            task='matching.tasks.check_joined_candidates',
+            task='matching.tasks.end_matching_task',
             args=json.dumps([task_request.id]),
             one_off=True,
         )

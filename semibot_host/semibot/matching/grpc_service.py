@@ -131,6 +131,7 @@ class MatchingServer(server_pb2_grpc.MatchingServerServicer):
         # 定刻タスク二つをtask_requestに関連付け
         task_request.check_joined_candidates_task = check_joined_candidates_task
         task_request.end_matching_task = end_matching_task
+        task_request.save()
 
         return response
 

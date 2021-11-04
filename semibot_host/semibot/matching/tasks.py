@@ -50,8 +50,8 @@ def end_matching_task(task_request_id: int):
     client.record_task_request_history(task_request)
     matching.send_result_message(task_request=task_request)
 
+    # 依頼を削除
+    task_request.delete()
+
     # タスクを削除
     task_request.end_matching_task.delete()
-
-    # 依頼を削除して終了
-    task_request.delete()

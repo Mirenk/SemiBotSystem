@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-
+from django_celery_beat.models import PeriodicTask
 
 # ラベル
 class Label(models.Model):
@@ -59,6 +59,10 @@ class TaskRequestRequest(models.Model):
     rematching_duration = models.DurationField()
     # 次の再募集
     next_rematching = models.DateTimeField()
+
+    # 再募集、終了のタスクを記録
+    check_joind_candidates_task = models.ForeignKey(PeriodicTask, on_delete=models.PROTECT, related_name='check_taskrequest', null=True, blank=True)
+    end_matching_task = models.ForeignKey(PeriodicTask, on_delete=models.PROTECT, related_name='end_request', null=True, blank=True)
 
 # 依頼リクエスト-ラベルセット間、順序を保つために使用
 class ThroughRequestLabelSet(models.Model):

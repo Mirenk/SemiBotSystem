@@ -55,3 +55,4 @@ def end_matching_task(task_request_id: int):
 
     # タスクを削除
     task_request.end_matching_task.delete()
+    task_request.check_joined_candidates_task.delete()

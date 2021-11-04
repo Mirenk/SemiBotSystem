@@ -61,7 +61,7 @@ class TaskRequestRequest(models.Model):
     next_rematching = models.DateTimeField()
 
     # 再募集、終了のタスクを記録
-    check_joind_candidates_task = models.ForeignKey(PeriodicTask, on_delete=models.PROTECT, related_name='check_taskrequest', null=True, blank=True)
+    check_joined_candidates_task = models.ForeignKey(PeriodicTask, on_delete=models.PROTECT, related_name='check_taskrequest', null=True, blank=True)
     end_matching_task = models.ForeignKey(PeriodicTask, on_delete=models.PROTECT, related_name='end_request', null=True, blank=True)
 
 # 依頼リクエスト-ラベルセット間、順序を保つために使用

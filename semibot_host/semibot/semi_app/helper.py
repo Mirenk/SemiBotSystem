@@ -19,6 +19,7 @@ def send_matching_server(task_datetime: datetime,
                          matching_end_datetime: datetime):
 
     task_request_data = type_pb2.TaskRequestData()
+    task_request_data.name = "全体ゼミ"
     task_request_data.task.CopyFrom(type_pb2.Task(name='全体ゼミ'))
     task_request_data.task_date.CopyFrom(timestamp_pb2.Timestamp(seconds=int(task_datetime.timestamp())))
 

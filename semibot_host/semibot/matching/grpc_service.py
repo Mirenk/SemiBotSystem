@@ -108,7 +108,7 @@ class MatchingServer(server_pb2_grpc.MatchingServerServicer):
         schedule, create = ClockedSchedule.objects.get_or_create(
             clocked_time=task_request.next_rematching
         )
-        PeriodicTask.objects.create(
+        check_joined_candidates_task = PeriodicTask.objects.create(
             clocked=schedule,
             name=task_request.name + now.strftime("%y%m%d%H%M"),
             task='matching.tasks.check_joined_candidates',
@@ -120,13 +120,17 @@ class MatchingServer(server_pb2_grpc.MatchingServerServicer):
         schedule, create = ClockedSchedule.objects.get_or_create(
             clocked_time=task_request.next_rematching
         )
-        PeriodicTask.objects.create(
+        end_matching_task = PeriodicTask.objects.create(
             clocked=schedule,
             name='end_' + task_request.name + now.strftime("%y%m%d%H%M"),
             task='matching.tasks.end_matching_task',
             args=json.dumps([task_request.id]),
             one_off=True,
         )
+
+        # 定刻タスク二つをtask_requestに関連付け
+        task_request.check_joined_candidates_task = check_joined_candidates_task
+        task_request.end_matching_task = end_matching_task
 
         return response
 

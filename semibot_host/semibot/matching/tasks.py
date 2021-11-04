@@ -6,7 +6,7 @@ from celery import shared_task
 from .models import TaskRequestRequest
 import matching.matching as matching
 import matching.grpc_client as client
-from django_celery_beat.models import ClockedSchedule, PeriodicTask
+from django_celery_beat.models import ClockedSchedule
 
 # 人数確認関数
 # 同時刻に複数のタスクの終了時刻が来る可能性があるので、ここを並列処理する
@@ -20,7 +20,7 @@ def check_joined_candidates(task_request_id: int):
     schedule, create = ClockedSchedule.objects.get_or_create(
         clocked_time=task_request.next_rematching + task_request.rematching_duration
     )
-    PeriodicTask.objects.filter(name=task_request.name).update(clocked=schedule)
+    task_request.check_joined_candidates_task.update(clocked=schedule)
 
     # 必要人数に足りていない場合、再募集
     if task_request.require_candidates > joined_candidates:
@@ -50,7 +50,7 @@ def end_matching_task(task_request_id: int):
     matching.send_result_message(task_request=task_request)
 
     # タスクを削除
-    PeriodicTask.objects.filter(name='end_' + task_request.name).delete()
+    task_request.end_matching_task.delete()
 
     # 依頼を削除して終了
     task_request.delete()

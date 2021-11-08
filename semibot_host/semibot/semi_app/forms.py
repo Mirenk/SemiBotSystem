@@ -54,7 +54,7 @@ class TaskRequestForm(ModelForm):
         if start_matching_datetime is not None:
             if start_matching_datetime <= timezone.now() + timedelta(minutes=30):
                 raise forms.ValidationError('募集開始時刻は現在時刻より30分以上空けてください。')
-            if start_matching_datetime < matching_end_datetime:
+            if start_matching_datetime >= matching_end_datetime:
                 raise forms.ValidationError('募集開始時刻は募集終了時刻より前にしてください。')
         return start_matching_datetime
 

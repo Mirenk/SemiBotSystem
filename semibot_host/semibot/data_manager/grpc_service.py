@@ -124,6 +124,7 @@ class DataManage(data_manage_pb2_grpc.DataManageServicer):
         response = data_manage_pb2.GetTaskRequestHistoriesResponse()
 
         # タスク取得
+        # TODO: Noneが来た場合…
         task_name = request.name
         close_old_connections()
         task = Task.objects.filter(name=task_name).first()

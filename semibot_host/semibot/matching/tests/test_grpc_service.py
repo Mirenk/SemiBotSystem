@@ -1,17 +1,17 @@
 import time
 from google.protobuf import timestamp_pb2, duration_pb2
-from django_grpc_framework.test import RPCTestCase
+from django_grpc_framework.test import RPCTransactionTestCase
 from matching_pb import server_pb2, server_pb2_grpc, type_pb2
 from matching.models import TaskRequestRequest
 from datetime import datetime, timedelta
 from django_celery_beat.models import PeriodicTask
 
-class MathcingServerTest(RPCTestCase):
+class MathcingServerTest(RPCTransactionTestCase):
     def test_add_task_request(self):
         task_request_data = type_pb2.TaskRequestData()
         task_request_data.name = 'testrequest'
 
-        task_pb = type_pb2.Task(name='testtask')
+        task_pb = type_pb2.Task(name='全体ゼミ')
         task_request_data.task.CopyFrom(task_pb)
 
         task_date = datetime.now()
@@ -63,7 +63,7 @@ class MathcingServerTest(RPCTestCase):
         record = TaskRequestRequest.objects.all().first()
 
         self.assertEqual(record.name, 'testrequest')
-        self.assertEqual(record.task, 'testtask')
+        self.assertEqual(record.task, '全体ゼミ')
         self.assertEqual(int(record.task_datetime.timestamp()), int(task_date.timestamp()))
         self.assertEqual(int(record.matching_end_datetime.timestamp()), int(end_date.timestamp()))
         self.assertEqual(record.require_candidates, 2)

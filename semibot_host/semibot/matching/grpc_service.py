@@ -118,7 +118,7 @@ class MatchingServer(server_pb2_grpc.MatchingServerServicer):
 
         # 終了のタスク登録
         schedule, create = ClockedSchedule.objects.get_or_create(
-            clocked_time=task_request.next_rematching
+            clocked_time=task_request.matching_end_datetime
         )
         end_matching_task = PeriodicTask.objects.create(
             clocked=schedule,

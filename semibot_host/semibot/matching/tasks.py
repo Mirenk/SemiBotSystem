@@ -17,11 +17,12 @@ def check_joined_candidates(task_request_id: int):
     joined_candidates = task_request.joined_candidates.all().count()
 
     # 次の人数確認時間に更新
-    schedule, create = ClockedSchedule.objects.get_or_create(
-        clocked_time=task_request.next_rematching + task_request.rematching_duration
-    )
-    task_request.check_joined_candidates_task.clocked = schedule
-    task_request.check_joined_candidates_task.enabled = True
+    if task_request.check_joined_candidates_task is not None:
+        schedule, create = ClockedSchedule.objects.get_or_create(
+            clocked_time=task_request.next_rematching + task_request.rematching_duration
+        )
+        task_request.check_joined_candidates_task.clocked = schedule
+        task_request.check_joined_candidates_task.enabled = True
 
     # 必要人数に足りていない場合、再募集
     if task_request.require_candidates > joined_candidates:
@@ -54,5 +55,8 @@ def end_matching_task(task_request_id: int):
     task_request.delete()
 
     # タスクを削除
-    task_request.end_matching_task.delete()
-    task_request.check_joined_candidates_task.delete()
+    try:
+        task_request.end_matching_task.delete()
+        task_request.check_joined_candidates_task.delete()
+    except AttributeError:
+        pass

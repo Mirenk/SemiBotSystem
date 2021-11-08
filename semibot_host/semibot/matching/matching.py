@@ -86,12 +86,14 @@ def select_candidate_group(task_request: TaskRequestRequest,
             # ラベル存在可否フラグ
             is_exist = False
             for label in list(tmp_label_dict):
+                # 数を減らした時点で0になったら、一定数集まったということなのでラベルを削除
+                if tmp_label_dict[label] == 0:
+                    del tmp_label_dict[label]
+                    continue
+
                 if label in work_personal_data.labels:
                     is_exist = True
                     tmp_label_dict[label] = tmp_label_dict[label] - 1
-                    # 数を減らした時点で0になったら、一定数集まったということなのでラベルを削除
-                    if tmp_label_dict[label] == 0:
-                        del tmp_label_dict[label]
 
             # 当てはまるラベルが一つもない、または集めるべきラベルがない場合、削除
             if not is_exist:

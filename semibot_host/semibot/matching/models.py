@@ -64,6 +64,9 @@ class TaskRequestRequest(models.Model):
     check_joined_candidates_task = models.ForeignKey(PeriodicTask, on_delete=models.PROTECT, related_name='check_taskrequest', null=True, blank=True)
     end_matching_task = models.ForeignKey(PeriodicTask, on_delete=models.PROTECT, related_name='end_request', null=True, blank=True)
 
+    # 依頼募集が終了しているかのフラグ
+    is_complete = models.BooleanField(default=False)
+
 # 依頼リクエスト-ラベルセット間、順序を保つために使用
 class ThroughRequestLabelSet(models.Model):
     task_request = models.ForeignKey(TaskRequestRequest, on_delete=models.CASCADE)

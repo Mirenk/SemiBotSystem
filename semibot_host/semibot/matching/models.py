@@ -86,6 +86,12 @@ class DeclineResponseHistory(models.Model):
     task_request = models.ForeignKey(TaskRequestRequest, on_delete=models.CASCADE)
     decline_at = models.DateTimeField(auto_now_add=True)
 
+# キャンセルログ
+class CancelResponseHistory(models.Model):
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    task_request = models.ForeignKey(TaskRequestRequest, on_delete=models.CASCADE)
+    cancel_at = models.DateTimeField(auto_now_add=True)
+
 # 人数集まった時刻ログ
 class FillRequireCandidateHistory(models.Model):
     task_request = models.ForeignKey(TaskRequestRequest, on_delete=models.CASCADE)

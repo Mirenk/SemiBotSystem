@@ -1,5 +1,5 @@
 from matching_pb import type_pb2
-from matching.models import TaskRequestRequest, Candidate
+from matching.models import TaskRequestRequest, Candidate, FillRequireCandidateHistory
 from matching.dynamic_label import DynamicLabel
 import matching.grpc_client as grpc_client
 from matching.message_api import SlackAPI
@@ -168,6 +168,10 @@ def join_task(task_request: TaskRequestRequest, user: User):
         task_request.requesting_candidates.remove(candidate)
         task_request.joined_candidates.add(candidate)
         print('join_task: Joined ', candidate.personal_data.username)
+
+    # 人数チェック
+    if task_request.joined_candidates.count() == task_request.require_candidates:
+        FillRequireCandidateHistory.objects.create(task_request=task_request)
 
     # メッセージ送信
     candidate_pb = grpc_client.get_personal_data_from_id(user.username)

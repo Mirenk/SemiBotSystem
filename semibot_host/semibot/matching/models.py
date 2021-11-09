@@ -73,3 +73,20 @@ class ThroughRequestLabelSet(models.Model):
     label_set = models.ForeignKey(LabelSet, on_delete=models.CASCADE)
     class Meta:
         ordering = ('id', )
+
+# 参加ログ
+class JoinResponseHistory(models.Model):
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    task_request = models.ForeignKey(TaskRequestRequest, on_delete=models.CASCADE)
+    join_at = models.DateTimeField(auto_now_add=True)
+
+# 不参加ログ
+class DeclineResponseHistory(models.Model):
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    task_request = models.ForeignKey(TaskRequestRequest, on_delete=models.CASCADE)
+    decline_at = models.DateTimeField(auto_now_add=True)
+
+# 人数集まった時刻ログ
+class FillRequireCandidateHistory(models.Model):
+    task_request = models.ForeignKey(TaskRequestRequest, on_delete=models.CASCADE)
+    fill_at = models.DateTimeField(auto_now_add=True)

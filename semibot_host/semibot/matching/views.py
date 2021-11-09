@@ -2,7 +2,7 @@ from django.views.generic import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse_lazy
-from matching.models import TaskRequestRequest
+from matching.models import TaskRequestRequest, JoinResponseHistory, DeclineResponseHistory
 from matching.matching import join_task, cancel_task
 
 class JoinView(LoginRequiredMixin, DetailView):
@@ -21,9 +21,15 @@ class JoinView(LoginRequiredMixin, DetailView):
 
         return obj
 
+    def join_response(self, user, task_request):
+        JoinResponseHistory.objects.create(user=user, task_request=task_request)
+        join_task(task_request, user)
+
+    def decline_response(self, user, task_request):
+        DeclineResponseHistory.objects.create(user=user, task_request=task_request)
+
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        join_task(self.object, self.request.user)
         return HttpResponseRedirect(str(self.success_url))
 
 

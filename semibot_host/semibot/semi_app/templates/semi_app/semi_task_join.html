@@ -11,6 +11,7 @@
     </dl>
     <form action="" method="POST">
         {% csrf_token %}
-        <button type="submit" class="button btn-primary btn-lg">参加</button>
+        <button type="submit" class="button btn-secondary btn-lg" name="btn" value="cancel">不参加</button>
+        <button type="submit" class="button btn-primary btn-lg" name="btn" value="join">参加</button>
     </form>
 {% endblock %}

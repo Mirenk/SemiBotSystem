@@ -44,6 +44,15 @@ class Join(JoinView):
     success_url = reverse_lazy('semi_app:top')
     template_name = 'semi_app/semi_task_join.html'
 
+    def post(self, request, *args, **kwargs):
+        res = super(Join, self).post(request, *args, **kwargs)
+        if request.POST.get('btn', '') == 'join':
+            self.join_response(self.request.user, self.object)
+        else:
+            self.decline_response(self.request.user, self.object)
+
+        return res
+
 class Cancel(CancelView):
     """参加者キャンセル"""
     success_url = reverse_lazy('semi_app:top')

@@ -25,7 +25,8 @@ def send_matching_server(task_datetime: datetime,
 
     request = server_pb2.AddTaskRequestRequest()
     request.task_request.CopyFrom(task_request_data)
-    request.require_candidates = BACHELOR_MIN_NUM + MASTER_MIN_NUM
+    #request.require_candidates = BACHELOR_MIN_NUM + MASTER_MIN_NUM
+    request.require_candidates = bachelor_num + master_num
     request.max_candidates = bachelor_num + master_num
 
     # ラベルセット生成

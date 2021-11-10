@@ -6,7 +6,9 @@ from celery import shared_task
 from .models import TaskRequestRequest
 import matching.matching as matching
 import matching.grpc_client as client
-from django_celery_beat.models import ClockedSchedule
+from django_celery_beat.models import ClockedSchedule, PeriodicTask
+from datetime import datetime
+import json
 
 # 人数確認関数
 # 同時刻に複数のタスクの終了時刻が来る可能性があるので、ここを並列処理する
@@ -17,12 +19,20 @@ def check_joined_candidates(task_request_id: int):
     joined_candidates = task_request.joined_candidates.all().count()
 
     # 次の人数確認時間に更新
+    schedule, create = ClockedSchedule.objects.get_or_create(
+        clocked_time=task_request.next_rematching + task_request.rematching_duration
+    )
+    check_joined_candidates_task = PeriodicTask.objects.create(
+        clocked=schedule,
+        name=task_request.name + datetime.now().strftime("%y%m%d%H%M"),
+        task='matching.tasks.check_joined_candidates',
+        args=json.dumps([task_request_id]),
+        one_off=True,
+    )
     if task_request.check_joined_candidates_task is not None:
-        schedule, create = ClockedSchedule.objects.get_or_create(
-            clocked_time=task_request.next_rematching + task_request.rematching_duration
-        )
-        task_request.check_joined_candidates_task.clocked = schedule
-        task_request.check_joined_candidates_task.enabled = True
+        task_request.check_joined_candidates_task.delete()
+    task_request.check_joined_candidates_task = check_joined_candidates_task
+
 
     # 必要人数に足りていない場合、再募集
     if task_request.require_candidates > joined_candidates:

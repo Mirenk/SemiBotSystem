@@ -2,6 +2,8 @@ version: '3'
 services:
     semibot_host:
         restart: always
+        volumes:
+            -   "./log:/var/log"
         command: >
             bash -c "DJANGO_SETTINGS_MODULE=semibot.settings celery -A semibot beat --scheduler django_celery_beat.schedulers:DatabaseScheduler --pidfile /celerybeat.pid &
             celery -A semibot worker &

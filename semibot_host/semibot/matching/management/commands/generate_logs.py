@@ -35,7 +35,7 @@ class Command(BaseCommand):
             writer = csv.writer(f)
             writer.writerow(['fill_at_date', 'fill_at_time'])
             for record in queryset:
-                writer.writerow([record.join_at.strftime('%Y/%m/%d'), record.join_at.strftime('%H:%M:%S')])
+                writer.writerow([record.fill_at.strftime('%Y/%m/%d'), record.fill_at.strftime('%H:%M:%S')])
 
     def handle(self, *args, **options):
         base_path = options['output_path']

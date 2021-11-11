@@ -2,6 +2,7 @@ from django.core.management.base import BaseCommand
 from django.utils.timezone import localtime
 from matching.models import TaskRequestRequest, JoinResponseHistory, DeclineResponseHistory, CancelResponseHistory, FillRequireCandidateHistory
 import csv
+import os
 
 class Command(BaseCommand):
     help = """Generate CSV log"""
@@ -48,14 +49,18 @@ class Command(BaseCommand):
             task_request = TaskRequestRequest.objects.get(id=options['id'])
         except TaskRequestRequest.DoesNotExist:
             print('Not found TaskRequest ID', options['id'])
+            return
 
-        self.__export_join_history_csv(base_path + task_request.name + '_join.csv',
+        target_path = base_path + task_request.name
+        os.mkdirs(target_path, exist_ok=True)
+
+        self.__export_join_history_csv(target_path + '/join.csv',
                                        JoinResponseHistory.objects.filter(task_request=task_request))
-        self.__export_decline_history_csv(base_path + task_request.name + '_decline.csv',
+        self.__export_decline_history_csv(target_path + '/decline.csv',
                                           DeclineResponseHistory.objects.filter(task_request=task_request))
-        self.__export_cancel_history_csv(base_path + task_request.name + '_cancel.csv',
+        self.__export_cancel_history_csv(target_path + '/cancel.csv',
                                          CancelResponseHistory.objects.filter(task_request=task_request))
-        self.__export_fill_require_history_csv(base_path + task_request.name + '_fill.csv',
+        self.__export_fill_require_history_csv(target_path + '/fill.csv',
                                                FillRequireCandidateHistory.objects.filter(task_request=task_request))
 
 

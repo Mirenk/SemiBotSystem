@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand
+from django.utils.timezone import localtime
 from matching.models import TaskRequestRequest, JoinResponseHistory, DeclineResponseHistory, CancelResponseHistory, FillRequireCandidateHistory
 import csv
 
@@ -14,28 +15,32 @@ class Command(BaseCommand):
             writer = csv.writer(f)
             writer.writerow(['user', 'join_at_date', 'join_at_time'])
             for record in queryset:
-                writer.writerow([record.user.username, record.join_at.strftime('%Y/%m/%d'), record.join_at.strftime('%H:%M:%S')])
+                dt = localtime(record.join_at)
+                writer.writerow([record.user.username, dt.strftime('%Y/%m/%d'), dt.strftime('%H:%M:%S')])
 
     def __export_decline_history_csv(self, filepath: str, queryset):
         with open(filepath, 'w') as f:
             writer = csv.writer(f)
             writer.writerow(['user', 'decline_at_date', 'decline_at_time'])
             for record in queryset:
-                writer.writerow([record.user.username, record.decline_at.strftime('%Y/%m/%d'), record.decline_at.strftime('%H:%M:%S')])
+                dt = localtime(record.decline_at)
+                writer.writerow([record.user.username, dt.strftime('%Y/%m/%d'), dt.strftime('%H:%M:%S')])
 
     def __export_cancel_history_csv(self, filepath: str, queryset):
         with open(filepath, 'w') as f:
             writer = csv.writer(f)
             writer.writerow(['user', 'cancel_at_date', 'cancel_at_time'])
             for record in queryset:
-                writer.writerow([record.user.username, record.cancel_at.strftime('%Y/%m/%d'), record.cancel_at.strftime('%H:%M:%S')])
+                dt = localtime(record.cancel_at)
+                writer.writerow([record.user.username, dt.strftime('%Y/%m/%d'), dt.strftime('%H:%M:%S')])
 
     def __export_fill_require_history_csv(self, filepath, queryset):
         with open(filepath, 'w') as f:
             writer = csv.writer(f)
             writer.writerow(['fill_at_date', 'fill_at_time'])
             for record in queryset:
-                writer.writerow([record.fill_at.strftime('%Y/%m/%d'), record.fill_at.strftime('%H:%M:%S')])
+                dt = localtime(record.fill_at)
+                writer.writerow([dt.strftime('%Y/%m/%d'), dt.strftime('%H:%M:%S')])
 
     def handle(self, *args, **options):
         base_path = options['output_path']

@@ -52,7 +52,7 @@ class Command(BaseCommand):
             return
 
         target_path = base_path + task_request.name
-        os.mkdirs(target_path, exist_ok=True)
+        os.makedirs(target_path, exist_ok=True)
 
         self.__export_join_history_csv(target_path + '/join.csv',
                                        JoinResponseHistory.objects.filter(task_request=task_request))

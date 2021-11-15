@@ -30,7 +30,7 @@ def check_joined_candidates(task_request_id: int):
         one_off=True,
     )
     task_request.check_joined_candidates_task = check_joined_candidates_task
-
+    task_request.next_rematching = task_request.next_rematching + task_request.rematching_duration
 
     # 必要人数に足りていない場合、再募集
     if task_request.require_candidates > joined_candidates:

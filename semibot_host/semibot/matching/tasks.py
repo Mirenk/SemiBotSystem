@@ -29,8 +29,6 @@ def check_joined_candidates(task_request_id: int):
         args=json.dumps([task_request_id]),
         one_off=True,
     )
-    if task_request.check_joined_candidates_task is not None:
-        task_request.check_joined_candidates_task.delete()
     task_request.check_joined_candidates_task = check_joined_candidates_task
 
 
@@ -63,10 +61,3 @@ def end_matching_task(task_request_id: int):
 
     # 依頼を完了状態にする
     task_request.is_complete = True
-
-    # タスクを削除
-    try:
-        task_request.end_matching_task.delete()
-        task_request.check_joined_candidates_task.delete()
-    except AttributeError:
-        pass

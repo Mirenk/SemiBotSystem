@@ -18,27 +18,28 @@ def check_joined_candidates(task_request_id: int):
     personal_data = client.get_personal_data_dict()
     joined_candidates = task_request.joined_candidates.all().count()
 
-    # 次の人数確認時間に更新
-    schedule, create = ClockedSchedule.objects.get_or_create(
-        clocked_time=task_request.next_rematching + task_request.rematching_duration
-    )
-    check_joined_candidates_task = PeriodicTask.objects.create(
-        clocked=schedule,
-        name=task_request.name + datetime.now().strftime("%y%m%d%H%M"),
-        task='matching.tasks.check_joined_candidates',
-        args=json.dumps([task_request_id]),
-        one_off=True,
-    )
-    task_request.check_joined_candidates_task = check_joined_candidates_task
-    task_request.next_rematching = task_request.next_rematching + task_request.rematching_duration
-
     # 必要人数に足りていない場合、再募集
     if task_request.require_candidates > joined_candidates:
         print('check_joined_candidates: Start rematching "',task_request.name,'"')
         task = client.get_task_from_name(task_request.task)
         task_request_history = client.get_task_request_histories(task)
         matching.select_candidate_group(task_request, personal_data, task_request_history)
-        return
+
+    # 次の人数確認時間に更新
+    next_rematching = task_request.next_rematching + task_request.rematching_duration
+    if next_rematching >= task_request.matching_end_datetime:
+        schedule, create = ClockedSchedule.objects.get_or_create(
+            clocked_time=task_request.next_rematching + task_request.rematching_duration
+        )
+        check_joined_candidates_task = PeriodicTask.objects.create(
+            clocked=schedule,
+            name=task_request.name + datetime.now().strftime("%y%m%d%H%M"),
+            task='matching.tasks.check_joined_candidates',
+            args=json.dumps([task_request_id]),
+            one_off=True,
+        )
+        task_request.check_joined_candidates_task = check_joined_candidates_task
+        task_request.next_rematching = task_request.next_rematching + task_request.rematching_duration
 
 # 終了関数
 # TODO:募集終了でも足りなかった場合の検討

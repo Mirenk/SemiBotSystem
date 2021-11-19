@@ -15,6 +15,11 @@ import json
 @shared_task
 def check_joined_candidates(task_request_id: int):
     task_request = TaskRequestRequest.objects.get(id=task_request_id)
+
+    # もし完了したタスクだった場合、すぐに終了
+    if task_request.is_complete:
+        return
+
     personal_data = client.get_personal_data_dict()
     joined_candidates = task_request.joined_candidates.all().count()
 

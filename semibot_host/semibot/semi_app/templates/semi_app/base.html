@@ -31,9 +31,11 @@
                         </li>
                     </ul>
                 </li>
+                {% if user.is_staff %}
                 <li class="nav-item">
                     <a class="nav-item nav-link" href="{% url 'semi_app:add_semi' %}">ゼミ登録</a>
                 </li>
+                {% endif %}
             {% else %}
                 <li class="nav-item">
                     <a class="nav-item nav-link" href="{% url 'semi_app:login' %}">ログイン</a>

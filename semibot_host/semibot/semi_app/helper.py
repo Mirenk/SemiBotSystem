@@ -83,7 +83,7 @@ def send_matching_server(task_datetime: datetime,
 
     # メッセージ
     request.request_message = task_datetime.strftime('%Y-%m-%d %H:%M') \
-        + "に行われるゼミの発表候補者になりました。\n" \
+        + "から2コマ行われるゼミの発表候補者になりました。\n" \
         + "発表者として参加できる場合は以下のURLに学内からアクセスし、参加処理を行ってください。\n" \
         + "<join_url>"
     request.join_complete_message = task_datetime.strftime('%Y-%m-%d %H:%M') \

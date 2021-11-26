@@ -16,11 +16,16 @@ def send_matching_server(task_datetime: datetime,
                          bachelor_num: int,
                          master_num: int,
                          rematching_duration: timedelta,
-                         matching_end_datetime: datetime):
+                         matching_end_datetime: datetime,
+                         is_random: bool):
 
     task_request_data = type_pb2.TaskRequestData()
-    task_request_data.name = "全体ゼミ_" + task_datetime.strftime('%m%d')
-    task_request_data.task.CopyFrom(type_pb2.Task(name='全体ゼミ'))
+    if is_random:
+        task_request_data.name = "ランダムゼミ_" + task_datetime.strftime('%m%d')
+        task_request_data.task.CopyFrom(type_pb2.Task(name='ランダムゼミ'))
+    else:
+        task_request_data.name = "全体ゼミ_" + task_datetime.strftime('%m%d')
+        task_request_data.task.CopyFrom(type_pb2.Task(name='全体ゼミ'))
     task_request_data.task_date.CopyFrom(timestamp_pb2.Timestamp(seconds=int(task_datetime.timestamp())))
 
     request = server_pb2.AddTaskRequestRequest()

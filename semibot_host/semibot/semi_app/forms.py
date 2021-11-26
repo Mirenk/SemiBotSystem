@@ -43,7 +43,7 @@ class TaskRequestForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for key, field in self.fields.items():
-            if key != 'start_matching_now':
+            if key != 'start_matching_now' or key != 'is_random':
                 field.widget.attrs['class'] = 'form-control'
             else:
                 field.widget.attrs['class'] = 'form-check-input'
@@ -80,5 +80,6 @@ class TaskRequestForm(ModelForm):
             'task_datetime': 'ゼミ日時',
             'bachelor_num': '学部生人数',
             'master_num': '院生人数',
-            'matching_end_datetime': '募集終了時刻'
+            'matching_end_datetime': '募集終了時刻',
+            'is_random': 'ランダムゼミ'
         }

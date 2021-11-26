@@ -9,3 +9,4 @@ class TaskRequest(models.Model):
     master_num = models.IntegerField(validators=[MinValueValidator(0)])
     rematching_duration = models.DurationField(null=True)
     matching_end_datetime = models.DateTimeField(null=True)
+    is_random = models.BooleanField(default=False, null=True)

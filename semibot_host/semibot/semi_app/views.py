@@ -92,7 +92,8 @@ class TaskRequestView(CreateView, LoginRequiredMixin):
                 bachelor_num=cleaned_data.get('bachelor_num'),
                 master_num=cleaned_data.get('master_num'),
                 rematching_duration=cleaned_data.get('rematching_duration'),
-                matching_end_datetime=cleaned_data.get('matching_end_datetime')
+                matching_end_datetime=cleaned_data.get('matching_end_datetime'),
+                is_random=cleaned_data.get('is_random')
             )
             return redirect(self.success_url)
         else: # 指定時刻に募集開始の場合

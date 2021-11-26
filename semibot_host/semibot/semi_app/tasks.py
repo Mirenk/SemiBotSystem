@@ -15,7 +15,8 @@ def start_matching_task(task_request_id: int):
         bachelor_num=record.bachelor_num,
         master_num=record.master_num,
         rematching_duration=record.rematching_duration,
-        matching_end_datetime=record.matching_end_datetime
+        matching_end_datetime=record.matching_end_datetime,
+        is_random=record.is_random
     )
 
     record.delete()

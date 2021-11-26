@@ -5,7 +5,6 @@ from matching_pb import type_pb2, server_pb2, server_pb2_grpc
 from google.protobuf import timestamp_pb2, duration_pb2
 from datetime import datetime, timedelta
 import grpc
-from enum import Enum
 
 # 定数類
 # 学部生最低人数
@@ -13,25 +12,15 @@ BACHELOR_MIN_NUM = 0
 # 院生最低人数
 MASTER_MIN_NUM = 0
 
-class SemiOption(Enum):
-    NORMAL = (0, 'normal')
-    RANDOM = (1, 'random')
-
 def send_matching_server(task_datetime: datetime,
                          bachelor_num: int,
                          master_num: int,
                          rematching_duration: timedelta,
-                         matching_end_datetime: datetime,
-                         option=SemiOption.NORMAL):
+                         matching_end_datetime: datetime):
 
     task_request_data = type_pb2.TaskRequestData()
-    if option == SemiOption.NORMAL:
-        task_request_data.name = "全体ゼミ_" + task_datetime.strftime('%m%d')
-        task_request_data.task.CopyFrom(type_pb2.Task(name='全体ゼミ'))
-    elif option == SemiOption.RANDOM:
-        task_request_data.name = "ランダムゼミ_" + task_datetime.strftime('%m%d')
-        task_request_data.task.CopyFrom(type_pb2.Task(name='ランダムゼミ'))
-
+    task_request_data.name = "全体ゼミ_" + task_datetime.strftime('%m%d')
+    task_request_data.task.CopyFrom(type_pb2.Task(name='全体ゼミ'))
     task_request_data.task_date.CopyFrom(timestamp_pb2.Timestamp(seconds=int(task_datetime.timestamp())))
 
     request = server_pb2.AddTaskRequestRequest()

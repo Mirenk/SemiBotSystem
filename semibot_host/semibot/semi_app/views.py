@@ -65,6 +65,12 @@ class TaskRequestView(CreateView, LoginRequiredMixin):
     template_name = 'semi_app/task_request_create.html'
     success_url = reverse_lazy('semi_app:top')
 
+    def get(self, request, *args, **kwargs):
+        # スタッフのみアクセス可能
+        if not request.user.is_staff:
+            return redirect(reverse_lazy('semi_app:top'))
+        return super().get(request, *args, **kwargs)
+
     def form_valid(self, form):
         ctx = {'form': form}
         if self.request.POST.get('next', '') == 'confirm':

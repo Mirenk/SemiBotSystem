@@ -32,7 +32,7 @@ def check_joined_candidates(task_request_id: int):
 
     # 次の人数確認時間に更新
     next_rematching = task_request.next_rematching + task_request.rematching_duration
-    if next_rematching >= task_request.matching_end_datetime:
+    if next_rematching < task_request.matching_end_datetime:
         schedule, create = ClockedSchedule.objects.get_or_create(
             clocked_time=task_request.next_rematching + task_request.rematching_duration
         )

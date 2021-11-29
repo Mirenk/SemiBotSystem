@@ -43,7 +43,7 @@ class TaskRequestForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for key, field in self.fields.items():
-            if key != 'start_matching_now' or key != 'is_random':
+            if key != 'start_matching_now':
                 field.widget.attrs['class'] = 'form-control'
             else:
                 field.widget.attrs['class'] = 'form-check-input'

@@ -7,8 +7,9 @@ from .models import TaskRequestRequest
 import matching.matching as matching
 import matching.grpc_client as client
 from django_celery_beat.models import ClockedSchedule, PeriodicTask
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
+from django.conf import settings
 
 # 人数確認関数
 # 同時刻に複数のタスクの終了時刻が来る可能性があるので、ここを並列処理する
@@ -32,6 +33,11 @@ def check_joined_candidates(task_request_id: int):
 
     # 次の人数確認時間に更新
     next_rematching = task_request.next_rematching + task_request.rematching_duration
+    # 土日の再募集をスキップ
+    if settings.MATCHING_SKIP_WEEKENDS:
+        if next_rematching.weekday() > 4: # 次回が土日だった場合
+            next_rematching += timedelta(days=2)
+
     if next_rematching < task_request.matching_end_datetime:
         schedule, create = ClockedSchedule.objects.get_or_create(
             clocked_time=task_request.next_rematching + task_request.rematching_duration
@@ -44,7 +50,7 @@ def check_joined_candidates(task_request_id: int):
             one_off=True,
         )
         task_request.check_joined_candidates_task = check_joined_candidates_task
-        task_request.next_rematching = task_request.next_rematching + task_request.rematching_duration
+        task_request.next_rematching = next_rematching
 
 # 終了関数
 # TODO:募集終了でも足りなかった場合の検討

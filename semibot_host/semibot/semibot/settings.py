@@ -145,6 +145,9 @@ CELERY_BROKER_URL = os.environ.get('REDIS_URL', 'redis://semibot_redis:6379/1')
 # DataManage gRPC Service URL
 MATCHING_DATAMANAGE_HOST = os.environ.get('DATAMANAGE_HOST', 'localhost:50051')
 
+# Skip weekends in rematching
+MATCHING_SKIP_WEEKENDS = True
+
 # Login Settings
 LOGIN_URL = 'semi_app:login'
 LOGIN_REDIRECT_URL = 'semi_app:top'

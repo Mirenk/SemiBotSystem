@@ -338,3 +338,6 @@ semibot_host/matchingapis/matching_pb/matching_pb
 
 # Test CSV
 semibot_host/semibot/matching/tests/test_csv/
+
+# log folderS
+log/

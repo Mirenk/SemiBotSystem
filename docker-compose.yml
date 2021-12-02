@@ -4,6 +4,8 @@ services:
         build: ./semibot_host
         image: semibot_host
         container_name: semibot_host
+        volumes:
+            -   "./log:/var/log"
         command: >
             bash -c "DJANGO_SETTINGS_MODULE=semibot.settings celery -A semibot beat --scheduler django_celery_beat.schedulers:DatabaseScheduler --pidfile /celerybeat.pid &
             celery -A semibot worker &

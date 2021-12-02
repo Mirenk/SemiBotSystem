@@ -2,11 +2,6 @@ version: '3'
 services:
     semibot_host:
         restart: always
-        command: >
-            bash -c "DJANGO_SETTINGS_MODULE=semibot.settings celery -A semibot beat --scheduler django_celery_beat.schedulers:DatabaseScheduler --pidfile /celerybeat.pid &
-            celery -A semibot worker &
-            python3 manage.py grpcrunserver &
-            python3 manage.py runserver 0:8000"
         
     semibot_db:
         restart: always

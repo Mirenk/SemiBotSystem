@@ -9,7 +9,8 @@ services:
         command: >
             bash -c "DJANGO_SETTINGS_MODULE=semibot.settings celery -A semibot beat --scheduler django_celery_beat.schedulers:DatabaseScheduler --pidfile /celerybeat.pid &
             celery -A semibot worker &
-            python3"
+            python3 manage.py grpcrunserver &
+            python3 manage.py runserver 0:8000"
         ports:
             - "8000:8000"
         tty: true

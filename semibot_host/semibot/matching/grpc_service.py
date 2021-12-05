@@ -8,10 +8,12 @@ from matching_pb import server_pb2, server_pb2_grpc
 from .dynamic_label import DynamicLabel
 import matching.matching as matching
 import matching.grpc_client as grpc_client
+from datetime import timedelta
 
 from django.db import transaction, close_old_connections
 from datetime import datetime, timezone
 from django.utils import timezone as django_timezone
+from django.conf import settings
 
 from django_celery_beat.models import ClockedSchedule, PeriodicTask
 
@@ -52,7 +54,13 @@ class MatchingServer(server_pb2_grpc.MatchingServerServicer):
             td = request.rematching_duration.ToTimedelta()
             now = django_timezone.now()
             task_request.rematching_duration = td
-            task_request.next_rematching = now + td
+
+            next_rematching = now + td
+            # 土日の再募集をスキップ
+            if settings.MATCHING_SKIP_WEEKENDS:
+                if next_rematching.weekday() > 4:  # 次回が土日だった場合
+                    next_rematching += timedelta(days=2)
+            task_request.next_rematching = next_rematching
 
             # ManyToManyのための一時記録
             task_request.save()

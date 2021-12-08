@@ -15,7 +15,8 @@ User = get_user_model()
 # 候補者グループ選択
 def select_candidate_group(task_request: TaskRequestRequest,
                            personal_data: dict[str, type_pb2.PersonalData],
-                           task_request_history: list[type_pb2.TaskRequestData]):
+                           task_request_history: list[type_pb2.TaskRequestData],
+                           is_rematching=False):
     # 0. 各データ準備
     # ラベルセット取得
     label_set = task_request.label_set.all().first()
@@ -125,7 +126,11 @@ def select_candidate_group(task_request: TaskRequestRequest,
         if task_request.joined_candidates.filter(personal_data__username=userid).first() is None:
             print('select_candidate_group: add', personal_data_record.username)
             task_request.requesting_candidates.add(record) # 依頼中に追加
-            send_message(personal_data[userid].message_addr, task_request.request_message) # 依頼送付
+            msg = task_request.request_message
+            if is_rematching:
+                send_message(personal_data[userid].message_addr, "[再募集]"+msg) # 依頼送付
+            else:
+                send_message(personal_data[userid].message_addr, msg)
 
     task_request.save() # 一応セーブ
 

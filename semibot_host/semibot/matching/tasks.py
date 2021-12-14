@@ -21,15 +21,14 @@ def check_joined_candidates(task_request_id: int):
     if task_request.is_complete:
         return
 
-    personal_data = client.get_personal_data_dict()
     joined_candidates = task_request.joined_candidates.all().count()
 
     # 必要人数に足りていない場合、再募集
     if task_request.require_candidates > joined_candidates:
         print('check_joined_candidates: Start rematching "',task_request.name,'"')
-        task = client.get_task_from_name(task_request.task)
-        task_request_history = client.get_task_request_histories(task)
-        matching.select_candidate_group(task_request, personal_data, task_request_history, is_rematching=True)
+        personal_data = matching.prepare_personal_data(task_request)
+        personal_data_id_list = matching.select_candidate_group(task_request, personal_data)
+        matching.send_request_to_candidates(task_request, personal_data, personal_data_id_list, is_rematching=True)
 
     # 次の人数確認時間に更新
     next_rematching = task_request.next_rematching + task_request.rematching_duration

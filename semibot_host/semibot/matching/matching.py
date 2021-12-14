@@ -12,14 +12,10 @@ import os
 # これでどのような認証を使っても動作が変わらない
 User = get_user_model()
 
-# 候補者グループ選択
-def select_candidate_group(task_request: TaskRequestRequest,
-                           personal_data: dict[str, type_pb2.PersonalData],
-                           task_request_history: list[type_pb2.TaskRequestData],
-                           is_rematching=False):
+# データ準備
+def prepare_personal_data(task_request: TaskRequestRequest):
     # 0. 各データ準備
-    # ラベルセット取得
-    label_set = task_request.label_set.all().first()
+    personal_data = grpc_client.get_personal_data_dict()
 
     # 処理用のIDのみリスト生成
     # このリストをフィルタやソートして、候補者グループを決定する
@@ -33,6 +29,18 @@ def select_candidate_group(task_request: TaskRequestRequest,
             personal_data_id_list.append(userid)
         else:
             del personal_data[userid]
+
+    return personal_data
+
+# 候補者グループ選択
+def select_candidate_group(task_request: TaskRequestRequest,
+                           personal_data: dict[str, type_pb2.PersonalData]):
+
+    # ラベルセット取得
+    label_set = task_request.label_set.all().first()
+    # 履歴取得
+    task = grpc_client.get_task_from_name(task_request.task)
+    task_request_history = grpc_client.get_task_request_histories(task)
 
     ## 1. 固定ラベルでフィルタ
     # TODO: ゼミ管理で使用しないため、未実装
@@ -108,14 +116,16 @@ def select_candidate_group(task_request: TaskRequestRequest,
     if len(personal_data_id_list) < task_request.require_candidates:
         task_request.label_set.remove(label_set)
         personal_data = grpc_client.get_personal_data_dict()
-        select_candidate_group(task_request, personal_data, task_request_history)
-        return
+        return select_candidate_group(task_request, personal_data)
 
     # 5. 最大人数を越していたら上から最大人数を取る(フィルタ)
     # ここでグループは確定
     if len(personal_data_id_list) > task_request.max_candidates:
         personal_data_id_list = personal_data_id_list[:task_request.max_candidates]
 
+    return personal_data_id_list
+
+def send_request_to_candidates(task_request, personal_data, personal_data_id_list, is_rematching=False):
     # task_requestのrequesting_candidatesに候補者を付け、send_messageを呼び動作終了
     # この時にjoined_candidateに存在したらrequesting_candidateに追加しない
     now = datetime.now()
@@ -133,11 +143,6 @@ def select_candidate_group(task_request: TaskRequestRequest,
                 send_message(personal_data[userid].message_addr, msg)
 
     task_request.save() # 一応セーブ
-
-    # debug
-    print('select_candidate_group: Candidate list: ')
-    for personal_data_id in personal_data_id_list:
-        print(personal_data_id)
 
 # 依頼送付
 def send_message(message_addr: type_pb2.MessageAddress, msg: str):
@@ -161,6 +166,14 @@ def send_result_message(task_request: TaskRequestRequest):
     for worker in workers:
         message_addr = personal_data[worker.personal_data.username].message_addr
         send_message(message_addr, msg)
+
+# 参加受付時の人数確認
+def is_fill_candidates(task_request: TaskRequestRequest):
+    # 最低人数満たしているか
+    if task_request.joined_candidates.count() != task_request.require_candidates:
+        return False
+    # ラベルを満たしているか
+    # 
 
 # 参加受付処理
 def join_task(task_request: TaskRequestRequest, user: User):

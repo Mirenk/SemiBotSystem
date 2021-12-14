@@ -42,4 +42,4 @@ class TaskTest(TestCase):
 
         end_matching_task(task_request.id)
 
-        self.assertEqual(TaskRequestRequest.objects.filter(id=task_request.id).first(), None)
+        self.assertEqual(TaskRequestRequest.objects.filter(id=task_request.id).first().is_complete, True)

@@ -73,3 +73,4 @@ def end_matching_task(task_request_id: int):
 
     # 依頼を完了状態にする
     task_request.is_complete = True
+    task_request.save()

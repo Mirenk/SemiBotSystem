@@ -1,5 +1,5 @@
 from matching_pb import type_pb2
-from matching.models import TaskRequestRequest, Candidate, FillRequireCandidateHistory
+from matching.models import TaskRequestRequest, Candidate, FillRequireCandidateHistory, LabelValue
 from matching.dynamic_label import DynamicLabel
 import matching.grpc_client as grpc_client
 from matching.message_api import SlackAPI
@@ -126,7 +126,7 @@ def select_candidate_group(task_request: TaskRequestRequest,
     return personal_data_id_list
 
 def send_request_to_candidates(task_request, personal_data, personal_data_id_list, is_rematching=False):
-    # task_requestのrequesting_candidatesに候補者を付け、send_messageを呼び動作終了
+    # task_requestのrequesting_candidatesに候補者を付ける
     # この時にjoined_candidateに存在したらrequesting_candidateに追加しない
     now = datetime.now()
     for userid in personal_data_id_list:
@@ -136,13 +136,17 @@ def send_request_to_candidates(task_request, personal_data, personal_data_id_lis
         if task_request.joined_candidates.filter(personal_data__username=userid).first() is None:
             print('select_candidate_group: add', personal_data_record.username)
             task_request.requesting_candidates.add(record) # 依頼中に追加
-            msg = task_request.request_message
-            if is_rematching:
-                send_message(personal_data[userid].message_addr, "[再募集]"+msg) # 依頼送付
-            else:
-                send_message(personal_data[userid].message_addr, msg)
 
     task_request.save() # 一応セーブ
+
+    # 依頼送信
+    for candidate in task_request.requesting_candidates.all():
+        userid = candidate.personal_data.username
+        msg = task_request.request_message
+        if is_rematching:
+            send_message(personal_data[userid].message_addr, "[再募集]"+msg) # 依頼送付
+        else:
+            send_message(personal_data[userid].message_addr, msg)
 
 # 依頼送付
 def send_message(message_addr: type_pb2.MessageAddress, msg: str):
@@ -167,45 +171,102 @@ def send_result_message(task_request: TaskRequestRequest):
         message_addr = personal_data[worker.personal_data.username].message_addr
         send_message(message_addr, msg)
 
-# 参加受付時の人数確認
-def is_fill_candidates(task_request: TaskRequestRequest):
-    # 最低人数満たしているか
-    if task_request.joined_candidates.count() != task_request.require_candidates:
+# 人数確認
+def check_fill_candidates(task_request: TaskRequestRequest):
+    label_set = task_request.label_set.all().first()
+
+    # 人数確認
+    if task_request.joined_candidates.count() <= task_request.require_candidates:
+        print("check_fill_candidates: Not fill require_candidates")
         return False
-    # ラベルを満たしているか
-    # 
+    # ラベル確認
+    if label_set.var_label.filter(label__is_dynamic=False).filter(value__gt=0).count() != 0:
+        print("check_fill_candidates: Not fill label")
+        return False
+
+    end_matching(task_request)
+    return True
 
 # 参加受付処理
 def join_task(task_request: TaskRequestRequest, user: User):
+    # task_requestがis_completeではない場合のみ動作
+    if task_request.is_complete:
+        return False
+
     # 処理候補者抽出
     candidate = task_request.requesting_candidates.filter(personal_data=user).first()
+    candidate_data = grpc_client.get_personal_data_from_id(user.username)
 
     # 依頼送付中から外し参加に付ける
     # トランザクション処理を行う
     with transaction.atomic():
+        # ラベルセットの数値を減らす
+        # TODO: If label_set == None ?
+        label_set = task_request.label_set.all().first()
+        for label_name in candidate_data.labels.keys():
+            label = label_set.var_label.filter(label__is_dynamic=False).filter(label__name=label_name).first()
+            print(label)
+            if label is not None:
+                if label.value == 0:
+                    return False
+
+                new_label, c = LabelValue.objects.get_or_create(label=label.label, value=label.value - 1)
+                label_set.var_label.remove(label)
+                label_set.var_label.add(new_label)
+
         task_request.requesting_candidates.remove(candidate)
         task_request.joined_candidates.add(candidate)
         print('join_task: Joined ', candidate.personal_data.username)
 
     # 人数チェック
-    if task_request.joined_candidates.count() == task_request.require_candidates:
+    if check_fill_candidates(task_request):
         FillRequireCandidateHistory.objects.create(task_request=task_request)
 
     # メッセージ送信
     candidate_pb = grpc_client.get_personal_data_from_id(user.username)
     send_message(candidate_pb.message_addr, task_request.join_complete_message)
 
+    return True
+
 # 参加キャンセル処理
 def cancel_task(task_request: TaskRequestRequest, user: User):
+    # task_requestがis_completeではない場合のみ動作
+    if task_request.is_complete:
+        return False
+
     # 処理候補者抽出
     candidate = task_request.joined_candidates.filter(personal_data=user).first()
+    candidate_data = grpc_client.get_personal_data_from_id(user.username)
 
     # join_taskと逆のことを行う
     with transaction.atomic():
         task_request.joined_candidates.remove(candidate)
         task_request.requesting_candidates.add(candidate)
+
+        # ラベルセットの数値を減らす
+        label_set = task_request.label_set.all().first()
+        for label_name in candidate_data.labels.keys():
+            label = label_set.var_label.filter(label__is_dynamic=False).filter(label__name=label_name).first()
+
+            if label is not None:
+                new_label, c = LabelValue.objects.get_or_create(label=label.label, value=label.value + 1)
+                label_set.var_label.remove(label)
+                label_set.var_label.add(new_label)
+
         print('join_task: Canceled ', candidate.personal_data.username)
+        task_request.save()
 
     # メッセージ送信
     candidate_pb = grpc_client.get_personal_data_from_id(user.username)
     send_message(candidate_pb.message_addr, task_request.cancel_complete_message)
+
+# 募集終了
+def end_matching(task_request: TaskRequestRequest):
+    # 書き込み
+    print("end_matching: End ",task_request.name,"'s matching")
+    grpc_client.record_task_request_history(task_request)
+    send_result_message(task_request=task_request)
+
+    # 依頼を完了状態にする
+    task_request.is_complete = True
+    task_request.save()

@@ -21,10 +21,8 @@ def check_joined_candidates(task_request_id: int):
     if task_request.is_complete:
         return
 
-    joined_candidates = task_request.joined_candidates.all().count()
-
     # 必要人数に足りていない場合、再募集
-    if task_request.require_candidates > joined_candidates:
+    if not matching.check_fill_candidates(task_request):
         print('check_joined_candidates: Start rematching "',task_request.name,'"')
         personal_data = matching.prepare_personal_data(task_request)
         personal_data_id_list = matching.select_candidate_group(task_request, personal_data)
@@ -56,20 +54,9 @@ def check_joined_candidates(task_request_id: int):
 @shared_task
 def end_matching_task(task_request_id: int):
     task_request = TaskRequestRequest.objects.get(id=task_request_id)
-    # 候補者取得
-    # この時、依頼送付が古い人順に並べる
-    candidates = task_request.joined_candidates.all().order_by('request_datetime')
 
-    # 候補者が多かった場合、削除
-    if candidates.count() > task_request.max_candidates:
-        for remove_candidate in candidates[task_request.max_candidates:]:
-            task_request.joined_candidates.remove(remove_candidate)
-
-    # 書き込み
-    print("check_time: End ",task_request.name,"'s matching")
-    client.record_task_request_history(task_request)
-    matching.send_result_message(task_request=task_request)
-
-    # 依頼を完了状態にする
-    task_request.is_complete = True
-    task_request.save()
+    if not task_request.is_complete:
+        print("end_mathcing_task: can't match ", task_request.name)
+        # 依頼を完了状態にする
+        task_request.is_complete = True
+        task_request.save()

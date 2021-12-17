@@ -23,7 +23,8 @@ class JoinView(LoginRequiredMixin, DetailView):
 
     def join_response(self, user, task_request):
         JoinResponseHistory.objects.create(user=user, task_request=task_request)
-        join_task(task_request, user)
+        if not join_task(task_request, user):
+            raise Http404()
 
     def decline_response(self, user, task_request):
         DeclineResponseHistory.objects.create(user=user, task_request=task_request)

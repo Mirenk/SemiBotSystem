@@ -55,6 +55,8 @@ class TaskRequestRequest(models.Model):
     joined_candidates = models.ManyToManyField(Candidate, blank=True, related_name="joined_task_request")
     # 返事待機中の候補者
     requesting_candidates = models.ManyToManyField(Candidate, blank=True, related_name="reserve_task_request")
+    # 不参加表明をした候補者
+    decline_candidates = models.ManyToManyField(Candidate, blank=True, related_name="declined_task_request")
     # 再募集間隔
     rematching_duration = models.DurationField()
     # 次の再募集

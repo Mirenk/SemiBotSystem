@@ -194,7 +194,14 @@ def join_task(task_request: TaskRequestRequest, user: User):
         return False
 
     # 処理候補者抽出
-    candidate = task_request.requesting_candidates.filter(personal_data=user).first()
+    # requestingだった場合、一度declineに下げてから処理
+    requesting = task_request.requesting_candidates.filter(personal_data=user).first()
+    if requesting:
+        with transaction.atomic():
+            task_request.requesting_candidates.remove(requesting)
+            task_request.decline_candidates.add(requesting)
+
+    candidate = task_request.decline_candidates.filter(personal_data=user).first()
     candidate_data = grpc_client.get_personal_data_from_id(user.username)
 
     # 依頼送付中から外し参加に付ける
@@ -214,7 +221,7 @@ def join_task(task_request: TaskRequestRequest, user: User):
                 label_set.var_label.remove(label)
                 label_set.var_label.add(new_label)
 
-        task_request.requesting_candidates.remove(candidate)
+        task_request.decline_candidates.remove(candidate)
         task_request.joined_candidates.add(candidate)
         print('join_task: Joined ', candidate.personal_data.username)
 
@@ -235,14 +242,18 @@ def cancel_task(task_request: TaskRequestRequest, user: User):
         return False
 
     # 処理候補者抽出
+    # joinedじゃない場合、一度joinedに上げてから処理開始
+    requesting = task_request.requesting_candidates.filter(personal_data=user).first()
+    if requesting:
+        with transaction.atomic():
+            task_request.requesting_candidates.remove(requesting)
+            task_request.joined_candidates.add(requesting)
+
     candidate = task_request.joined_candidates.filter(personal_data=user).first()
     candidate_data = grpc_client.get_personal_data_from_id(user.username)
 
     # join_taskと逆のことを行う
     with transaction.atomic():
-        task_request.joined_candidates.remove(candidate)
-        task_request.requesting_candidates.add(candidate)
-
         # ラベルセットの数値を減らす
         label_set = task_request.label_set.all().first()
         for label_name in candidate_data.labels.keys():
@@ -253,8 +264,9 @@ def cancel_task(task_request: TaskRequestRequest, user: User):
                 label_set.var_label.remove(label)
                 label_set.var_label.add(new_label)
 
+        task_request.joined_candidates.remove(candidate)
+        task_request.decline_candidates.add(candidate)
         print('join_task: Canceled ', candidate.personal_data.username)
-        task_request.save()
 
     # メッセージ送信
     candidate_pb = grpc_client.get_personal_data_from_id(user.username)

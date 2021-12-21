@@ -16,7 +16,8 @@ class JoinView(LoginRequiredMixin, DetailView):
 
         # 依頼送付に居るか調べる
         candidate = obj.requesting_candidates.filter(personal_data=self.request.user).first()
-        if candidate is None:
+        declined = obj.decline_candidates.filter(personal_data=self.request.user).first()
+        if candidate is None and declined is None:
             raise Http404()
 
         return obj
@@ -28,6 +29,8 @@ class JoinView(LoginRequiredMixin, DetailView):
 
     def decline_response(self, user, task_request):
         DeclineResponseHistory.objects.create(user=user, task_request=task_request)
+        if not cancel_task(task_request, user):
+            raise Http404()
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()

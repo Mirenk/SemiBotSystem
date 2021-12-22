@@ -109,7 +109,7 @@ class MatchingServer(server_pb2_grpc.MatchingServerServicer):
         # 候補者グループ選択呼び出し
         personal_data = matching.prepare_personal_data(task_request)
         personal_data_id_list = matching.select_candidate_group(task_request, personal_data)
-        matching.send_request_to_candidates(task_request, personal_data, personal_data_id_list)
+        matching.send_request_to_candidates(task_request, personal_data_id_list)
 
         # 人数チェックのタスク登録
         schedule, create = ClockedSchedule.objects.get_or_create(

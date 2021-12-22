@@ -43,3 +43,31 @@ class TaskTest(TestCase):
         end_matching_task(task_request.id)
 
         self.assertEqual(TaskRequestRequest.objects.filter(id=task_request.id).first().is_complete, True)
+
+    def test_re_matching(self):
+        task_request = make_test_task_request()
+
+        print('test_end_matching_task: first matching')
+        # 一回目の募集
+        check_joined_candidates(task_request.id)
+        task_request = TaskRequestRequest.objects.get(id=task_request.id)
+        # 3人参加させる
+        for candidate in task_request.requesting_candidates.all()[:3]:
+            if join_task(task_request, candidate.personal_data):
+                print('test_end_matching_task: joining', candidate.personal_data.username)
+
+        # 二人キャンセルさせる
+        for candidate in task_request.joined_candidates.all()[:2]:
+            if cancel_task(task_request, candidate.personal_data):
+                print('test_end_matching_task: canceling', candidate.personal_data.username)
+
+        print('test_end_matching_task: second matching')
+        # 二回目の募集
+        check_joined_candidates(task_request.id)
+        # 候補者全員参加させる
+        for candidate in task_request.requesting_candidates.all():
+            join_task(task_request, candidate.personal_data)
+
+        end_matching_task(task_request.id)
+
+        self.assertEqual(TaskRequestRequest.objects.filter(id=task_request.id).first().is_complete, True)

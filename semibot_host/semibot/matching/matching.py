@@ -25,7 +25,9 @@ def prepare_personal_data(task_request: TaskRequestRequest):
     personal_data_id_list = []
     for userid in list(personal_data):
         requesting_candidate = task_request.requesting_candidates.filter(personal_data__username=userid).first()
-        if requesting_candidate is None:
+        declined_candidate  = task_request.decline_candidates.filter(personal_data__username=userid).first()
+        joined_candidate = task_request.joined_candidates.filter(personal_data__username=userid).first()
+        if requesting_candidate is None and declined_candidate is None and joined_candidate is None:
             personal_data_id_list.append(userid)
         else:
             del personal_data[userid]
@@ -118,14 +120,11 @@ def select_candidate_group(task_request: TaskRequestRequest,
         personal_data = grpc_client.get_personal_data_dict()
         return select_candidate_group(task_request, personal_data)
 
-    # 5. 最大人数を越していたら上から最大人数を取る(フィルタ)
-    # ここでグループは確定
-    if len(personal_data_id_list) > task_request.max_candidates:
-        personal_data_id_list = personal_data_id_list[:task_request.max_candidates]
-
     return personal_data_id_list
 
-def send_request_to_candidates(task_request, personal_data, personal_data_id_list, is_rematching=False):
+def send_request_to_candidates(task_request, personal_data_id_list, is_rematching=False):
+    personal_data = grpc_client.get_personal_data_dict()
+
     # task_requestのrequesting_candidatesに候補者を付ける
     # この時にjoined_candidateに存在したらrequesting_candidateに追加しない
     now = datetime.now()
@@ -241,6 +240,11 @@ def cancel_task(task_request: TaskRequestRequest, user: User):
     if task_request.is_complete:
         return False
 
+    # キャンセルしてるのにまた不参加押す不届きもの対応
+    decline = task_request.decline_candidates.filter(personal_data=user).first()
+    if decline:
+        return True
+
     # 処理候補者抽出
     # joinedじゃない場合、一度joinedに上げてから処理開始
     requesting = task_request.requesting_candidates.filter(personal_data=user).first()
@@ -271,6 +275,8 @@ def cancel_task(task_request: TaskRequestRequest, user: User):
     # メッセージ送信
     candidate_pb = grpc_client.get_personal_data_from_id(user.username)
     send_message(candidate_pb.message_addr, task_request.cancel_complete_message)
+
+    return True
 
 # 募集終了
 def end_matching(task_request: TaskRequestRequest):

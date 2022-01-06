@@ -67,5 +67,5 @@ class Command(BaseCommand):
                 return
             self.__export_all_csv(base_path, task_request)
         elif options['id'] == 0:
-            for task_request in TaskRequestRequest.objects.all():
+            for task_request in TaskRequestRequest.objects.filter(is_complete=True):
                 self.__export_all_csv(base_path, task_request)

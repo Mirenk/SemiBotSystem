@@ -8,7 +8,7 @@ class Command(BaseCommand):
     help = """Generate CSV log"""
 
     def add_arguments(self, parser):
-        parser.add_argument('--id', type=int, required=True)
+        parser.add_argument('--id', type=int, default=0)
         parser.add_argument('-o', '--output_path', type=str, default='/var/log/semibot/')
 
     def __export_join_history_csv(self, filepath: str, queryset):
@@ -43,14 +43,7 @@ class Command(BaseCommand):
                 dt = localtime(record.fill_at)
                 writer.writerow([dt.strftime('%Y/%m/%d'), dt.strftime('%H:%M:%S')])
 
-    def handle(self, *args, **options):
-        base_path = options['output_path']
-        try:
-            task_request = TaskRequestRequest.objects.get(id=options['id'])
-        except TaskRequestRequest.DoesNotExist:
-            print('Not found TaskRequest ID', options['id'])
-            return
-
+    def __export_all_csv(self, base_path, task_request):
         target_path = base_path + task_request.name
         os.makedirs(target_path, exist_ok=True)
 
@@ -63,4 +56,16 @@ class Command(BaseCommand):
         self.__export_fill_require_history_csv(target_path + '/fill.csv',
                                                FillRequireCandidateHistory.objects.filter(task_request=task_request))
 
+    def handle(self, *args, **options):
+        base_path = options['output_path']
 
+        if id > 0:
+            try:
+                task_request = TaskRequestRequest.objects.get(id=options['id'])
+            except TaskRequestRequest.DoesNotExist:
+                print('Not found TaskRequest ID', options['id'])
+                return
+            self.__export_all_csv(base_path, task_request)
+        elif id == 0:
+            for task_request in TaskRequestRequest.objects.all():
+                self.__export_all_csv(base_path, task_request)

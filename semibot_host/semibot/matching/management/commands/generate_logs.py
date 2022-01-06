@@ -59,13 +59,13 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         base_path = options['output_path']
 
-        if id > 0:
+        if options['id'] > 0:
             try:
                 task_request = TaskRequestRequest.objects.get(id=options['id'])
             except TaskRequestRequest.DoesNotExist:
                 print('Not found TaskRequest ID', options['id'])
                 return
             self.__export_all_csv(base_path, task_request)
-        elif id == 0:
+        elif options['id'] == 0:
             for task_request in TaskRequestRequest.objects.all():
                 self.__export_all_csv(base_path, task_request)

@@ -29,6 +29,9 @@ class Candidate(models.Model):
     personal_data = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='candidate_personaldata')
     request_datetime = models.DateTimeField()
 
+    def __str__(self):
+        return self.personal_data.username + "(" + self.request_datetime.strftime("%Y/%m/%d %H:%M:%S") + ")"
+
 # 依頼リクエスト
 # TODO: 重複登録の防止、ほぼ同一のような依頼リクエストが来ることも考えられるため、それも考慮
 class TaskRequestRequest(models.Model):

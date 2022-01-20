@@ -91,8 +91,10 @@ class DynamicLabel:
         label = type_pb2.Label(name='past_joined')
         var_label = type_pb2.LabelValue()
         var_label.label.CopyFrom(label)
+
+        max_timestamp = max(user_dict.values())
         for id, timestamp in user_dict.items():
-            var_label.value = -timestamp
+            var_label.value = max_timestamp - timestamp
             personal_data[id].var_labels.append(var_label)
 
         return personal_data

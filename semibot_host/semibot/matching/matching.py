@@ -115,7 +115,8 @@ def select_candidate_group(task_request: TaskRequestRequest,
 
     ## 4. 最低人数を満たしていなかったらDBのlabel_setを破棄し、もう一度自身を呼ぶ
     ## このとき各引数を取り直す
-    if len(personal_data_id_list) < task_request.require_candidates:
+    ## ラベルセットが最後の一つだった場合、行わない
+    if len(personal_data_id_list) < task_request.require_candidates and task_request.label_set.count() > 1:
         task_request.label_set.remove(label_set)
         personal_data = grpc_client.get_personal_data_dict()
         return select_candidate_group(task_request, personal_data)
@@ -175,7 +176,7 @@ def check_fill_candidates(task_request: TaskRequestRequest):
     label_set = task_request.label_set.all().first()
 
     # 人数確認
-    if task_request.joined_candidates.count() <= task_request.require_candidates:
+    if task_request.joined_candidates.count() < task_request.require_candidates:
         print("check_fill_candidates: Not fill require_candidates")
         return False
     # ラベル確認

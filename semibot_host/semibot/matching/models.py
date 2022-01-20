@@ -7,6 +7,9 @@ class Label(models.Model):
     name = models.CharField(unique=True, max_length=20)
     is_dynamic = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.name
+
 # 数値ラベル
 class LabelValue(models.Model):
     label = models.ForeignKey(Label, on_delete=models.CASCADE)
@@ -16,6 +19,9 @@ class LabelValue(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['label', 'value'], name='labelvalue_unique')
         ]
+
+    def __str__(self):
+        return self.label.name + "(val:" + str(self.value) + ")"
 
 # ラベルセット
 # 固定ラベルと数値ラベルのセットを保存しておくモデル

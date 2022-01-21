@@ -1,0 +1,14 @@
+version: '3'
+services:
+    tester:
+        build: ./tester
+        image: tester
+        container_name: tester
+        volumes:
+            - "./tester/tester:/app/tester"
+            - "./log:/var/log"
+        command: >
+            bash -c "python3"
+        tty: true
+        depends_on:
+        - semibot_host

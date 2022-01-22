@@ -11,8 +11,15 @@ class BaseMessageAPI(metaclass=ABCMeta):
         pass
 
 class SlackAPI(BaseMessageAPI):
-    def __init__(self):
-        self.client = slack.WebClient(token=os.environ.get('SLACK_API_TOKEN'))
+    def __init__(self, send_dm=False, debug=False):
+        self.debug = debug
+        if send_dm:
+            try:
+                self.client = slack.WebClient(token=os.environ.get('SLACK_API_TOKEN'))
+            except Exception:
+                self.client = None
+        else:
+            self.client = None
 
     def __post_msg(self, channel, msg):
         try:
@@ -21,16 +28,16 @@ class SlackAPI(BaseMessageAPI):
             print(f"__post_msg: {e.res['error']}")
 
     def send_dm(self, userid: str, msg: str):
-        try:
-            res = self.client.conversations_open(users=userid)
-        except SlackApiError as e:
-            print(f"send_dm: {e.response['error']}")
-            return
-        else:
-            dm_channel = res["channel"]["id"]
-            self.__post_msg(dm_channel, msg)
+        if self.debug or self.client is None:
+            print('SlackAPI: userid: ', userid)
+            print('SlackAPI: msg: ', msg)
 
-    # デバッグ用
-    def print_send_dm(self, userid: str, msg: str):
-        print('SlackAPI: userid: ', userid)
-        print('SlackAPI: msg: ', msg)
+        if self.client is not None:
+            try:
+                res = self.client.conversations_open(users=userid)
+            except SlackApiError as e:
+                print(f"send_dm: {e.response['error']}")
+                return
+            else:
+                dm_channel = res["channel"]["id"]
+                self.__post_msg(dm_channel, msg)

@@ -153,13 +153,10 @@ def send_message(message_addr: type_pb2.MessageAddress, msg: str):
     method = message_addr.method
 
     if type_pb2.MessageAddress.Method.Name(method) == 'SLACK':
-        api = SlackAPI()
+        api = SlackAPI(send_dm=(os.environ.get('NOT_SEND_DM', 'False') != True), debug=True)
     # elif ~でapiを変えていく
 
-    api.print_send_dm(message_addr.userid, msg) # DEBUG
-    # 環境変数でNOT_SEND_DMをTrueとすることで送信を抑止
-    if os.environ.get('NOT_SEND_DM', 'False') != 'True':
-        api.send_dm(message_addr.userid, msg)
+    api.send_dm(message_addr.userid, msg)
 
 def send_result_message(task_request: TaskRequestRequest):
     workers = task_request.joined_candidates.all()

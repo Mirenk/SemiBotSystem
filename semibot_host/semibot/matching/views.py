@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse_lazy
 from matching.models import TaskRequestRequest, JoinResponseHistory, DeclineResponseHistory, CancelResponseHistory
-from matching.matching import join_task, cancel_task
+from matching.tasks import join_task, cancel_task
 
 class JoinView(LoginRequiredMixin, DetailView):
     model = TaskRequestRequest
@@ -24,13 +24,11 @@ class JoinView(LoginRequiredMixin, DetailView):
 
     def join_response(self, user, task_request):
         JoinResponseHistory.objects.create(user=user, task_request=task_request)
-        if not join_task(task_request, user):
-            raise Http404()
+        join_task.delay(task_request_pk=task_request.pk, user_pk=user.pk)
 
     def decline_response(self, user, task_request):
         DeclineResponseHistory.objects.create(user=user, task_request=task_request)
-        if not cancel_task(task_request, user):
-            raise Http404()
+        cancel_task.delay(task_request_pk=task_request.pk, user_pk=user.pk)
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -56,5 +54,5 @@ class CancelView(LoginRequiredMixin, DetailView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         CancelResponseHistory.objects.create(task_request=self.object, user=self.request.user)
-        cancel_task(self.object, self.request.user)
+        cancel_task.delay(task_request_pk=self.object.pk, user_pk=self.request.user.pk)
         return HttpResponseRedirect(str(self.success_url))

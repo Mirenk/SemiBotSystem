@@ -4,7 +4,6 @@ from matching.dynamic_label import DynamicLabel
 import matching.grpc_client as grpc_client
 from matching.message_api import SlackAPI
 from datetime import datetime
-from django.db import transaction
 from django.contrib.auth import get_user_model
 import os
 
@@ -182,98 +181,6 @@ def check_fill_candidates(task_request: TaskRequestRequest):
         return False
 
     end_matching(task_request)
-    return True
-
-# 参加受付処理
-def join_task(task_request: TaskRequestRequest, user: User):
-    # task_requestがis_completeではない場合のみ動作
-    if task_request.is_complete:
-        return False
-
-    # 処理候補者抽出
-    # requestingだった場合、一度declineに下げてから処理
-    requesting = task_request.requesting_candidates.filter(personal_data=user).first()
-    if requesting:
-        with transaction.atomic():
-            task_request.requesting_candidates.remove(requesting)
-            task_request.decline_candidates.add(requesting)
-
-    candidate = task_request.decline_candidates.filter(personal_data=user).first()
-    candidate_data = grpc_client.get_personal_data_from_id(user.username)
-
-    # 依頼送付中から外し参加に付ける
-    # トランザクション処理を行う
-    with transaction.atomic():
-        # ラベルセットの数値を減らす
-        # TODO: If label_set == None ?
-        label_set = task_request.label_set.all().first()
-        for label_name in candidate_data.labels.keys():
-            label = label_set.var_label.filter(label__is_dynamic=False).filter(label__name=label_name).first()
-            print(label)
-            if label is not None:
-                if label.value == 0:
-                    return False
-
-                new_label, c = LabelValue.objects.get_or_create(label=label.label, value=label.value - 1)
-                label_set.var_label.remove(label)
-                label_set.var_label.add(new_label)
-
-        task_request.decline_candidates.remove(candidate)
-        task_request.joined_candidates.add(candidate)
-        print('join_task: Joined ', candidate.personal_data.username)
-
-    # 人数チェック
-    if check_fill_candidates(task_request):
-        FillRequireCandidateHistory.objects.create(task_request=task_request)
-
-    # メッセージ送信
-    candidate_pb = grpc_client.get_personal_data_from_id(user.username)
-    send_message(candidate_pb.message_addr, task_request.join_complete_message)
-
-    return True
-
-# 参加キャンセル処理
-def cancel_task(task_request: TaskRequestRequest, user: User):
-    # task_requestがis_completeではない場合のみ動作
-    if task_request.is_complete:
-        return False
-
-    # キャンセルしてるのにまた不参加押す不届きもの対応
-    decline = task_request.decline_candidates.filter(personal_data=user).first()
-    if decline:
-        return True
-
-    # 処理候補者抽出
-    # joinedじゃない場合、一度joinedに上げてから処理開始
-    requesting = task_request.requesting_candidates.filter(personal_data=user).first()
-    if requesting:
-        with transaction.atomic():
-            task_request.requesting_candidates.remove(requesting)
-            task_request.joined_candidates.add(requesting)
-
-    candidate = task_request.joined_candidates.filter(personal_data=user).first()
-    candidate_data = grpc_client.get_personal_data_from_id(user.username)
-
-    # join_taskと逆のことを行う
-    with transaction.atomic():
-        # ラベルセットの数値を減らす
-        label_set = task_request.label_set.all().first()
-        for label_name in candidate_data.labels.keys():
-            label = label_set.var_label.filter(label__is_dynamic=False).filter(label__name=label_name).first()
-
-            if label is not None:
-                new_label, c = LabelValue.objects.get_or_create(label=label.label, value=label.value + 1)
-                label_set.var_label.remove(label)
-                label_set.var_label.add(new_label)
-
-        task_request.joined_candidates.remove(candidate)
-        task_request.decline_candidates.add(candidate)
-        print('join_task: Canceled ', candidate.personal_data.username)
-
-    # メッセージ送信
-    candidate_pb = grpc_client.get_personal_data_from_id(user.username)
-    send_message(candidate_pb.message_addr, task_request.cancel_complete_message)
-
     return True
 
 # 募集終了

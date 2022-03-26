@@ -4,7 +4,6 @@ from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView
 from django.views import generic
 from django.urls import reverse_lazy
-from matching.views import JoinView, CancelView
 from .forms import LoginForm, MyPasswordChangeForm, TaskRequestForm
 from .models import TaskRequest
 import semi_app.helper as helper
@@ -38,25 +37,6 @@ class PasswordChange(PasswordChangeView):
 class PasswordChangeDone(PasswordChangeDoneView):
     """パスワード変更しました"""
     template_name = 'semi_app/password_change_done.html'
-
-class Join(JoinView):
-    """参加者受付"""
-    success_url = reverse_lazy('semi_app:top')
-    template_name = 'semi_app/semi_task_join.html'
-
-    def post(self, request, *args, **kwargs):
-        res = super(Join, self).post(request, *args, **kwargs)
-        if request.POST.get('btn', '') == 'join':
-            self.join_response(self.request.user, self.object)
-        else:
-            self.decline_response(self.request.user, self.object)
-
-        return res
-
-class Cancel(CancelView):
-    """参加者キャンセル"""
-    success_url = reverse_lazy('semi_app:top')
-    template_name = 'semi_app/semi_task_cancel.html'
 
 class TaskRequestView(CreateView, LoginRequiredMixin):
     """依頼受付"""

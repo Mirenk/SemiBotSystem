@@ -1,11 +1,11 @@
-from django.views.generic import DetailView
+from django.views.generic import DetailView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse_lazy
 from matching.models import TaskRequestRequest, JoinResponseHistory, DeclineResponseHistory, CancelResponseHistory
 from matching.tasks import join_task, cancel_task
 
-class JoinView(LoginRequiredMixin, DetailView):
+class BaseJoinView(LoginRequiredMixin, DetailView):
     model = TaskRequestRequest
     template_name_suffix = '_task_join'
     success_url = reverse_lazy('join_success')
@@ -35,7 +35,7 @@ class JoinView(LoginRequiredMixin, DetailView):
         return HttpResponseRedirect(str(self.success_url))
 
 
-class CancelView(LoginRequiredMixin, DetailView):
+class BaseCancelView(LoginRequiredMixin, DetailView):
     model = TaskRequestRequest
     template_name_suffix = '_task_cancel'
     success_url = reverse_lazy('cancel_success')
@@ -56,3 +56,25 @@ class CancelView(LoginRequiredMixin, DetailView):
         CancelResponseHistory.objects.create(task_request=self.object, user=self.request.user)
         cancel_task.delay(task_request_pk=self.object.pk, user_pk=self.request.user.pk)
         return HttpResponseRedirect(str(self.success_url))
+
+class Top(TemplateView):
+    template_name = 'matching/top.html'
+
+class Join(BaseJoinView):
+    """参加者受付"""
+    success_url = reverse_lazy('matching:complete')
+    template_name = 'matching/task_join.html'
+
+    def post(self, request, *args, **kwargs):
+        res = super(Join, self).post(request, *args, **kwargs)
+        if request.POST.get('btn', '') == 'join':
+            self.join_response(self.request.user, self.object)
+        else:
+            self.decline_response(self.request.user, self.object)
+
+        return res
+
+class Cancel(BaseCancelView):
+    """参加者キャンセル"""
+    success_url = reverse_lazy('matching:comlete')
+    template_name = 'matching/task_cancel.html'

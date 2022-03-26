@@ -1,0 +1,16 @@
+{% extends "semi_app/base.html" %}
+
+{% block title %}キャンセル - マッチングシステム{% endblock %}
+
+{% block content %}
+    <h1>参加取り消し</h1>
+    <p>以下の参加をキャンセルしますか？</p>
+    <dl class="row">
+        <dt class="col-3">作業日時</dt>
+        <dd class="col-9">{{ task_request.task_datetime }}</dd>
+    </dl>
+    <form action="" method="POST">
+        {% csrf_token %}
+        <button type="submit" class="button btn-primary btn-lg">キャンセル</button>
+    </form>
+{% endblock %}

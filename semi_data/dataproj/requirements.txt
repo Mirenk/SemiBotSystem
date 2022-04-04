@@ -1,0 +1,9 @@
+Django
+djangorestframework
+mysqlclient
+django-concurrency
+requests
+djangogrpcframework
+grpcio
+grpcio-tools
+googleapis-common-protos

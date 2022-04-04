@@ -1,13 +1,12 @@
 version: '3'
 services:
-    semibot_host:
-        build: ./semibot_host
-        image: semibot_host
-        container_name: semibot_host
+    matching_host:
+        build: matching_host
+        container_name: matching_host
         volumes:
             -   "./log:/var/log"
         command: >
-            bash -c "DJANGO_SETTINGS_MODULE=semibot.settings celery -A semibot beat --scheduler django_celery_beat.schedulers:DatabaseScheduler --pidfile /celerybeat.pid &
+            bash -c "DJANGO_SETTINGS_MODULE=semibot.settings celery -A matchingproj beat --scheduler django_celery_beat.schedulers:DatabaseScheduler --pidfile /celerybeat.pid &
             celery -A semibot worker &
             python3 manage.py grpcrunserver &
             python3 manage.py runserver 0:8000"
@@ -15,13 +14,54 @@ services:
             - "8000:8000"
         tty: true
         depends_on:
-        - semibot_db
+        - mysql_db
+        - semi_data
         - redis
-        
-    semibot_db:
-        build: ./semibot_db
-        image: semibot_db
-        container_name: semibot_db
+        - join_worker
+
+    join_worker:
+        build: matching_host
+        container_name: join_worker
+        command: >
+            celery -A matchingproj worker -Q join
+        depends_on:
+            - mysql_db
+            - semi_data
+            - redis
+
+    semi_app:
+        build: semi_app
+        container_name: semi_app
+        volumes:
+            -   "./log:/var/log"
+        command: >
+            bash -c "DJANGO_SETTINGS_MODULE=semibot.settings celery -A matchingproj beat --scheduler django_celery_beat.schedulers:DatabaseScheduler --pidfile /celerybeat.pid &
+            celery -A semibot worker &
+            python3 manage.py runserver 0:8080"
+        ports:
+            - "8080:8080"
+        tty: true
+        depends_on:
+        - mysql_db
+        - redis_semi
+
+    semi_data:
+        build: semi_data
+        container_name: semi_data
+        volumes:
+            -   "./log:/var/log"
+        command: >
+            bash -c "python3 manage.py grpcrunserver &
+            python3 manage.py runserver 0:8081"
+        ports:
+            - "8081:8081"
+        tty: true
+        depends_on:
+        - mysql_db
+
+    mysql_db:
+        build: mysql_db
+        container_name: mysql_db
         command:
             - --default-authentication-plugin=mysql_native_password
         environment:
@@ -30,13 +70,22 @@ services:
         ports:
             - "3306:3306"
         volumes:
-            - "./semibot_db/init:/docker-entrypoint-initdb.d" # db初期化
+            - "./mysql_db/init:/docker-entrypoint-initdb.d" # db初期化
             - "mysql:/var/lib/mysql" # db永続化(コンテナ再起動後もデータ保持)
 
     # For celery
     redis:
         image: redis:alpine
-        container_name: semibot_redis
+        container_name: redis
+
+    redis_semi:
+        image: redis:alpine
+        container_name: redis_semi
+
+    reverse-proxy:
+        image: nginx
+        ports:
+            - 80:80
 
 volumes:
     mysql: # db用名前付きボリューム

@@ -1,0 +1,52 @@
+// やり取りに利用するモデル(message)をまとめたもの
+// リクエスト時のみ利用するmessageは各protoに記述
+
+syntax = "proto3";
+
+package matching_pb;
+
+import "google/protobuf/timestamp.proto";
+
+message Label {
+  string name = 1;
+}
+
+message LabelValue {
+  Label label = 1;
+  int32 value = 2;
+}
+
+message MessageAddress {
+  // 送信手段
+  enum Method {
+    SLACK = 0;
+  }
+  Method method = 1;
+  string userid = 2;
+}
+
+message PersonalData {
+  string id = 1;
+  string name = 2;
+  MessageAddress message_addr = 3;
+  map<string, Label> labels = 4; // key == Label.name
+  // マッチング処理時のみ利用
+  repeated LabelValue var_labels = 5;
+}
+
+message Task {
+  string name = 1;
+  map<string, Label> require_label = 2; // key == Label.name
+  repeated LabelValue require_label_value = 3;
+}
+
+message TaskRequestData {
+  string name = 1;
+  Task task = 2;
+  google.protobuf.Timestamp task_date = 3;
+  // 記録時のみ利用
+  map<string, PersonalData> worker = 4; // key == PersonalData.id
+  map<string, Label> recommend_label = 5; // key == Label.name
+  repeated LabelValue recommend_label_value = 6;
+}
+

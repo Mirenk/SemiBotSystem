@@ -1,8 +1,8 @@
 version: '3'
 services:
-    semibot_host:
+    matching_host:
         volumes:
-            - "./semibot_host/semibot:/app/semibot"
+            - "./matching_host/matchingproj:/app/matchingproj"
             - "./log:/var/log"
         ports:
             - "50051:50051"

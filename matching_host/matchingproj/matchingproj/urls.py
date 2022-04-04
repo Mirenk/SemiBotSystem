@@ -1,0 +1,27 @@
+"""matchingproj URLg Configuration
+
+The `urlpatterns` list routes URLs to views. For more information please see:
+    https://docs.djangoproject.com/en/3.2/topics/http/urls/
+Examples:
+Function views
+    1. Add an import:  from my_app import views
+    2. Add a URL to urlpatterns:  path('', views.home, name='home')
+Class-based views
+    1. Add an import:  from other_app.views import Home
+    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
+Including another URLconf
+    1. Import the include() function: from django.urls import include, path
+    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+"""
+from django.contrib import admin
+from django.urls import path, include
+from data_manager.grpc_service import grpc_handlers as data_manager_grpc_handler
+from matching.grpc_service import grpc_handlers as matching_grpc_handler
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+]
+
+def grpc_handlers(server):
+    data_manager_grpc_handler(server)
+    matching_grpc_handler(server)

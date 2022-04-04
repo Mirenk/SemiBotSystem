@@ -1,0 +1,91 @@
+syntax = "proto3";
+
+package matching_pb;
+
+import "matching_pb/type.proto";
+
+/*
+ * ListLabels messages
+ */
+message ListLabelsRequest {}
+
+message ListLabelsResponse {
+  map<string, matching_pb.Label> labels = 1; // key == Label.name
+}
+
+/*
+ * ListCandidates messages
+ */
+message ListPersonalDataRequest {}
+
+message ListPersonalDataResponse {
+  map<string, matching_pb.PersonalData> personal_data = 1; // key == PersonalData.id
+}
+
+/*
+ * ListTasks messages
+ */
+message ListTasksRequest {}
+
+message ListTasksResponse {
+  repeated matching_pb.Task tasks = 1;
+}
+
+/*
+ * GetTaskFromName messages
+ */
+message GetTaskFromNameRequest {
+  string name = 1;
+}
+
+/*
+ * GetTaskRequestHistories messages
+ */
+message GetTaskRequestHistoriesResponse {
+  repeated matching_pb.TaskRequestData task_requests = 1;
+}
+
+/*
+ * GetPersonalData message
+ */
+message GetPersonalDataFromIdRequest {
+  string id = 1;
+}
+
+/*
+ * RecordTaskRequestHistory message
+ */
+message RecordTaskRequestHistoryResult {
+  enum Result {
+    SUCCESS = 0;
+    FAILED = 1;
+  }
+  Result result = 1;
+  string message = 2;
+}
+
+message AuthRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message AuthResult {
+  bool result = 1;
+}
+
+/*
+ * Service: DataManage
+ */
+service DataManage {
+  // 候補者抽出用
+  rpc ListLabels (ListLabelsRequest) returns (ListLabelsResponse);
+  rpc ListPersonalData (ListPersonalDataRequest) returns (ListPersonalDataResponse);
+  // マッチング記録取得用
+  rpc ListTasks (ListTasksRequest) returns (ListTasksResponse);
+  rpc GetTaskFromName (GetTaskFromNameRequest) returns (matching_pb.Task);
+  rpc GetTaskRequestHistories (matching_pb.Task) returns (GetTaskRequestHistoriesResponse);
+  // マッチング結果記録
+  rpc GetPersonalDataFromId (GetPersonalDataFromIdRequest) returns (matching_pb.PersonalData);
+  rpc RecordTaskRequestHistory (matching_pb.TaskRequestData) returns (RecordTaskRequestHistoryResult);
+  rpc Auth (AuthRequest) returns (AuthResult);
+}

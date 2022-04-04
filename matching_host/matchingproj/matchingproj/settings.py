@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'matching',
     'django_celery_beat',
     'django_celery_results',
+    'custom_auth',
 ]
 
 MIDDLEWARE = [
@@ -146,3 +147,4 @@ MATCHING_DATAMANAGE_HOST = os.environ.get('DATAMANAGE_HOST', 'semi_data:50051')
 # Login Settings
 #LOGIN_URL = 'semi_app:login'
 #LOGIN_REDIRECT_URL = 'semi_app:top'
+AUTHENTICATION_BACKENDS = ['custom_auth.backends.Backend']

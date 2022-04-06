@@ -83,10 +83,10 @@ WSGI_APPLICATION = 'matchingproj.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': '`matching_db',
+        'NAME': 'matching_db',
         'USER': 'root',
         'PASSWORD': 'Endeavor',
-        'HOST': 'semibot_db'
+        'HOST': 'mysql_db'
     }
 }
 
@@ -148,3 +148,5 @@ MATCHING_DATAMANAGE_HOST = os.environ.get('DATAMANAGE_HOST', 'semi_data:50051')
 #LOGIN_URL = 'semi_app:login'
 #LOGIN_REDIRECT_URL = 'semi_app:top'
 AUTHENTICATION_BACKENDS = ['custom_auth.backends.Backend']
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'

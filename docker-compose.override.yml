@@ -1,8 +1,28 @@
 version: '3'
 services:
     matching_host:
+        command: >
+            bash -c "DJANGO_SETTINGS_MODULE=semibot.settings celery -A matchingproj beat --scheduler django_celery_beat.schedulers:DatabaseScheduler --pidfile /celerybeat.pid &
+            celery -A semibot worker &
+            python3 manage.py grpcrunserver &
+            python3 manage.py runserver 0:8081"
         volumes:
             - "./matching_host/matchingproj:/app/matchingproj"
             - "./log:/var/log"
         ports:
+            - "8081:8081"
             - "50051:50051"
+    semi_app:
+        command: >
+            bash -c "DJANGO_SETTINGS_MODULE=semibot.settings celery -A matchingproj beat --scheduler django_celery_beat.schedulers:DatabaseScheduler --pidfile /celerybeat.pid &
+            celery -A semibot worker &
+            python3 manage.py runserver 0:8080"
+        ports:
+            - "8080:8080"
+
+    semi_data:
+        command: >
+            bash -c "python3 manage.py grpcrunserver &
+            python3 manage.py runserver 0:8082"
+        ports:
+            - "8082:8082"

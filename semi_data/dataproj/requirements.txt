@@ -7,3 +7,4 @@ djangogrpcframework
 grpcio
 grpcio-tools
 googleapis-common-protos
+uwsgi

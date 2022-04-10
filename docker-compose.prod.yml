@@ -1,7 +1,28 @@
 version: '3'
 services:
-    semibot_host:
+    matching_host:
         restart: always
-        
-    semibot_db:
+
+    join_worker:
         restart: always
+
+    semi_app:
+        restart: always
+
+    semi_data:
+        restart: always
+
+    mysql_db:
+        restart: always
+
+    # For celery
+    redis:
+        restart: always
+
+    redis_semi:
+        restart: always
+
+    nginx:
+        restart: always
+        ports:
+            - 80:80

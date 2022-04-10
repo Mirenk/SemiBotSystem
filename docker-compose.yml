@@ -3,15 +3,14 @@ services:
     matching_host:
         build: matching_host
         container_name: matching_host
-        volumes:
-            -   "./log:/var/log"
         command: >
             bash -c "DJANGO_SETTINGS_MODULE=matchingproj.settings celery -A matchingproj beat --scheduler django_celery_beat.schedulers:DatabaseScheduler --pidfile /celerybeat.pid &
             celery -A matchingproj worker &
             python3 manage.py grpcrunserver &
-            uwsgi --socket :8081 --module matchingproj.wsgi"
+            uwsgi --socket /tmp/uwsgi.sock --chmod-socket=664 --uid www-data --gid www-data --module matchingproj.wsgi &
+            nginx -g 'daemon off;'"
         expose:
-            - "8081"
+            - "80"
             - "50051"
         tty: true
         depends_on:
@@ -33,14 +32,13 @@ services:
     semi_app:
         build: semi_app
         container_name: semi_app
-        volumes:
-            -   "./log:/var/log"
         command: >
             bash -c "DJANGO_SETTINGS_MODULE=semiproj.settings celery -A semiproj beat --scheduler django_celery_beat.schedulers:DatabaseScheduler --pidfile /celerybeat.pid &
             celery -A semiproj worker &
-            uwsgi --socket :8080 --module semiproj.wsgi"
+            uwsgi --socket /tmp/uwsgi.sock --chmod-socket=664 --uid www-data --gid www-data --module semiproj.wsgi &
+            nginx -g 'daemon off;'"
         expose:
-            - "8080"
+            - "80"
         tty: true
         depends_on:
         - mysql_db
@@ -49,13 +47,12 @@ services:
     semi_data:
         build: semi_data
         container_name: semi_data
-        volumes:
-            -   "./log:/var/log"
         command: >
             bash -c "python3 manage.py grpcrunserver &
-            uwsgi --socket :8082 --module dataproj.wsgi"
+            uwsgi --socket /tmp/uwsgi.sock --chmod-socket=664 --uid www-data --gid www-data --module dataproj.wsgi &
+            nginx -g 'daemon off;'"
         expose:
-            - "8082"
+            - "80"
             - "50051"
         tty: true
         depends_on:
@@ -90,7 +87,7 @@ services:
         ports:
             - 8000:80
         volumes:
-            - "./nginx/default.conf:/etc/nginx/conf.d/default.conf"
+            - "./nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf"
             - "./nginx/uwsgi_params:/etc/nginx/uwsgi_params"
         depends_on:
             - semi_app
